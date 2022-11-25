@@ -1,0 +1,7 @@
+POST http://localhost:3000/api/inspect
+Content-Type: application/json
+
+{
+  "url": "https://fma-zurich.ch",
+  "name": "fma-zurich"
+}
