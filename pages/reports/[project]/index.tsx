@@ -72,6 +72,7 @@ export const ProjectPage = ({ reports, projectName, url, projects }: ProjectPage
         { field: 'seo', headerName: 'seo', flex: 1 },
         { field: 'pwa', headerName: 'pwa', flex: 1 },
         { field: 'hasReport', headerName: 'hasReport', flex: 1 },
+        { field: 'type', headerName: 'type', flex: 1 },
         { field: 'htmlReportFile', headerName: 'htmlReportFile', flex: 1 },
     ];
 
