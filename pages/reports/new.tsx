@@ -1,12 +1,6 @@
-import { GetServerSideProps } from "next";
-import glob from 'glob';
-import fs from 'fs';
-import path from 'path';
-import { REPORTFILE_PROJECT_DELIMITER, REPORTS_FOLDER } from "../../config";
-import { Button, TextField, Typography } from "@mui/material";
+import { Button, TextField } from "@mui/material";
 import { useState } from "react";
 import axios from "axios";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useRouter } from "next/router";
 
 export const ProjectPage = () => {
@@ -25,9 +19,9 @@ export const ProjectPage = () => {
     }
 
     return <div>
-        <TextField value={ name } onChange={ (e) => setName(e.target.value) }/>
-        <TextField value={ url } onChange={ (e) => setUrl(e.target.value) }/>
-        <Button variant={ 'contained' } onClick={ onRunReport }>Run</Button>
+        <input placeholder='Name' value={ name } onChange={ (e) => setName(e.target.value) }/>
+        <input placeholder='Url' value={ url } onChange={ (e) => setUrl(e.target.value) }/>
+        <button className={'bg-primary'} onClick={ onRunReport }>Run</button>
     </div>
 
 }

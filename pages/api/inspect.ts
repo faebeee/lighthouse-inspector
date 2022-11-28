@@ -1,12 +1,13 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { inspector } from "../../src/inspector";
+import { DESKTOP_CONFIG, inspector, MOBILE_CONFIG } from "../../src/inspector";
 
-export const inspectHandler = (request: NextApiRequest, response: NextApiResponse) => {
+export const inspectHandler = async (request: NextApiRequest, response: NextApiResponse) => {
     if (request.method !== 'POST') {
         response.status(405).send({});
         return;
     }
-    inspector(request.body.url, request.body.name)
+    await inspector(request.body.url, request.body.name, DESKTOP_CONFIG)
+    await inspector(request.body.url, request.body.name, MOBILE_CONFIG)
     return response.send({});
 }
 
