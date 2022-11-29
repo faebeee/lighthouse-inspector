@@ -7,7 +7,7 @@ import { getReportFilesForProject, getReportsForProject } from "../../../src/get
 import { getProjects } from "../../../src/get-projects";
 import { Layout } from "../../../src/components/layout";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { Button, ListItemText, MenuItem, MenuList, TextField } from "@mui/material";
+import { Button, Card, CardContent, ListItemText, MenuItem, MenuList, TextField } from "@mui/material";
 import { Stack } from "@mui/system";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
@@ -81,7 +81,11 @@ export const ProjectPage = ({ desktopReports, mobileReports, projectName, url, p
             headerName: 'htmlReportFile',
             flex: 1,
             renderCell: (data) => <Link target={ '_blank' }
-                href={ `/api/${ projectName }/${ data.value }` }>{ data.value }</Link>
+                href={ `/api/${ projectName }/${ data.value }` }>
+                <Typography color={ 'secondary' }>
+                    { data.value }
+                </Typography>
+            </Link>
         },
     ];
 
@@ -96,21 +100,29 @@ export const ProjectPage = ({ desktopReports, mobileReports, projectName, url, p
                     onClick={ onRunReport }>{ isLoading ? 'Loading...' : 'Run' }</Button>
             </Stack>
 
-            <Typography variant={ 'h4' }>Desktop</Typography>
-            <DataGrid
-                rows={ desktopReports }
-                columns={ columns }
-                getRowId={ (r) => r.date }
-                autoHeight
-            />
+            <Card>
+                <CardContent>
+                    <Typography color={ 'textPrimary' } variant={ 'h4' }>Desktop</Typography>
+                    <DataGrid
+                        rows={ desktopReports }
+                        columns={ columns }
+                        getRowId={ (r) => r.date }
+                        autoHeight
+                    />
+                </CardContent>
+            </Card>
 
-            <Typography variant={ 'h4' }>Mobile</Typography>
-            <DataGrid
-                rows={ mobileReports }
-                columns={ columns }
-                getRowId={ (r) => r.date }
-                autoHeight
-            />
+            <Card>
+                <CardContent>
+                    <Typography color={ 'textPrimary' } variant={ 'h4' }>Mobile</Typography>
+                    <DataGrid
+                        rows={ mobileReports }
+                        columns={ columns }
+                        getRowId={ (r) => r.date }
+                        autoHeight
+                    />
+                </CardContent>
+            </Card>
         </Stack>
     </Layout>
 }

@@ -43,8 +43,10 @@ export const MOBILE_CONFIG = {
 export const inspector = async (url: string, name: string, config:unknown = {}) => {
     const chrome = await chromeLauncher.launch({ chromeFlags: [ '--headless' ] });
     const options = {
-        logLevel: 'info', output: [ 'json', 'html' ], 
-        port: chrome.port, 
+        logLevel: 'info',
+        output: ['json', 'html'],
+        port: chrome.port,
+        locale: 'en-US',
         settings: {
             throttling: constants.throttling.desktopDense4G,
             screenEmulation: constants.screenEmulationMetrics.desktop,

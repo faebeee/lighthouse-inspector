@@ -7,7 +7,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import Link from 'next/link';
-import { ListItemText, MenuItem, MenuList } from "@mui/material";
+import { Button, ListItemText, MenuItem, MenuList, Paper } from "@mui/material";
 import { version } from '../../package.json';
 
 export type LayoutProps = PropsWithChildren<{
@@ -28,12 +28,13 @@ export const Layout = ({ children, sidebar, title, projects, }: LayoutProps) => 
         setOpen(false);
     };
 
-    return <div>
+    return <Box>
         <Drawer
             sx={ {
                 width: drawerWidth,
                 flexShrink: 0,
                 '& .MuiDrawer-paper': {
+                    background: 'transparent',
                     width: drawerWidth,
                     boxSizing: 'border-box',
                 },
@@ -41,45 +42,60 @@ export const Layout = ({ children, sidebar, title, projects, }: LayoutProps) => 
             variant={ 'permanent' }
             anchor="left"
         >
-            { sidebar }
+            <Toolbar>
+                <Typography>Lighthouse Inspector</Typography>
+            </Toolbar>
+
             <MenuList>
                 { projects.map((name) => (
                     <Link href={ `/reports/${ name }` } key={ name }>
                         <MenuItem>
-                            <ListItemText>{ name }</ListItemText>
+                            <ListItemText>
+                                <Typography color={ 'secondary' }>{ name }</Typography>
+                            </ListItemText>
                         </MenuItem>
                     </Link>
                 )) }
                 <Divider/>
                 <Link href={ `/reports/new` }>
                     <MenuItem>
-                        <ListItemText>New</ListItemText>
+                        <ListItemText>
+                            <Button fullWidth variant={ 'contained' } color={ 'primary' }>New</Button>
+                        </ListItemText>
                     </MenuItem>
                 </Link>
                 <Divider/>
                 <Link href={ 'https://github.com/faebeee/lighthouse-inspector' } target={ '_blank' }>
                     <MenuItem>
-                        <Typography variant={ 'caption' }>Github - v{ version }</Typography>
+                        <Typography variant={ 'caption' } color={ 'secondary' }>Github - v{ version }</Typography>
                     </MenuItem>
                 </Link>
             </MenuList>
         </Drawer>
         <Box sx={ {
-            marginLeft: `${ drawerWidth }px`,
-            paddingTop: `80px`,
+            background: 'rgba(237, 237, 237, 0.11)',
+            boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
+            backdropFilter: 'blur(9.9px)',
         } }>
-            <AppBar position={ 'absolute' }
+            <AppBar position={ 'relative' }
+                variant={ 'outlined' }
                 sx={ {
+                    background: 'transparent',
                     left: `${ drawerWidth }px`,
                     maxWidth: `calc(100% - ${ drawerWidth }px)`,
                 } }>
-                <Toolbar>
-                    <Typography variant="h6" noWrap component="div">
-                        { title ?? 'Lighthouse Inspector' }
+                <Toolbar variant={ 'regular' }>
+                    <Typography variant="h4" noWrap>
+                        { title }
                     </Typography>
                 </Toolbar>
             </AppBar>
-            { children }
+            <Box sx={ {
+                marginLeft: `${ drawerWidth }px`,
+                p: 5,
+            } }>
+                { children }
+            </Box>
         </Box>
-    </div>
+    </Box>
 }

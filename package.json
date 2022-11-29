@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "runner": "ts-node -P tsconfig.node.json ./src/cli.ts"
+    "runner": "ts-node --project tsconfig.node.json ./src/cli.ts"
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",
