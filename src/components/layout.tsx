@@ -6,17 +6,18 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import Link from 'next/link';
+import { ListItemText, MenuItem, MenuList } from "@mui/material";
+import { version } from '../../package.json';
 
 export type LayoutProps = PropsWithChildren<{
     sidebar?: ReactNode;
     title?: string;
+    projects: string[]
 }>
 const drawerWidth = 240;
 
-export const Layout = ({ children, sidebar, title }: LayoutProps) => {
+export const Layout = ({ children, sidebar, title, projects, }: LayoutProps) => {
     const [ open, setOpen ] = React.useState(false);
 
     const handleDrawerOpen = () => {
@@ -26,7 +27,6 @@ export const Layout = ({ children, sidebar, title }: LayoutProps) => {
     const handleDrawerClose = () => {
         setOpen(false);
     };
-
 
     return <div>
         <Drawer
@@ -42,6 +42,27 @@ export const Layout = ({ children, sidebar, title }: LayoutProps) => {
             anchor="left"
         >
             { sidebar }
+            <MenuList>
+                { projects.map((name) => (
+                    <Link href={ `/reports/${ name }` } key={ name }>
+                        <MenuItem>
+                            <ListItemText>{ name }</ListItemText>
+                        </MenuItem>
+                    </Link>
+                )) }
+                <Divider/>
+                <Link href={ `/reports/new` }>
+                    <MenuItem>
+                        <ListItemText>New</ListItemText>
+                    </MenuItem>
+                </Link>
+                <Divider/>
+                <Link href={ 'https://github.com/faebeee/lighthouse-inspector' } target={ '_blank' }>
+                    <MenuItem>
+                        <Typography variant={ 'caption' }>Github - v{ version }</Typography>
+                    </MenuItem>
+                </Link>
+            </MenuList>
         </Drawer>
         <Box sx={ {
             marginLeft: `${ drawerWidth }px`,
