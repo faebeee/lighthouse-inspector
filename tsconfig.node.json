@@ -14,6 +14,9 @@
     }
   },
   "compilerOptions": {
-    // typescript options here
-  }
+
+  },
+  "include": [
+    "node_modules/lighthouse/types/**/*.d.ts"
+  ]
 }

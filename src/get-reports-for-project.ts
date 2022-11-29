@@ -38,6 +38,7 @@ export const getReportsForProject = async (project: string): Promise<ReportResul
                     hasReport: htmlExists,
                     htmlReportFile: htmlExists ? path.basename(htmlReport, '.html') : null,
                     type: report.configSettings.formFactor,
+                    stacks: report.stackPacks.map((stack) => stack.title),
                 });
                 return acc;
             }, [] as ReportResult[]);

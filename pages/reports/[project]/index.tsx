@@ -11,6 +11,7 @@ import { Button, Card, CardContent, ListItemText, MenuItem, MenuList, TextField 
 import { Stack } from "@mui/system";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
+import { getLatestReport } from "../../../src/server/utils/get-latest-report";
 
 export type ReportResult = {
     date: string;
@@ -23,6 +24,7 @@ export type ReportResult = {
     hasReport: boolean;
     htmlReportFile: string | null;
     type: string;
+    stacks: string[];
 };
 
 export type ProjectPageProps = {
@@ -31,18 +33,23 @@ export type ProjectPageProps = {
     reports: ReportResult[];
     mobileReports: ReportResult[];
     desktopReports: ReportResult[];
-    projects: string[]
+    projects: string[],
+    stack: string[],
+    latestScreenshotBase64: string,
+    latestMobileScreenshotBase64: string,
 }
 
 export const getServerSideProps: GetServerSideProps<ProjectPageProps> = async (req) => {
     const project = req.query.project as string;
     const projects = await getProjects();
-    const reports = await getReportsForProject(project as string);
-    const files = await getReportFilesForProject(project as string);
+    const reports = await getReportsForProject(project);
+    const files = await getReportFilesForProject(project);
     const desktopReports = reports.filter((r) => r.type === 'desktop');
     const mobileReports = reports.filter((r) => r.type === 'mobile');
 
-    const projectUrl = files.length > 0 ? JSON.parse(fs.readFileSync(files[0], { encoding: 'utf8' })).finalUrl : '';
+    const latestDesktopReport = await getLatestReport(project, 'desktop');
+    const latestMobileReport = await getLatestReport(project, 'mobile');
+    const projectUrl = files.length > 0 ? latestDesktopReport.finalUrl : '';
 
     return {
         props: {
@@ -52,11 +59,23 @@ export const getServerSideProps: GetServerSideProps<ProjectPageProps> = async (r
             projects,
             desktopReports,
             mobileReports,
+            stack: desktopReports[desktopReports.length - 1]?.stacks ?? [],
+            latestScreenshotBase64: latestDesktopReport.audits['final-screenshot'].details.data,
+            latestMobileScreenshotBase64: latestMobileReport.audits['final-screenshot'].details.data,
         }
     }
 }
 
-export const ProjectPage = ({ desktopReports, mobileReports, projectName, url, projects }: ProjectPageProps) => {
+export const ProjectPage = ({
+                                desktopReports,
+                                mobileReports,
+                                projectName,
+                                url,
+                                projects,
+                                latestScreenshotBase64,
+                                latestMobileScreenshotBase64,
+                                stack,
+                            }: ProjectPageProps) => {
     const [ isLoading, setIsLoading ] = useState(false);
 
     const onRunReport = () => {
@@ -93,12 +112,25 @@ export const ProjectPage = ({ desktopReports, mobileReports, projectName, url, p
         title={ projectName }
         projects={ projects }>
         <Stack spacing={ 2 }>
+
             <Stack direction={ 'row' } spacing={ 2 }>
                 <TextField label={ 'Name' } value={ projectName } disabled/>
                 <TextField fullWidth label={ 'Url' } value={ url } disabled/>
                 <Button variant={ 'contained' } disabled={ isLoading }
                     onClick={ onRunReport }>{ isLoading ? 'Loading...' : 'Run' }</Button>
             </Stack>
+
+            <Stack direction={ 'row' } spacing={ 2 }>
+                <img height={ 250 } src={ latestScreenshotBase64 }/>
+                <img height={ 250 } src={ latestMobileScreenshotBase64 }/>
+            </Stack>
+
+            <Card>
+                <CardContent>
+                    <Typography color={ 'textPrimary' } variant={ 'h4' }>Stack</Typography>
+                    { stack.join(', ') }
+                </CardContent>
+            </Card>
 
             <Card>
                 <CardContent>
