@@ -1,6 +1,6 @@
 import { GetServerSideProps } from "next";
 import { Layout } from "../src/components/layout";
-import { getProjects } from "../src/get-projects";
+import { getProjects } from "../src/server/utils/get-projects";
 
 export type ReportsPageProps = {
     projects: string[];

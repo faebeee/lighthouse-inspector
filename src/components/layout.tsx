@@ -72,11 +72,7 @@ export const Layout = ({ children, sidebar, title, projects, }: LayoutProps) => 
                 </Link>
             </MenuList>
         </Drawer>
-        <Box sx={ {
-            background: 'rgba(237, 237, 237, 0.11)',
-            boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
-            backdropFilter: 'blur(9.9px)',
-        } }>
+        <Box >
             <AppBar position={ 'relative' }
                 variant={ 'outlined' }
                 sx={ {

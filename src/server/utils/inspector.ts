@@ -1,7 +1,7 @@
 import fs from 'fs';
 import * as chromeLauncher from 'chrome-launcher';
 import { format } from 'date-fns';
-import { REPORTFILE_PROJECT_DELIMITER, REPORTS_FOLDER } from "../config";
+import { REPORTFILE_PROJECT_DELIMITER, REPORTS_FOLDER } from "../../../config";
 
 const lighthouse = require('lighthouse');
 const constants = require('lighthouse/lighthouse-core/config/constants');

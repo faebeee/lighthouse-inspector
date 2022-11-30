@@ -1,17 +1,19 @@
 import { GetServerSideProps } from "next";
 import { useState } from 'react';
-import fs from 'fs';
 import axios from "axios";
 import Link from "next/link";
-import { getReportFilesForProject, getReportsForProject } from "../../../src/get-reports-for-project";
-import { getProjects } from "../../../src/get-projects";
+import { getReportFilesForProject, getReportsForProject } from "../../../src/server/utils/get-reports-for-project";
+import { getProjects } from "../../../src/server/utils/get-projects";
 import { Layout } from "../../../src/components/layout";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { Button, Card, CardContent, ListItemText, MenuItem, MenuList, TextField } from "@mui/material";
+import { Button, Card, CardContent, Grid, MenuItem, MenuList, Tab, Tabs, TextField } from "@mui/material";
 import { Stack } from "@mui/system";
-import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 import { getLatestReport } from "../../../src/server/utils/get-latest-report";
+import { VictoryAxis, VictoryChart, VictoryLegend, VictoryLine, VictoryTooltip } from "victory";
+import { COLOR } from "../../../config";
+import Box from "@mui/material/Box";
+import { scaleBand } from "d3-scale";
 
 export type ReportResult = {
     date: string;
@@ -49,6 +51,7 @@ export const getServerSideProps: GetServerSideProps<ProjectPageProps> = async (r
 
     const latestDesktopReport = await getLatestReport(project, 'desktop');
     const latestMobileReport = await getLatestReport(project, 'mobile');
+    // @ts-ignore
     const projectUrl = files.length > 0 ? latestDesktopReport.finalUrl : '';
 
     return {
@@ -60,11 +63,16 @@ export const getServerSideProps: GetServerSideProps<ProjectPageProps> = async (r
             desktopReports,
             mobileReports,
             stack: desktopReports[desktopReports.length - 1]?.stacks ?? [],
+            // @ts-ignore
             latestScreenshotBase64: latestDesktopReport.audits['final-screenshot'].details.data,
+            // @ts-ignore
             latestMobileScreenshotBase64: latestMobileReport.audits['final-screenshot'].details.data,
         }
+
     }
 }
+const CHART_WIDTH = 600;
+const CHART_HEIGHT = 400;
 
 export const ProjectPage = ({
                                 desktopReports,
@@ -77,7 +85,11 @@ export const ProjectPage = ({
                                 stack,
                             }: ProjectPageProps) => {
     const [ isLoading, setIsLoading ] = useState(false);
+    const [ value, setValue ] = useState<string>('desktop');
 
+    const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+        setValue(newValue);
+    };
     const onRunReport = () => {
         setIsLoading(true);
         axios.post('/api/inspect', {
@@ -108,54 +120,156 @@ export const ProjectPage = ({
         },
     ];
 
+    const lines = [
+        { key: 'performance', color: COLOR.PERFORMANCE },
+        { key: 'accessibility', color: COLOR.ACCESSIBILITY },
+        { key: 'bestPractices', color: COLOR.BEST_PRACTICE },
+        { key: 'seo', color: COLOR.SEO },
+        { key: 'pwa', color: COLOR.PWA },
+    ]
+
     return <Layout
         title={ projectName }
         projects={ projects }>
-        <Stack spacing={ 2 }>
+        <Grid container spacing={ 2 }>
+            <Grid item xs={ 12 }>
+                <Stack direction={ 'row' } spacing={ 2 }>
+                    <TextField label={ 'Name' } value={ projectName } disabled/>
+                    <TextField fullWidth label={ 'Url' } value={ url } disabled/>
+                    <Button variant={ 'contained' } disabled={ isLoading }
+                        onClick={ onRunReport }>{ isLoading ? 'Loading...' : 'Run' }</Button>
+                </Stack>
+            </Grid>
 
-            <Stack direction={ 'row' } spacing={ 2 }>
-                <TextField label={ 'Name' } value={ projectName } disabled/>
-                <TextField fullWidth label={ 'Url' } value={ url } disabled/>
-                <Button variant={ 'contained' } disabled={ isLoading }
-                    onClick={ onRunReport }>{ isLoading ? 'Loading...' : 'Run' }</Button>
-            </Stack>
+            <Grid item xs={ 12 } xl={ 6 }>
+                <Stack direction={ 'row' } spacing={ 2 }>
+                    <img height={ 250 } src={ latestScreenshotBase64 }/>
+                    <img height={ 250 } src={ latestMobileScreenshotBase64 }/>
+                </Stack>
+            </Grid>
 
-            <Stack direction={ 'row' } spacing={ 2 }>
-                <img height={ 250 } src={ latestScreenshotBase64 }/>
-                <img height={ 250 } src={ latestMobileScreenshotBase64 }/>
-            </Stack>
+            <Grid item xs={ 12 } xl={ 6 }>
+                <Card>
+                    <CardContent>
+                        <Typography color={ 'textPrimary' } variant={ 'h4' }>Stack</Typography>
+                        { stack.join(', ') }
+                    </CardContent>
+                </Card>
+            </Grid>
+        </Grid>
 
-            <Card>
-                <CardContent>
-                    <Typography color={ 'textPrimary' } variant={ 'h4' }>Stack</Typography>
-                    { stack.join(', ') }
-                </CardContent>
-            </Card>
+        <Card sx={ { mt: 4 } }>
+            <Box sx={ { borderBottom: 1, borderColor: 'divider' } }>
+                <Tabs value={ value } onChange={ handleChange }>
+                    <Tab label="Desktop" value={ 'desktop' }/>
+                    <Tab label="Mobile" value={ 'mobile' }/>
+                </Tabs>
+            </Box>
 
-            <Card>
-                <CardContent>
-                    <Typography color={ 'textPrimary' } variant={ 'h4' }>Desktop</Typography>
-                    <DataGrid
-                        rows={ desktopReports }
-                        columns={ columns }
-                        getRowId={ (r) => r.date }
-                        autoHeight
-                    />
-                </CardContent>
-            </Card>
+            { value === 'desktop' && <Box>
+                <Grid container spacing={ 2 }>
+                    <Grid item xs={ 12 } xl={ 6 }>
+                        <svg width={ CHART_WIDTH }
+                            height={ CHART_HEIGHT }>
+                            <VictoryAxis
+                                crossAxis
+                                dependentAxis
+                                width={ CHART_WIDTH }
+                                height={ CHART_HEIGHT }
+                                domain={ [ 0, 100 ] }
+                                standalone={ false }
+                            />
 
-            <Card>
-                <CardContent>
-                    <Typography color={ 'textPrimary' } variant={ 'h4' }>Mobile</Typography>
-                    <DataGrid
-                        rows={ mobileReports }
-                        columns={ columns }
-                        getRowId={ (r) => r.date }
-                        autoHeight
-                    />
-                </CardContent>
-            </Card>
-        </Stack>
+                            <VictoryLegend x={ 10 } y={ 10 }
+                                orientation="horizontal"
+                                standalone={ false }
+                                height={ 10 }
+                                width={ CHART_WIDTH }
+                                style={ { title: { fontSize: '14px' } } }
+                                colorScale={ Object.values(COLOR) }
+                                data={
+                                    lines.map((line) => ({ name: line.key }))
+                                }
+                            />
+                            { lines.map((line) => (<VictoryLine
+                                standalone={ false }
+                                key={ line.key }
+                                height={ CHART_HEIGHT }
+                                width={ CHART_WIDTH }
+                                minDomain={ { y: 0 } }
+                                maxDomain={ { y: 100 } }
+                                style={ {
+                                    data: { stroke: line.color },
+                                } }
+                                x={ 'date' }
+                                y={ line.key }
+                                data={ desktopReports }
+                            />)) }
+                        </svg>
+                    </Grid>
+
+                    <Grid item xs={ 12 }>
+                        <DataGrid
+                            rows={ desktopReports }
+                            columns={ columns }
+                            getRowId={ (r) => r.date }
+                            autoHeight
+                        />
+                    </Grid>
+                </Grid>
+            </Box> }
+
+
+            { value === 'mobile' && <Box>
+                <Grid container spacing={ 2 }>
+                    <Grid item xs={ 12 } xl={ 6 }>
+                        <svg width={ CHART_WIDTH }
+                            height={ CHART_HEIGHT }>
+                            <VictoryAxis
+                                crossAxis
+                                dependentAxis
+                                width={ CHART_WIDTH }
+                                height={ CHART_HEIGHT }
+                                domain={ [ 0, 100 ] }
+                                standalone={ false }
+                            />
+
+                            <VictoryLegend x={ 10 } y={ 10 }
+                                orientation="horizontal"
+                                standalone={false}
+                                colorScale={ Object.values(COLOR) }
+                                data={
+                                    lines.map((line) => ({ name: line.key }))
+                                }
+                            />
+                            { lines.map((line) => (<VictoryLine
+                                standalone={false}
+                                key={ line.key }
+                                height={ CHART_HEIGHT }
+                                width={ CHART_WIDTH }
+                                minDomain={ { y: 0 } }
+                                maxDomain={ { y: 100 } }
+                                style={ {
+                                    data: { stroke: line.color },
+                                } }
+                                x={ 'date' }
+                                y={ line.key }
+                                data={ mobileReports }
+                            />)) }
+                        </svg>
+                    </Grid>
+
+                    <Grid item xs={ 12 }>
+                        <DataGrid
+                            rows={ mobileReports }
+                            columns={ columns }
+                            getRowId={ (r) => r.date }
+                            autoHeight
+                        />
+                    </Grid>
+                </Grid>
+            </Box> }
+        </Card>
     </Layout>
 }
 

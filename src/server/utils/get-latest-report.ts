@@ -1,5 +1,5 @@
 import fs from "fs";
-import { getReportFilesForProject, getReportsForProject } from "../../get-reports-for-project";
+import { getReportFilesForProject, getReportsForProject } from "./get-reports-for-project";
 
 export const getLatestReport = async (project: string, type: string): Promise<LH.RunnerResult> => {
     const reports = await getReportFilesForProject(project);

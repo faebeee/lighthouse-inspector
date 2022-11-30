@@ -2,7 +2,7 @@ import { Button, TextField } from "@mui/material";
 import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
-import { getProjects } from '../../src/get-projects';
+import { getProjects } from '../../src//server/utils/get-projects';
 import { Layout } from "../../src/components/layout";
 import { Stack } from "@mui/system";
 

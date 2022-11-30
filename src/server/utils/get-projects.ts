@@ -1,5 +1,5 @@
 import glob from "glob";
-import { REPORTS_FOLDER } from "../config";
+import { REPORTS_FOLDER } from "../../../config";
 
 export const getProjects = async (): Promise<string[]> => {
     return new Promise((resolve, reject) => {

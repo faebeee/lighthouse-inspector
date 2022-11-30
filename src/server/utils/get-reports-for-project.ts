@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
-import { ReportResult } from "../pages/reports/[project]";
-import { REPORTS_FOLDER } from "../config";
+import { ReportResult } from "../../../pages/reports/[project]";
+import { REPORTS_FOLDER } from "../../../config";
 import glob from "glob";
 
 export const getReportFilesForProject = async (project: string): Promise<string[]> => {
