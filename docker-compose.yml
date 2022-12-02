@@ -1,8 +1,17 @@
 version: "3.9"
 services:
-  lighthouse-inspector:
-    build: .
+  web:
+    image: lighthouse-inspector/web
+    build:
+      dockerfile: ./Dockerfile
     volumes:
       - ./:/usr/src/app
     ports:
       - "8081:3000"
+
+  runner:
+    image: lighthouse-inspector/runner
+    build:
+      dockerfile: ./cron.Dockerfile
+    volumes:
+      - ./:/usr/src/app
