@@ -6,16 +6,16 @@ import { getReportFilesForProject, getReportsForProject } from "../../../src/ser
 import { getProjects } from "../../../src/server/utils/get-projects";
 import { Layout } from "../../../src/components/layout";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { Button, Card, CardContent, Grid, MenuItem, MenuList, Tab, Tabs, TextField } from "@mui/material";
+import { Button, Card, CardContent, Grid, Tab, Tabs, TextField } from "@mui/material";
 import { Stack } from "@mui/system";
 import Typography from "@mui/material/Typography";
 import { getLatestReport } from "../../../src/server/utils/get-latest-report";
-import { VictoryAxis, VictoryChart, VictoryLegend, VictoryLine, VictoryTooltip } from "victory";
+import { VictoryAxis, VictoryLegend, VictoryLine } from "victory";
 import { COLOR } from "../../../config";
 import Box from "@mui/material/Box";
-import { scaleBand } from "d3-scale";
 
 export type ReportResult = {
+    domain: string;
     projectName: string;
     date: string;
     finalUrl: string;
@@ -29,7 +29,7 @@ export type ReportResult = {
     type: string;
     stacks: string[];
 
-    imageBase64: string;
+    imageBase64?: string;
 };
 
 export type ProjectPageProps = {

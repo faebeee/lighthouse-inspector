@@ -7,7 +7,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import Link from 'next/link';
-import { Button, IconButton, ListItemText, MenuItem, MenuList, Paper } from "@mui/material";
+import { Button, IconButton, ListItemText, MenuItem, MenuList } from "@mui/material";
 import { version } from '../../package.json';
 import { ArrowBack } from "@mui/icons-material";
 
@@ -70,7 +70,6 @@ export const Layout = ({ children, sidebar, title, projects, }: LayoutProps) => 
         </Drawer>
         <Box >
             <AppBar position={ 'relative' }
-                variant={ 'outlined' }
                 sx={ {
                     background: 'transparent',
                     left: `${ drawerWidth }px`,

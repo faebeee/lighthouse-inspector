@@ -17,8 +17,8 @@ const theme = createTheme({
             styleOverrides: {
                 root: {
                     background: 'rgba(107,107,107,0.4)',
-                    boxShadow: '0 8px 32px 0 rgba( 31, 38, 135, 0.37 )',
-                    backdropFilter: 'blur( 5.5px )',
+                    // boxShadow: '0 8px 32px 0 rgba( 31, 38, 135, 0.37 )',
+                    // backdropFilter: 'blur( 5.5px )',
                 }
             }
         }

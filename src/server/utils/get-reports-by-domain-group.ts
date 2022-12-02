@@ -1,8 +1,8 @@
-import { getAllReports, getReport } from "./get-reports-for-project";
+import { getAllReports } from "./get-reports-for-project";
 import { ReportResult } from "../../../pages/reports/[project]";
 
 export const getReportsByDomainGroup = async (type: 'mobile' | 'desktop' = 'desktop'): Promise<Record<string, ReportResult[]>> => {
-    const reports = await getAllReports();
+    const reports = await getAllReports(true);
     return reports
         .filter((r) => r.type === type)
         .reduce((acc, report) => {

@@ -17,7 +17,7 @@ export const getReportFilesForProject = async (project: string): Promise<string[
     })
 }
 
-export const getAllReports = (): Promise<ReportResult[]> => {
+export const getAllReports = (getWithThumbnail?: boolean): Promise<ReportResult[]> => {
     const folder = path.join(process.cwd(), REPORTS_FOLDER);
     return new Promise((resolve, reject) => {
         return glob(`${ folder }/**/*.json`, (err, files) => {
@@ -25,7 +25,11 @@ export const getAllReports = (): Promise<ReportResult[]> => {
                 return reject(err);
             }
             const reports = files.reduce((acc, file) => {
-                acc.push(getReport(file));
+                if (getWithThumbnail) {
+                    acc.push(getReportWithThumbnail(file));
+                } else {
+                    acc.push(getReport(file));
+                }
                 return acc;
             }, [] as ReportResult[]);
             return resolve(reports);
@@ -38,8 +42,10 @@ export const getReport = (file: string): ReportResult => {
     const htmlReport = file.replace('.json', '.html');
     const htmlExists = fs.existsSync(htmlReport);
     const projectName = path.basename(path.dirname(file));
+    const url = new URL(report.finalUrl)
     return {
         projectName: projectName,
+        domain: url.host,
         date: report.fetchTime,
         finalUrl: report.finalUrl,
         performance: report.categories.performance.score * 100,
@@ -47,11 +53,19 @@ export const getReport = (file: string): ReportResult => {
         bestPractices: report.categories['best-practices'].score * 100,
         seo: report.categories.seo.score * 100,
         pwa: report.categories.pwa.score * 100,
-        imageBase64: report.audits['final-screenshot'].details.data,
         hasReport: htmlExists,
         htmlReportFile: htmlExists ? path.basename(htmlReport, '.html') : null,
         type: report.configSettings.formFactor,
         stacks: report.stackPacks.map((stack) => stack.title),
+    };
+}
+
+export const getReportWithThumbnail = (file: string): ReportResult => {
+    const report = getReport(file);
+    const reportFile = JSON.parse(fs.readFileSync(file, { encoding: 'utf8' })) as LighthouseReport;
+    return {
+        ...report,
+        imageBase64: reportFile.audits['final-screenshot'].details.data,
     };
 }
 
