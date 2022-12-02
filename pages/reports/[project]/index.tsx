@@ -16,6 +16,7 @@ import Box from "@mui/material/Box";
 import { scaleBand } from "d3-scale";
 
 export type ReportResult = {
+    projectName: string;
     date: string;
     finalUrl: string;
     performance: number;
@@ -27,6 +28,8 @@ export type ReportResult = {
     htmlReportFile: string | null;
     type: string;
     stacks: string[];
+
+    imageBase64: string;
 };
 
 export type ProjectPageProps = {

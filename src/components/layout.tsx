@@ -7,8 +7,9 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import Link from 'next/link';
-import { Button, ListItemText, MenuItem, MenuList, Paper } from "@mui/material";
+import { Button, IconButton, ListItemText, MenuItem, MenuList, Paper } from "@mui/material";
 import { version } from '../../package.json';
+import { ArrowBack } from "@mui/icons-material";
 
 export type LayoutProps = PropsWithChildren<{
     sidebar?: ReactNode;
@@ -18,16 +19,6 @@ export type LayoutProps = PropsWithChildren<{
 const drawerWidth = 240;
 
 export const Layout = ({ children, sidebar, title, projects, }: LayoutProps) => {
-    const [ open, setOpen ] = React.useState(false);
-
-    const handleDrawerOpen = () => {
-        setOpen(true);
-    };
-
-    const handleDrawerClose = () => {
-        setOpen(false);
-    };
-
     return <Box>
         <Drawer
             sx={ {
@@ -47,6 +38,11 @@ export const Layout = ({ children, sidebar, title, projects, }: LayoutProps) => 
             </Toolbar>
 
             <MenuList>
+                <MenuItem>
+                    <ListItemText>
+                        Projects
+                    </ListItemText>
+                </MenuItem>
                 { projects.map((name) => (
                     <Link href={ `/reports/${ name }` } key={ name }>
                         <MenuItem>
@@ -81,7 +77,12 @@ export const Layout = ({ children, sidebar, title, projects, }: LayoutProps) => 
                     maxWidth: `calc(100% - ${ drawerWidth }px)`,
                 } }>
                 <Toolbar variant={ 'regular' }>
-                    <Typography variant="h4" noWrap>
+                    <Link href={ '/' }>
+                        <IconButton sx={ { mr: 1 } }>
+                            <ArrowBack/>
+                        </IconButton>
+                    </Link>
+                    <Typography variant="h5" noWrap>
                         { title }
                     </Typography>
                 </Toolbar>

@@ -19,17 +19,22 @@ export const getServerSideProps = async () => {
     }
 }
 export const NewPage = ({ projects }: NewPageProps) => {
+    const [ isLoading, setIsLoading ] = useState(false);
     const [ url, setUrl ] = useState('');
     const [ name, setName ] = useState('');
     const router = useRouter();
 
     const onRunReport = () => {
+        setIsLoading(true);
         axios.post('/api/inspect', {
             url,
             name
         })
             .then(() => {
                 router.push(`/reports/${ name }`);
+            })
+            .finally(() => {
+                setIsLoading(false);
             })
     }
 
@@ -40,7 +45,6 @@ export const NewPage = ({ projects }: NewPageProps) => {
             <Button variant={ 'contained' } onClick={ onRunReport }>Run</Button>
         </Stack>
     </Layout>
-
 }
 
 export default NewPage;

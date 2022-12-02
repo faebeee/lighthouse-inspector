@@ -3,6 +3,6 @@ services:
   lighthouse-inspector:
     build: .
     volumes:
-      - ./_reports:/usr/src/app/_reports
+      - ./:/usr/src/app
     ports:
-      - "3000:3000"
+      - "8081:3000"

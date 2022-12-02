@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { DESKTOP_CONFIG, inspector, MOBILE_CONFIG } from "../../src/inspector";
+import { DESKTOP_CONFIG, inspector, MOBILE_CONFIG } from "../../src/server/utils/inspector";
 
 export const inspectHandler = async (request: NextApiRequest, response: NextApiResponse) => {
     if (request.method !== 'POST') {
