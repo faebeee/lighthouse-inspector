@@ -2,12 +2,13 @@ import { Button, TextField } from "@mui/material";
 import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
-import { getProjects } from '../../src//server/utils/get-projects';
+import { getProjects } from '../../src/server/lib/project-services';
 import { Layout } from "../../src/components/layout";
 import { Stack } from "@mui/system";
+import { Project } from "@prisma/client";
 
 export type NewPageProps = {
-    projects: string[]
+    projects: Project[]
 }
 
 export const getServerSideProps = async () => {
@@ -26,12 +27,12 @@ export const NewPage = ({ projects }: NewPageProps) => {
 
     const onRunReport = () => {
         setIsLoading(true);
-        axios.post('/api/inspect', {
+        axios.post('/api/projects', {
             url,
             name
         })
-            .then(() => {
-                router.push(`/reports/${ name }`);
+            .then(({ data }) => {
+                router.push(`/projects/${ data.id }`);
             })
             .finally(() => {
                 setIsLoading(false);

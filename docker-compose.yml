@@ -1,6 +1,6 @@
 version: "3.9"
 services:
-  db:
+  database:
     image: postgres:14.1-alpine
     restart: always
     environment:
@@ -12,17 +12,16 @@ services:
       - ./data:/var/lib/postgresql/data
 
   web:
+    depends_on:
+      - database
     image: lighthouse-inspector/web
     build:
       dockerfile: ./Dockerfile
+      args:
+        - DATABASE_URL=postgresql://postgres:postgres@database:5432/lhi
     volumes:
       - ./:/usr/src/app
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@database:5432/lhi
     ports:
       - "8081:3000"
-
-  runner:
-    image: lighthouse-inspector/runner
-    build:
-      dockerfile: ./cron.Dockerfile
-    volumes:
-      - ./:/usr/src/app

@@ -2,6 +2,7 @@ FROM node:slim AS app
 
 # We don't need the standalone Chromium
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
+ARG DATABASE_URL
 
 # Install Google Chrome Stable and fonts
 # Note: this installs the necessary libs to make the browser work with Puppeteer.
@@ -17,5 +18,7 @@ COPY package*.json ./
 RUN yarn install
 COPY . .
 EXPOSE 3000
+RUN npx prisma generate
 RUN npm run build
+RUN npx prisma migrate dev
 CMD [ "npm", "run", "start"]
