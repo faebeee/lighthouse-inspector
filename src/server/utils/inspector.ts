@@ -31,7 +31,7 @@ export const MOBILE_CONFIG = {
 
 export const inspector = async (url: string, name: string, config:unknown = {}) => {
     console.log(`Run for ${ url }`);
-    const chrome = await chromeLauncher.launch({ chromeFlags: [ '--headless', '--no-gpu', '--no-sandbox', '--disable-dev-shm-usage' ] });
+    const chrome = await chromeLauncher.launch({ chromeFlags: [ '--headless', '--no-gpu' ] });
     const options = {
         logLevel: 'info',
         output: [ 'json', 'html' ],
@@ -45,7 +45,7 @@ export const inspector = async (url: string, name: string, config:unknown = {}) 
     const runnerResult = await lighthouse(url, options, config);
 
     // `.report` is the HTML report as a string
-    const folder = `${ REPORTS_FOLDER }/${ name }`
+    const folder = `${ REPORTS_FOLDER }/${ name }`;
     const reportData = runnerResult.report;
     if (!fs.existsSync(folder)) {
         fs.mkdirSync(folder, { recursive: true });

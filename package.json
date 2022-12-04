@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "prisma:generate": "npx prisma generate --watch",
     "runner": "ts-node --project tsconfig.node.json ./src/cli/cli.ts"
   },
   "dependencies": {
@@ -15,6 +16,7 @@
     "@mui/icons-material": "^5.10.15",
     "@mui/material": "^5.10.15",
     "@mui/x-data-grid": "^5.17.13",
+    "@prisma/client": "4.7.1",
     "@types/node": "18.11.9",
     "@types/react": "18.0.25",
     "@types/react-dom": "18.0.9",
@@ -25,6 +27,7 @@
     "glob": "^8.0.3",
     "lighthouse": "^9.6.8",
     "next": "13.0.5",
+    "prisma": "^4.7.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "ts-node": "^10.9.1",
