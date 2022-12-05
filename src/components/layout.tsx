@@ -7,18 +7,20 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import Link from 'next/link';
-import { Button, IconButton, ListItemText, MenuItem, MenuList } from "@mui/material";
+import { Button, IconButton, ListItemText, MenuItem, MenuList, Paper, Stack } from "@mui/material";
 import { version } from '../../package.json';
 import { ArrowBack } from "@mui/icons-material";
+import { Project } from "@prisma/client";
 
 export type LayoutProps = PropsWithChildren<{
     sidebar?: ReactNode;
     title?: string;
-    projects: string[]
+    projects: Project[];
+    actions?: ReactNode
 }>
 const drawerWidth = 240;
 
-export const Layout = ({ children, sidebar, title, projects, }: LayoutProps) => {
+export const Layout = ({ children, sidebar, title, projects, actions }: LayoutProps) => {
     return <Box>
         <Drawer
             sx={ {
@@ -43,17 +45,17 @@ export const Layout = ({ children, sidebar, title, projects, }: LayoutProps) => 
                         Projects
                     </ListItemText>
                 </MenuItem>
-                { projects.map((name) => (
-                    <Link href={ `/reports/${ name }` } key={ name }>
+                { projects.map((project) => (
+                    <Link href={ `/projects/${ project.id }` } key={ project.id }>
                         <MenuItem>
                             <ListItemText>
-                                <Typography color={ 'secondary' }>{ name }</Typography>
+                                <Typography color={ 'secondary' }>{ project.name }</Typography>
                             </ListItemText>
                         </MenuItem>
                     </Link>
                 )) }
                 <Divider/>
-                <Link href={ `/reports/new` }>
+                <Link href={ `/projects/new` }>
                     <MenuItem>
                         <ListItemText>
                             <Button fullWidth variant={ 'contained' } color={ 'primary' }>New</Button>
@@ -70,20 +72,24 @@ export const Layout = ({ children, sidebar, title, projects, }: LayoutProps) => 
         </Drawer>
         <Box >
             <AppBar position={ 'relative' }
+                variant={ 'outlined' }
                 sx={ {
                     background: 'transparent',
                     left: `${ drawerWidth }px`,
                     maxWidth: `calc(100% - ${ drawerWidth }px)`,
                 } }>
                 <Toolbar variant={ 'regular' }>
-                    <Link href={ '/' }>
-                        <IconButton sx={ { mr: 1 } }>
-                            <ArrowBack/>
-                        </IconButton>
-                    </Link>
-                    <Typography variant="h5" noWrap>
-                        { title }
-                    </Typography>
+                    <Stack direction={ 'row' } spacing={ 1 }>
+                        <Link href={ '/' }>
+                            <IconButton>
+                                <ArrowBack/>
+                            </IconButton>
+                        </Link>
+                        <Typography variant="h5" noWrap>
+                            { title }
+                        </Typography>
+                        { actions }
+                    </Stack>
                 </Toolbar>
             </AppBar>
             <Box sx={ {

@@ -1,6 +1,7 @@
 export const REPORTS_FOLDER = '_reports';
 export const REPORTFILE_PROJECT_DELIMITER = '::';
 export const REPORTFILE_DATE_FORMAT = 'yyyy-MM-dd-hhmmss';
+export const DATE_FORMAT = 'yyyy-MM-dd hh:mm:ss';
 
 export const COLOR = {
     PERFORMANCE: '#7269c5',

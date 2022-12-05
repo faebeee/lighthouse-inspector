@@ -1,8 +1,27 @@
 version: "3.9"
 services:
-  lighthouse-inspector:
-    build: .
+  database:
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5433:5432'
+    volumes:
+      - ./data:/var/lib/postgresql/data
+
+  web:
+    depends_on:
+      - database
+    image: lighthouse-inspector/web
+    build:
+      dockerfile: ./Dockerfile
+      args:
+        - DATABASE_URL=postgresql://postgres:postgres@database:5432/lhi
     volumes:
       - ./:/usr/src/app
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@database:5432/lhi
     ports:
       - "8081:3000"

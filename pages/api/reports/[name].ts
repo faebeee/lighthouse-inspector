@@ -1,12 +1,11 @@
+import path from "path";
+import { REPORTS_FOLDER } from "../../../config";
+import fs from "fs";
 import { NextApiRequest, NextApiResponse } from "next";
-import { REPORTS_FOLDER } from "../../../../config";
-import path from 'path';
-import fs from 'fs';
 
 export const reportHandler = (request: NextApiRequest, response: NextApiResponse) => {
-    const { project, report } = request.query;
-    const type = request.query.type === 'json' ? 'json' : 'html';
-    const file = path.join(REPORTS_FOLDER, project as string, `${ report }.${ type }`);
+    const name = request.query.name as string;
+    const file = path.join(REPORTS_FOLDER, name);
     if (!fs.existsSync(file)) {
         return response.status(404).send({});
     }
