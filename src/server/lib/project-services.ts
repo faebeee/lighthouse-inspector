@@ -5,6 +5,13 @@ import { getLatestReportForProject } from "./lighthousereport-services";
 export const getProjects = async (): Promise<Project[]> => {
     return getPrisma().project.findMany();
 };
+export const getProjectsByGroup = async (group: string): Promise<Project[]> => {
+    return getPrisma().project.findMany({
+        where: {
+            group,
+        }
+    });
+};
 
 export const getProjectById = async (id: number): Promise<Project | null> => {
     return (await getPrisma().project.findFirst({
@@ -12,6 +19,15 @@ export const getProjectById = async (id: number): Promise<Project | null> => {
             id,
         }
     })) || null;
+}
+
+export const updateProject = async (project: Project, data: Partial<Project>) => {
+    return getPrisma().project.update({
+        where: {
+            id: project.id
+        },
+        data,
+    });
 }
 
 export const getLatestReportsForAllProjects = async (type?: string) => {

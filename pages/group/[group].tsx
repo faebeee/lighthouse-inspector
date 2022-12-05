@@ -1,11 +1,12 @@
 import { GetServerSideProps } from "next";
-import { Layout } from "../src/components/layout";
-import { getLatestReportsForAllProjects, getProjects } from "../src/server/lib/project-services";
+import { Layout } from "../../src/components/layout";
+import { getLatestReportsForAllProjects, getProjectsByGroup } from "../../src/server/lib/project-services";
 import {
     Button,
     Card,
     CardActions,
-    CardContent, Chip,
+    CardContent,
+    Chip,
     Grid,
     Table,
     TableBody,
@@ -16,25 +17,26 @@ import {
 } from "@mui/material";
 import Link from "next/link";
 import Typography from "@mui/material/Typography";
-import React from "react";
+import React, { useState } from "react";
 import { LighthouseRunReport, Project } from "@prisma/client";
-import { transformForSerialisation } from "../src/server/lib/lighthousereport-services";
+import { transformForSerialisation } from "../../src/server/lib/lighthousereport-services";
 import { Stack } from "@mui/system";
-import format from "date-fns/format";
-import { DATE_FORMAT } from "../config";
+import axios from "axios";
 
 export type ReportsPageProps = {
     projects: Project[];
+    group: string;
     desktopReports: Record<number, LighthouseRunReport>;
 }
 
-export const getServerSideProps: GetServerSideProps<ReportsPageProps> = async () => {
-    const projects = await getProjects();
+export const getServerSideProps: GetServerSideProps<ReportsPageProps> = async (req) => {
+    const projects = await getProjectsByGroup(req.query.group as string);
     const desktopReports = await getLatestReportsForAllProjects('desktop');
 
     return {
         props: {
             projects: projects,
+            group: req.query.group as string,
             desktopReports: Object.entries(desktopReports).reduce((acc, [ id, report ]) => {
                 // @ts-ignore
                 acc[id] = report ? transformForSerialisation(report) : null;
@@ -44,31 +46,36 @@ export const getServerSideProps: GetServerSideProps<ReportsPageProps> = async ()
     }
 }
 
-export const ReportsPage = ({ projects, desktopReports }: ReportsPageProps) => {
-    return <Layout projects={ projects }>
-        <Typography color={ 'white' } variant={ 'h1' }>Projects</Typography>
+export const ReportsPage = ({ projects, desktopReports, group }: ReportsPageProps) => {
+    const [isLoading, setIsLoading] = useState(false);
+
+    const runGroup = () => {
+        setIsLoading(true);
+        axios.post(`/api/group/${ group }/inspect`)
+            .finally(() => {
+                setIsLoading(false);
+            })
+    }
+    return <Layout projects={ projects } title={ group } actions={<>
+        <Button variant={'contained'} onClick={ runGroup }>Run</Button>
+
+    </>}>
         <Grid container spacing={ 2 }>
             { projects.map((project) => {
                 const report = desktopReports[project.id];
-                if(!report){
-                    return null;
-                }
                 return (
                     <Grid key={ project.id } item xs={ 12 } lg={ 6 } xl={ 3 }>
                         <Card>
                             <CardContent>
                                 <Stack direction={ 'row' }>
                                     <Typography variant={ 'h5' }>{ project.name }</Typography>
-                                    { project.group && <Link href={ `/group/${ project.group }` }>
-                                        <Chip color={ 'primary' } sx={ { ml: 2 } } label={ project.group }/>
-                                    </Link> }
+                                    { project.group &&
+                                        <Chip color={ 'primary' } sx={ { ml: 2 } } label={ project.group }/> }
                                 </Stack>
 
-                                <Typography variant={ 'body2' }>{ project.url }</Typography>
-                                { report?.date && <Typography
-                                    variant={ 'body2' }>{ format(new Date(report.date), DATE_FORMAT) }</Typography> }
+                                <Typography variant={ 'body1' }>{ project.url }</Typography>
                                 <TableContainer>
-                                    <Table>
+                                    <Table size="small">
                                         <TableHead>
                                             <TableRow>
                                                 <TableCell>Performance</TableCell>
@@ -79,13 +86,11 @@ export const ReportsPage = ({ projects, desktopReports }: ReportsPageProps) => {
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
-                                            <TableRow>
-                                                <TableCell>{ report.performance }</TableCell>
-                                                <TableCell>{ report.accessibility }</TableCell>
-                                                <TableCell>{ report.bestPractices }</TableCell>
-                                                <TableCell>{ report.SEO }</TableCell>
-                                                <TableCell>{ report.PWA }</TableCell>
-                                            </TableRow>
+                                            <TableCell>{ report.performance }</TableCell>
+                                            <TableCell>{ report.accessibility }</TableCell>
+                                            <TableCell>{ report.bestPractices }</TableCell>
+                                            <TableCell>{ report.SEO }</TableCell>
+                                            <TableCell>{ report.PWA }</TableCell>
                                         </TableBody>
                                     </Table>
                                 </TableContainer>

@@ -55,6 +55,8 @@ export const ProjectPage = ({
                                 mobileReports,
                             }: ProjectPageProps) => {
     const [ isLoading, setIsLoading ] = useState(false);
+    const [ group, setGroup ] = useState(project.group);
+    const [ name, setName ] = useState(project.name);
     const [ value, setValue ] = useState<string>('desktop');
     const handleChange = (event: React.SyntheticEvent, newValue: string) => {
         setValue(newValue);
@@ -66,6 +68,18 @@ export const ProjectPage = ({
                 setIsLoading(false);
             })
     }
+
+    const updateProject = () => {
+        setIsLoading(true);
+        axios.patch(`/api/projects/${ project.id }`, {
+            group,
+            name
+        })
+            .finally(() => {
+                setIsLoading(false);
+            })
+    }
+
     const columns: GridColDef[] = [
         { field: 'date', headerName: 'date', flex: 1 },
         { field: 'performance', headerName: 'performance', flex: 1 },
@@ -96,14 +110,19 @@ export const ProjectPage = ({
 
     return <Layout
         title={ project.name }
+        actions={ <>
+            <Button variant={ 'contained' } disabled={ isLoading }
+                onClick={ onRunReport }>{ isLoading ? 'Loading...' : 'Run' }</Button>
+        </> }
         projects={ projects }>
         <Grid container spacing={ 2 }>
             <Grid item xs={ 12 }>
                 <Stack direction={ 'row' } spacing={ 2 }>
-                    <TextField label={ 'Name' } value={ project.name } disabled/>
+                    <TextField label={ 'Name' } value={ name } onChange={ (e) => setName(e.target.value) }/>
+                    <TextField label={ 'Group' } value={ group } onChange={ (e) => setGroup(e.target.value) }/>
                     <TextField fullWidth label={ 'Url' } value={ project.url } disabled/>
-                    <Button variant={ 'contained' } disabled={ isLoading }
-                        onClick={ onRunReport }>{ isLoading ? 'Loading...' : 'Run' }</Button>
+                    <Button variant={ 'outlined' } disabled={ isLoading }
+                        onClick={ updateProject }>{ isLoading ? 'Loading...' : 'Save' }</Button>
                 </Stack>
             </Grid>
 

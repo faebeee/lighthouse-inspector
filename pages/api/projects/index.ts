@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getPrisma } from "../../../src/server/get-prisma";
-import { getProjects } from "../../../src/server/lib/project-services";
+import { getProjectById, getProjects, updateProject } from "../../../src/server/lib/project-services";
 
 export const ProjectsHandler = async (request: NextApiRequest, response: NextApiResponse) => {
     if (request.method === 'POST') {
@@ -9,6 +9,7 @@ export const ProjectsHandler = async (request: NextApiRequest, response: NextApi
                 data: {
                     name: request.body.name,
                     url: request.body.url,
+                    group: request.body.group,
                 }
             });
             response.status(201).send(project);
