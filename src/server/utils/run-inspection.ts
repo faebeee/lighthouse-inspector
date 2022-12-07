@@ -1,4 +1,3 @@
-import { getProjectById } from "../lib/project-services";
 import { DESKTOP_CONFIG, inspector, MOBILE_CONFIG } from "./inspector";
 import { format } from "date-fns";
 import fs from "fs";
