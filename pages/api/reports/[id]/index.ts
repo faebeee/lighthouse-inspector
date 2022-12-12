@@ -1,5 +1,5 @@
 import path from "path";
-import { REPORTS_FOLDER } from "../../../config";
+import { REPORTS_FOLDER } from "../../../../config";
 import fs from "fs";
 import { NextApiRequest, NextApiResponse } from "next";
 

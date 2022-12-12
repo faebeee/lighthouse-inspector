@@ -5,7 +5,7 @@ import {
     Button,
     Card,
     CardActions,
-    CardContent, Chip,
+    CardContent, CardMedia, Chip,
     Grid,
     Table,
     TableBody,
@@ -57,6 +57,11 @@ export const ReportsPage = ({ navigation, projects, desktopReports }: ReportsPag
                 return (
                     <Grid key={project.id} item xs={12} lg={6} xl={3}>
                         <Card>
+                            <CardMedia component="img"
+                                height={200} 
+                                image={`/api/reports/${report.id}/thumbnail`}>
+
+                            </CardMedia>
                             <CardContent>
                                 <Stack direction={'row'}>
                                     <Typography variant={'h5'}>{project.name}</Typography>

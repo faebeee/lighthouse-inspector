@@ -54,7 +54,6 @@ const CHART_HEIGHT = 400;
 
 export const ProjectPage = ({
     project,
-    projects,
     desktopReports,
     mobileReports,
     navigation,
@@ -63,6 +62,7 @@ export const ProjectPage = ({
     const [group, setGroup] = useState(project.group);
     const [name, setName] = useState(project.name);
     const [value, setValue] = useState<string>('desktop');
+    const latestReport = desktopReports.length > 0 ? desktopReports[desktopReports.length - 1] : null;
     const handleChange = (event: React.SyntheticEvent, newValue: string) => {
         setValue(newValue);
     };
@@ -71,7 +71,7 @@ export const ProjectPage = ({
         setGroup(project.group);
         setName(project.name);
     }, [project]);
-    
+
     const onRunReport = () => {
         setIsLoading(true);
         axios.post(`/api/projects/${project.id}/inspect`)
@@ -92,6 +92,7 @@ export const ProjectPage = ({
     }
 
     const columns: GridColDef[] = [
+        { field: 'id', headerName: 'ID' },
         { field: 'date', headerName: 'date', flex: 1 },
         { field: 'performance', headerName: 'performance', flex: 1 },
         { field: 'accessibility', headerName: 'accessibility', flex: 1 },
@@ -136,13 +137,14 @@ export const ProjectPage = ({
                         onClick={updateProject}>{isLoading ? 'Loading...' : 'Save'}</Button>
                 </Stack>
             </Grid>
-
-            <Grid item xs={12} xl={6}>
-                <Stack direction={'row'} spacing={2}>
-                    <img height={250} src={''} />
-                    <img height={250} src={''} />
-                </Stack>
-            </Grid>
+            {latestReport &&
+                <Grid item xs={12} xl={6}>
+                    <Stack direction={'row'} spacing={2}>
+                        <img height={250} src={`/api/reports/${latestReport.id}/thumbnail`} />
+                        <img height={250} src={''} />
+                    </Stack>
+                </Grid>
+            }
 
             <Grid item xs={12} xl={6}>
                 <Card>

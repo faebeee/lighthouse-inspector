@@ -14,11 +14,15 @@ export const runInspection = async (project:Project) => {
     if (!fs.existsSync(REPORTS_FOLDER)) {
         fs.mkdirSync(REPORTS_FOLDER, { recursive: true });
     }
-    const desktopFile = `report_${ project.id }_desktop_${ timestamp }.html`;
-    const mobileFile = `report_${ project.id }_mobile_${ timestamp }.html`;
-    fs.writeFileSync(path.join(REPORTS_FOLDER, desktopFile), desktopReports.html);
-    fs.writeFileSync(path.join(REPORTS_FOLDER, mobileFile), mobileReports.html);
+    const desktopFileHtml = `report_${ project.id }_desktop_${ timestamp }.html`;
+    const desktopFileJson = `report_${ project.id }_desktop_${ timestamp }.json`;
+    const mobileFileHtml = `report_${ project.id }_mobile_${ timestamp }.html`;
+    const mobileFileJson = `report_${ project.id }_mobile_${ timestamp }.json`;
+    fs.writeFileSync(path.join(REPORTS_FOLDER, desktopFileHtml), desktopReports.html);
+    fs.writeFileSync(path.join(REPORTS_FOLDER, desktopFileJson), JSON.stringify(desktopReports.json));
+    fs.writeFileSync(path.join(REPORTS_FOLDER, mobileFileHtml), mobileReports.html);
+    fs.writeFileSync(path.join(REPORTS_FOLDER, mobileFileJson), JSON.stringify(mobileReports.json));
 
-    await persistReport(project, desktopReports.json, desktopFile);
-    await persistReport(project, mobileReports.json, mobileFile);
+    await persistReport(project, desktopReports.json, desktopFileHtml);
+    await persistReport(project, mobileReports.json, mobileFileHtml);
 }
