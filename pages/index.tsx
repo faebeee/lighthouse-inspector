@@ -54,9 +54,6 @@ export const ReportsPage = ({ navigation, projects, desktopReports }: ReportsPag
         <Grid container spacing={2}>
             {projects.map((project) => {
                 const report = desktopReports[project.id];
-                if (!report) {
-                    return null;
-                }
                 return (
                     <Grid key={project.id} item xs={12} lg={6} xl={3}>
                         <Card>
@@ -71,7 +68,7 @@ export const ReportsPage = ({ navigation, projects, desktopReports }: ReportsPag
                                 <Typography variant={'body2'}>{project.url}</Typography>
                                 {report?.date && <Typography
                                     variant={'body2'}>{format(new Date(report.date), DATE_FORMAT)}</Typography>}
-                                <TableContainer>
+                                {report && <TableContainer>
                                     <Table>
                                         <TableHead>
                                             <TableRow>
@@ -92,17 +89,17 @@ export const ReportsPage = ({ navigation, projects, desktopReports }: ReportsPag
                                             </TableRow>
                                         </TableBody>
                                     </Table>
-                                </TableContainer>
+                                </TableContainer>}
                             </CardContent>
                             <CardActions>
                                 <Link
                                     href={`/projects/${project.id}`}>
                                     <Button color={'secondary'} variant={'text'}>View Details</Button>
                                 </Link>
-                                <Link target={'_blank'}
+                                {report && <Link target={'_blank'}
                                     href={`/api/reports/${report!.htmlReportFile}`}>
                                     <Button color={'secondary'} variant={'text'}>Open Report</Button>
-                                </Link>
+                                </Link>}
                             </CardActions>
                         </Card>
                     </Grid>

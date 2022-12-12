@@ -91,9 +91,6 @@ export const ReportsPage = ({ projects, navigation, desktopReports, group }: Rep
                                 <TableBody>
                                     {projects.map((project) => {
                                         const report = desktopReports[project.id];
-                                        if(!report){
-                                            return null;
-                                        }
                                         return (<TableRow key={project.id}>
                                             <TableCell>
                                                 <Link href={`/projects/${project.id}`}>
@@ -105,13 +102,13 @@ export const ReportsPage = ({ projects, navigation, desktopReports, group }: Rep
                                                     <Typography color={'secondary'}>{project.url}</Typography>
                                                 </Link>
                                             </TableCell>
-                                            <TableCell>{report.performance}</TableCell>
-                                            <TableCell>{report.accessibility}</TableCell>
-                                            <TableCell>{report.bestPractices}</TableCell>
-                                            <TableCell>{report.SEO}</TableCell>
-                                            <TableCell>{report.PWA}</TableCell>
-                                            <TableCell>{report.type}</TableCell>
-                                            <TableCell>{format(new Date(report.date), DATE_FORMAT)}</TableCell>
+                                            <TableCell>{report?.performance}</TableCell>
+                                            <TableCell>{report?.accessibility}</TableCell>
+                                            <TableCell>{report?.bestPractices}</TableCell>
+                                            <TableCell>{report?.SEO}</TableCell>
+                                            <TableCell>{report?.PWA}</TableCell>
+                                            <TableCell>{report?.type}</TableCell>
+                                            <TableCell>{report && format(new Date(report.date), DATE_FORMAT)}</TableCell>
                                         </TableRow>)
                                     })}
                                 </TableBody>
