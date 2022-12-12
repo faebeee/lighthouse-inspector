@@ -3,7 +3,7 @@ import { getPrisma } from "../get-prisma";
 import { getLatestReportForProject } from "./lighthousereport-services";
 
 export const getProjects = async (): Promise<Project[]> => {
-    return getPrisma().project.findMany();
+    return (await getPrisma().project.findMany()) ?? [];
 };
 export const getProjectsByGroup = async (group: string): Promise<Project[]> => {
     return getPrisma().project.findMany({

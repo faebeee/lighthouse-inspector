@@ -1,4 +1,5 @@
 import * as chromeLauncher from 'chrome-launcher';
+import psi from 'psi';
 import { LighthouseReport } from "../../../types/lighthouse";
 
 const lighthouse = require('lighthouse');

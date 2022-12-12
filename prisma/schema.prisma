@@ -24,11 +24,11 @@ model LighthouseRunReport {
     projectId Int
     date DateTime
     finalUrl String
-    performance Int
-    accessibility Int
-    bestPractices Int
-    SEO Int
-    PWA Int
+    performance Float
+    accessibility Float
+    bestPractices Float
+    SEO Float
+    PWA Float
     htmlReportFile String?
     type String
     stacks String[] @default([])

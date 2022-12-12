@@ -1,29 +1,31 @@
-import * as React from 'react';
-import { PropsWithChildren, ReactNode } from 'react';
-import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
+import { ArrowBack, Folder, Newspaper } from "@mui/icons-material";
+import { Button, IconButton, ListItemIcon, ListItemText, MenuItem, MenuList, Stack } from "@mui/material";
 import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Divider from '@mui/material/Divider';
+import Drawer from '@mui/material/Drawer';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
+import Image from "next/image";
 import Link from 'next/link';
-import { Button, IconButton, ListItemText, MenuItem, MenuList, Paper, Stack } from "@mui/material";
+import { PropsWithChildren, ReactNode } from 'react';
 import { version } from '../../package.json';
-import { ArrowBack } from "@mui/icons-material";
-import { Project } from "@prisma/client";
+import { NavigationEntry } from '../utils/get-navigation';
 
 export type LayoutProps = PropsWithChildren<{
     sidebar?: ReactNode;
     title?: string;
-    projects: Project[];
+    navigation: NavigationEntry[];
     actions?: ReactNode
 }>
 const drawerWidth = 240;
 
-export const Layout = ({ children, sidebar, title, projects, actions }: LayoutProps) => {
+export const Layout = ({ children, sidebar, title, navigation, actions }: LayoutProps) => {
+    const pages = navigation.filter((item) => !item.isGroup);
+    const groups = navigation.filter((item) => item.isGroup);
     return <Box>
         <Drawer
-            sx={ {
+            sx={{
                 width: drawerWidth,
                 flexShrink: 0,
                 '& .MuiDrawer-paper': {
@@ -31,8 +33,8 @@ export const Layout = ({ children, sidebar, title, projects, actions }: LayoutPr
                     width: drawerWidth,
                     boxSizing: 'border-box',
                 },
-            } }
-            variant={ 'permanent' }
+            }}
+            variant={'permanent'}
             anchor="left"
         >
             <Toolbar>
@@ -41,62 +43,80 @@ export const Layout = ({ children, sidebar, title, projects, actions }: LayoutPr
 
             <MenuList>
                 <MenuItem>
+                    <ListItemIcon>
+                        <Newspaper />
+                    </ListItemIcon>
                     <ListItemText>
                         Projects
                     </ListItemText>
                 </MenuItem>
-                { projects.map((project) => (
-                    <Link href={ `/projects/${ project.id }` } key={ project.id }>
-                        <MenuItem>
-                            <ListItemText>
-                                <Typography color={ 'secondary' }>{ project.name }</Typography>
-                            </ListItemText>
-                        </MenuItem>
-                    </Link>
-                )) }
-                <Divider/>
-                <Link href={ `/projects/new` }>
+                {pages.map((nav) => (<Link href={nav.url} key={nav.label}>
                     <MenuItem>
                         <ListItemText>
-                            <Button fullWidth variant={ 'contained' } color={ 'primary' }>New</Button>
+                            <Typography color={'secondary'}>{nav.label}</Typography>
+                        </ListItemText>
+                    </MenuItem>
+                </Link>))}
+                <Divider />
+                <MenuItem>
+                    <ListItemIcon>
+                        <Folder />
+                    </ListItemIcon>
+                    <ListItemText>
+                        Groups
+                    </ListItemText>
+                </MenuItem>
+                {groups.map((nav) => (<Link href={nav.url} key={nav.label}>
+                    <MenuItem>
+                        <ListItemText>
+                            <Typography color={'secondary'}>{nav.label}</Typography>
+                        </ListItemText>
+                    </MenuItem>
+                </Link>))}
+
+                <Divider />
+                <Link href={`/projects/new`}>
+                    <MenuItem>
+                        <ListItemText>
+                            <Button fullWidth variant={'contained'} color={'primary'}>New</Button>
                         </ListItemText>
                     </MenuItem>
                 </Link>
-                <Divider/>
-                <Link href={ 'https://github.com/faebeee/lighthouse-inspector' } target={ '_blank' }>
+                <Divider />
+                <Link href={'https://github.com/faebeee/lighthouse-inspector'} target={'_blank'}>
                     <MenuItem>
-                        <Typography variant={ 'caption' } color={ 'secondary' }>Github - v{ version }</Typography>
+                        <Typography variant={'caption'} color={'secondary'}>Github - v{version}</Typography>
                     </MenuItem>
                 </Link>
             </MenuList>
         </Drawer>
         <Box >
-            <AppBar position={ 'relative' }
-                variant={ 'outlined' }
-                sx={ {
+            <AppBar position={'relative'}
+                variant={'outlined'}
+                sx={{
                     background: 'transparent',
-                    left: `${ drawerWidth }px`,
-                    maxWidth: `calc(100% - ${ drawerWidth }px)`,
-                } }>
-                <Toolbar variant={ 'regular' }>
-                    <Stack direction={ 'row' } spacing={ 1 }>
-                        <Link href={ '/' }>
+                    left: `${drawerWidth}px`,
+                    maxWidth: `calc(100% - ${drawerWidth}px)`,
+                }}>
+                <Toolbar variant={'regular'}>
+                    <Stack direction={'row'} spacing={1}>
+                        <Link href={'/'}>
                             <IconButton>
-                                <ArrowBack/>
+                                <ArrowBack />
                             </IconButton>
                         </Link>
                         <Typography variant="h5" noWrap>
-                            { title }
+                            {title}
                         </Typography>
-                        { actions }
+                        {actions}
                     </Stack>
                 </Toolbar>
             </AppBar>
-            <Box sx={ {
-                marginLeft: `${ drawerWidth }px`,
+            <Box sx={{
+                marginLeft: `${drawerWidth}px`,
                 p: 5,
-            } }>
-                { children }
+            }}>
+                {children}
             </Box>
         </Box>
     </Box>

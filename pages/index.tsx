@@ -22,20 +22,24 @@ import { transformForSerialisation } from "../src/server/lib/lighthousereport-se
 import { Stack } from "@mui/system";
 import format from "date-fns/format";
 import { DATE_FORMAT } from "../config";
+import { getNavigation, NavigationEntry } from "../src/utils/get-navigation";
 
 export type ReportsPageProps = {
+    navigation: NavigationEntry[];
     projects: Project[];
     desktopReports: Record<number, LighthouseRunReport>;
 }
 
 export const getServerSideProps: GetServerSideProps<ReportsPageProps> = async () => {
+    const navigation = await getNavigation();
     const projects = await getProjects();
     const desktopReports = await getLatestReportsForAllProjects('desktop');
 
     return {
         props: {
-            projects: projects,
-            desktopReports: Object.entries(desktopReports).reduce((acc, [ id, report ]) => {
+            navigation,
+            projects,
+            desktopReports: Object.entries(desktopReports).reduce((acc, [id, report]) => {
                 // @ts-ignore
                 acc[id] = report ? transformForSerialisation(report) : null;
                 return acc;
@@ -44,29 +48,29 @@ export const getServerSideProps: GetServerSideProps<ReportsPageProps> = async ()
     }
 }
 
-export const ReportsPage = ({ projects, desktopReports }: ReportsPageProps) => {
-    return <Layout projects={ projects }>
-        <Typography color={ 'white' } variant={ 'h1' }>Projects</Typography>
-        <Grid container spacing={ 2 }>
-            { projects.map((project) => {
+export const ReportsPage = ({ navigation, projects, desktopReports }: ReportsPageProps) => {
+    return <Layout navigation={navigation}>
+        <Typography color={'white'} variant={'h1'}>Projects</Typography>
+        <Grid container spacing={2}>
+            {projects.map((project) => {
                 const report = desktopReports[project.id];
-                if(!report){
+                if (!report) {
                     return null;
                 }
                 return (
-                    <Grid key={ project.id } item xs={ 12 } lg={ 6 } xl={ 3 }>
+                    <Grid key={project.id} item xs={12} lg={6} xl={3}>
                         <Card>
                             <CardContent>
-                                <Stack direction={ 'row' }>
-                                    <Typography variant={ 'h5' }>{ project.name }</Typography>
-                                    { project.group && <Link href={ `/group/${ project.group }` }>
-                                        <Chip color={ 'primary' } sx={ { ml: 2 } } label={ project.group }/>
-                                    </Link> }
+                                <Stack direction={'row'}>
+                                    <Typography variant={'h5'}>{project.name}</Typography>
+                                    {project.group && <Link href={`/group/${project.group}`}>
+                                        <Chip color={'primary'} sx={{ ml: 2 }} label={project.group} />
+                                    </Link>}
                                 </Stack>
 
-                                <Typography variant={ 'body2' }>{ project.url }</Typography>
-                                { report?.date && <Typography
-                                    variant={ 'body2' }>{ format(new Date(report.date), DATE_FORMAT) }</Typography> }
+                                <Typography variant={'body2'}>{project.url}</Typography>
+                                {report?.date && <Typography
+                                    variant={'body2'}>{format(new Date(report.date), DATE_FORMAT)}</Typography>}
                                 <TableContainer>
                                     <Table>
                                         <TableHead>
@@ -80,11 +84,11 @@ export const ReportsPage = ({ projects, desktopReports }: ReportsPageProps) => {
                                         </TableHead>
                                         <TableBody>
                                             <TableRow>
-                                                <TableCell>{ report.performance }</TableCell>
-                                                <TableCell>{ report.accessibility }</TableCell>
-                                                <TableCell>{ report.bestPractices }</TableCell>
-                                                <TableCell>{ report.SEO }</TableCell>
-                                                <TableCell>{ report.PWA }</TableCell>
+                                                <TableCell>{report.performance}</TableCell>
+                                                <TableCell>{report.accessibility}</TableCell>
+                                                <TableCell>{report.bestPractices}</TableCell>
+                                                <TableCell>{report.SEO}</TableCell>
+                                                <TableCell>{report.PWA}</TableCell>
                                             </TableRow>
                                         </TableBody>
                                     </Table>
@@ -92,18 +96,18 @@ export const ReportsPage = ({ projects, desktopReports }: ReportsPageProps) => {
                             </CardContent>
                             <CardActions>
                                 <Link
-                                    href={ `/projects/${ project.id }` }>
-                                    <Button color={ 'secondary' } variant={ 'text' }>View Details</Button>
+                                    href={`/projects/${project.id}`}>
+                                    <Button color={'secondary'} variant={'text'}>View Details</Button>
                                 </Link>
-                                <Link target={ '_blank' }
-                                    href={ `/api/reports/${ report!.htmlReportFile }` }>
-                                    <Button color={ 'secondary' } variant={ 'text' }>Open Report</Button>
+                                <Link target={'_blank'}
+                                    href={`/api/reports/${report!.htmlReportFile}`}>
+                                    <Button color={'secondary'} variant={'text'}>Open Report</Button>
                                 </Link>
                             </CardActions>
                         </Card>
                     </Grid>
                 )
-            }) }
+            })}
         </Grid>
     </Layout>
 }
