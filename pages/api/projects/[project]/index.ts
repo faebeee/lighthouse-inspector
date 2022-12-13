@@ -3,7 +3,6 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 export const projectHandler = async (request: NextApiRequest, response: NextApiResponse) => {
     if (request.method === 'PATCH') {
-        console.log(request.query.project);
         const project = await getProjectById(parseInt(request.query.project as string));
         if (!project) {
             response.status(404).send({});

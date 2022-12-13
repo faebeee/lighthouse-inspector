@@ -1,17 +1,20 @@
-import path from "path";
-import { REPORTS_FOLDER } from "../../../../config";
-import fs from "fs";
 import { NextApiRequest, NextApiResponse } from "next";
+import { getReportById } from "../../../../src/server/report-services";
+import { getReportFile, hasReportFile } from "../../../../src/server/lib/minio";
 
-export const reportHandler = (request: NextApiRequest, response: NextApiResponse) => {
-    const name = request.query.name as string;
-    const file = path.join(REPORTS_FOLDER, name);
-    if (!fs.existsSync(file)) {
-        return response.status(404).send({});
+export const reportHandler = async (request: NextApiRequest, response: NextApiResponse) => {
+    const id = parseInt(request.query.id as string);
+    const report = await getReportById(id)
+    if (!report) {
+        return response.status(404).send('Report not found');
     }
+    const hasFile = await hasReportFile(report);
+    if (!hasFile) {
+        return response.status(404).send('File not found');
+    }
+    const content = await getReportFile(report);
 
-    const data = fs.readFileSync(file, 'utf8');
-    return response.send(data);
+    return response.send(content);
 }
 
 export default reportHandler;

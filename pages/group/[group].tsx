@@ -26,6 +26,7 @@ import axios from "axios";
 import { getNavigation, NavigationEntry } from "../../src/utils/get-navigation";
 import { DATE_FORMAT } from "../../config";
 import { format } from "date-fns";
+import { ProjectCard } from "../../src/components/project-card";
 
 export type ReportsPageProps = {
     projects: Project[];
@@ -73,57 +74,7 @@ export const ReportsPage = ({ projects, navigation, desktopReports, group }: Rep
                 const report = desktopReports[project.id];
                 return (
                     <Grid key={project.id} item xs={12} lg={6} xl={3}>
-                        <Card>
-                            <CardMedia component="img"
-                                height={200}
-                                image={`/api/reports/${report.id}/thumbnail`}>
-
-                            </CardMedia>
-                            <CardContent>
-                                <Stack direction={'row'}>
-                                    <Typography variant={'h5'}>{project.name}</Typography>
-                                    {project.group && <Link href={`/group/${project.group}`}>
-                                        <Chip color={'primary'} sx={{ ml: 2 }} label={project.group} />
-                                    </Link>}
-                                </Stack>
-
-                                <Typography variant={'body2'}>{project.url}</Typography>
-                                {report?.date && <Typography
-                                    variant={'body2'}>{format(new Date(report.date), DATE_FORMAT)}</Typography>}
-                                {report && <TableContainer>
-                                    <Table>
-                                        <TableHead>
-                                            <TableRow>
-                                                <TableCell>Performance</TableCell>
-                                                <TableCell>Accessibility</TableCell>
-                                                <TableCell>Best Practices</TableCell>
-                                                <TableCell>SEO</TableCell>
-                                                <TableCell>PWA</TableCell>
-                                            </TableRow>
-                                        </TableHead>
-                                        <TableBody>
-                                            <TableRow>
-                                                <TableCell>{report.performance}</TableCell>
-                                                <TableCell>{report.accessibility}</TableCell>
-                                                <TableCell>{report.bestPractices}</TableCell>
-                                                <TableCell>{report.SEO}</TableCell>
-                                                <TableCell>{report.PWA}</TableCell>
-                                            </TableRow>
-                                        </TableBody>
-                                    </Table>
-                                </TableContainer>}
-                            </CardContent>
-                            <CardActions>
-                                <Link
-                                    href={`/projects/${project.id}`}>
-                                    <Button color={'secondary'} variant={'text'}>View Details</Button>
-                                </Link>
-                                {report && <Link target={'_blank'}
-                                    href={`/api/reports/${report!.htmlReportFile}`}>
-                                    <Button color={'secondary'} variant={'text'}>Open Report</Button>
-                                </Link>}
-                            </CardActions>
-                        </Card>
+                        <ProjectCard project={ project } report={ report }/>
                     </Grid>
                 )
             })}

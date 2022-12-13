@@ -1,31 +1,26 @@
-import { gridColumnsTotalWidthSelector } from "@mui/x-data-grid";
 import { NextApiRequest, NextApiResponse } from "next";
-import path from "path";
-import * as fs from 'fs';
-import { REPORTS_FOLDER } from "../../../../config";
 import { getReportById } from "../../../../src/server/report-services";
-import { ConstructionOutlined } from "@mui/icons-material";
-
+import { getReportFile, hasReportFile } from "../../../../src/server/lib/minio";
 
 
 export const thumbnailHandler = async (req: NextApiRequest, res: NextApiResponse) => {
     const reportId = parseInt(req.query.id as string);
+    const isMobile = req.query.type === 'mobile';
     const report = await getReportById(reportId);
     if (!report || !report?.htmlReportFile) {
-        res.status(404).send({});
+        res.status(404).send(`No reportfile stored`);
         return;
     }
-    const file = path.basename(report?.htmlReportFile, '.html');
-    const filePath = path.join(process.cwd(), REPORTS_FOLDER, `${file}.json`);
-    if (!fs.existsSync(filePath)) {
-        res.status(404).send('File not found');
+
+    const reportFileExists = await hasReportFile(report, 'json', isMobile );
+    if (!reportFileExists) {
+        res.status(404).send(`File for report #${ report } (${ report.htmlReportFile }) not found`);
         return;
     }
-    const fileContents = fs.readFileSync(filePath, 'utf8');
+    const fileContents = await getReportFile(report, 'json', isMobile)!;
 
     const reportData = JSON.parse(fileContents);
     const imageBase64 = reportData.audits['final-screenshot'].details.data
-    console.log(imageBase64);
     const byteArray = new Buffer(imageBase64.replace(/^[\w\d;:\/]+base64\,/g, ''), 'base64');
 
     return res

@@ -38,3 +38,4 @@ _reports
 .idea
 data
 .env
+minio_storage
