@@ -22,7 +22,7 @@ import { LighthouseRunReport, Project } from "@prisma/client";
 
 export type ProjectCardProps = {
     project: Project;
-    report: LighthouseRunReport
+    report?: LighthouseRunReport | null
 }
 export const ProjectCard = ({ report, project }: ProjectCardProps) => {
     return <Card>
@@ -30,7 +30,7 @@ export const ProjectCard = ({ report, project }: ProjectCardProps) => {
             <CardMedia component="img"
                 height={ 300 }
                 style={ { objectFit: 'cover' } }
-                image={ `/api/reports/${ report.id }/thumbnail` }>
+                image={ `/api/reports/${ report?.id }/thumbnail` }>
             </CardMedia>
         </Stack>
         <CardContent>

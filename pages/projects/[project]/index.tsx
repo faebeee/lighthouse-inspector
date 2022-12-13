@@ -168,10 +168,10 @@ export const ProjectPage = ({
                 </Stack>
             </Grid> }
 
-            <Grid item xs={ 12 } xl={ 6 }>
+            { desktopReports.length > 0 && <Grid item xs={ 12 } xl={ 6 }>
                 <Card>
                     <CardContent>
-                        <Typography>Mobile</Typography>
+                        <Typography>Desktop</Typography>
                         <svg width={ CHART_WIDTH }
                             height={ CHART_HEIGHT }>
                             <VictoryAxis
@@ -211,8 +211,9 @@ export const ProjectPage = ({
                         </svg>
                     </CardContent>
                 </Card>
-            </Grid>
-            <Grid item xs={ 12 } xl={ 6 }>
+            </Grid> }
+
+            { mobileReports.length > 0 && <Grid item xs={ 12 } xl={ 6 }>
                 <Card>
                     <CardContent>
                         <Typography>Mobile</Typography>
@@ -252,7 +253,7 @@ export const ProjectPage = ({
                         </svg>
                     </CardContent>
                 </Card>
-            </Grid>
+            </Grid> }
         </Grid>
 
         <Card sx={{ mt: 4 }}>
