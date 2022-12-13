@@ -29,13 +29,8 @@ export const ProjectCard = ({ report, project }: ProjectCardProps) => {
         <Stack component={ 'div' } direction={ 'row' } spacing={ 1 }>
             <CardMedia component="img"
                 height={ 300 }
-                style={ { objectFit: 'contain' } }
+                style={ { objectFit: 'cover' } }
                 image={ `/api/reports/${ report.id }/thumbnail` }>
-            </CardMedia>
-            <CardMedia component="img"
-                height={ 300 }
-                style={ { objectFit: 'contain' } }
-                image={ `/api/reports/${ report.id }/thumbnail?type=mobile` }>
             </CardMedia>
         </Stack>
         <CardContent>
