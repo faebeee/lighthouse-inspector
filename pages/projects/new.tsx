@@ -6,10 +6,11 @@ import { getProjects } from '../../src/server/lib/project-services';
 import { Layout } from "../../src/components/layout";
 import { Stack } from "@mui/system";
 import { Project } from "@prisma/client";
-import { getNavigation } from "../../src/utils/get-navigation";
+import { getNavigation, NavigationEntry } from "../../src/utils/get-navigation";
 
 export type NewPageProps = {
-    projects: Project[]
+    projects: Project[];
+    navigation: NavigationEntry[];
 }
 
 export const getServerSideProps = async () => {
