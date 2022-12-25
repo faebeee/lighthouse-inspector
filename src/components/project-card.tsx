@@ -35,15 +35,14 @@ export const ProjectCard = ({ report, project }: ProjectCardProps) => {
         </Stack>
         <CardContent>
             <Stack component={ 'div' } direction={ 'row' }>
-                <Typography variant={ 'h5' }>{ project.name }</Typography>
-                { project.group && <Link href={ `/group/${ project.group }` }>
-                    <Chip color={ 'primary' } sx={ { ml: 2 } } label={ project.group }/>
-                </Link> }
+                <Link href={ `/projects/${ project.id }` }>
+                    <Typography color={ 'textPrimary' } variant={ 'h5' }>{ project.name }</Typography>
+                </Link>
+
+                { project.group && <Chip color={ 'primary' } sx={ { ml: 2 } } label={ project.group }/> }
+
             </Stack>
 
-            <Typography variant={ 'body2' }>{ project.url }</Typography>
-            { report?.date && <Typography
-                variant={ 'body2' }>{ format(new Date(report.date), DATE_FORMAT) }</Typography> }
             { report && <TableContainer>
                 <Table>
                     <TableHead>
@@ -68,10 +67,9 @@ export const ProjectCard = ({ report, project }: ProjectCardProps) => {
             </TableContainer> }
         </CardContent>
         <CardActions>
-            <Link
-                href={ `/projects/${ project.id }` }>
-                <Button color={ 'secondary' } variant={ 'text' }>View Details</Button>
-            </Link>
+            { project.group && <Link href={ `/group/${ project.group }` }>
+                <Button color={ 'secondary' } variant={ 'text' }>View Group</Button>
+            </Link> }
             { report && <Link target={ '_blank' }
                 href={ `/api/reports/${ report!.id }` }>
                 <Button color={ 'secondary' } variant={ 'text' }>Open Report</Button>

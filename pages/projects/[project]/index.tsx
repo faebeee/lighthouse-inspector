@@ -2,6 +2,7 @@ import { GetServerSideProps } from "next";
 import { useEffect, useState } from 'react';
 import axios from "axios";
 import Link from "next/link";
+import Image from "next/image";
 import { getProjectById, getProjects } from "../../../src/server/lib/project-services";
 import { Layout } from "../../../src/components/layout";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
@@ -63,7 +64,7 @@ export const ProjectPage = ({
     const [group, setGroup] = useState(project.group);
     const [name, setName] = useState(project.name);
     const [value, setValue] = useState<string>('desktop');
-    const latestReport = desktopReports.length > 0 ? desktopReports[desktopReports.length - 1] : null;
+    const latestReport = desktopReports.length > 0 ? desktopReports[0] : null;
     const handleChange = (event: React.SyntheticEvent, newValue: string) => {
         setValue(newValue);
     };
@@ -127,163 +128,191 @@ export const ProjectPage = ({
     ]
 
     return <Layout
+        backLink={ project.group ? `/group/${ project.group }` : '/' }
+        showSidebar={ false }
         title={ project.name }
-        actions={ <>
-            <Button variant={ 'contained' } disabled={ isLoading }
-                onClick={ onRunReport }>{ isLoading ? 'Loading...' : 'Run' }</Button>
-        </> }
+        actions={<Button variant={ 'text' } disabled={ isLoading }
+            onClick={ onRunReport }>{ isLoading ? 'Loading...' : 'Run' }</Button>}
         navigation={ navigation }>
         <Grid container spacing={ 2 }>
-            { latestReport &&
-                <Grid item xs={ 12 } xl={ 6 }>
-                    <Stack direction={ 'row' } spacing={ 2 }>
-                        <img height={ 250 } src={ `/api/reports/${ latestReport.id }/thumbnail` }/>
-                        <img height={ 250 } src={ `/api/reports/${ latestReport.id }/thumbnail?type=mobile` }/>
-                    </Stack>
+            <Grid item xs={ 12 } xl={ 4 }>
+                <Grid container spacing={ 2 }>
+                    <Grid item xs={ 12 }>
+                        <Stack direction={ 'row' } spacing={ 2 }>
+                            { latestReport &&
+                                <img height={ 300 } alt={ 'desktop' }
+                                    src={ `/api/reports/${ latestReport.id }/thumbnail` }/> }
+                            { latestReport &&
+                                <img height={ 300 } alt={ 'mobile' }
+                                    src={ `/api/reports/${ latestReport.id }/thumbnail?type=mobile` }/> }
+                        </Stack>
+                    </Grid>
+
+                    <Grid item xs={ 12 }>
+                        <Stack spacing={ 2 }>
+                            <Card>
+                                <CardContent>
+                                    <Stack direction={ 'row' } spacing={ 2 }>
+                                        <TextField label={ 'Name' } value={ name }
+                                            onChange={ (e) => setName(e.target.value) }/>
+                                        <TextField label={ 'Group' } value={ group }
+                                            onChange={ (e) => setGroup(e.target.value) }/>
+                                        <TextField fullWidth label={ 'Url' } value={ project.url } disabled/>
+                                        <Button variant={ 'outlined' } disabled={ isLoading }
+                                            onClick={ updateProject }>{ isLoading ? 'Loading...' : 'Save' }</Button>
+                                    </Stack>
+
+                                </CardContent>
+                            </Card>
+
+                            <Card>
+                                <CardContent>
+                                    <Typography color={ 'textPrimary' } variant={ 'subtitle2' }>URL</Typography>
+                                    <Typography variant={ 'h6' }>{ project.url }</Typography>
+                                </CardContent>
+                            </Card>
+
+                            { project.group && <Card>
+                                <CardContent>
+                                    <Typography color={ 'textPrimary' } variant={ 'subtitle2' }>Group</Typography>
+                                    <Link href={ `/groups/${ project.group }` }>
+                                        <Typography color={ 'textPrimary' }
+                                            variant={ 'h6' }>{ project.group }</Typography>
+                                    </Link>
+                                </CardContent>
+                            </Card> }
+
+                            { latestReport && latestReport.stacks?.length > 0 && <Card>
+                                <CardContent>
+                                    <Typography color={ 'textPrimary' } variant={ 'subtitle2' }>Stack</Typography>
+                                    <Typography variant={ 'h6' }>{ latestReport?.stacks.join(', ') }</Typography>
+                                </CardContent>
+                            </Card> }
+                        </Stack>
+                    </Grid>
                 </Grid>
-            }
+            </Grid>
 
-            { latestReport && <Grid item xs={ 12 } xl={ 6 }>
-                <Stack spacing={ 2 }>
-                    <Card>
-                        <CardContent>
-                            <Stack direction={ 'row' } spacing={ 2 }>
-                                <TextField label={ 'Name' } value={ name } onChange={ (e) => setName(e.target.value) }/>
-                                <TextField label={ 'Group' } value={ group }
-                                    onChange={ (e) => setGroup(e.target.value) }/>
-                                <TextField fullWidth label={ 'Url' } value={ project.url } disabled/>
-                                <Button variant={ 'outlined' } disabled={ isLoading }
-                                    onClick={ updateProject }>{ isLoading ? 'Loading...' : 'Save' }</Button>
-                            </Stack>
+            <Grid item xs={ 12 } xl={ 8 }>
+                <Grid container spacing={ 2 }>
+                    <Grid item xs={ 12 }>
+                        <Card>
+                            <Box sx={ { borderBottom: 1, borderColor: 'divider' } }>
+                                <Tabs value={ value } onChange={ handleChange }>
+                                    <Tab label="Desktop" value={ 'desktop' }/>
+                                    <Tab label="Mobile" value={ 'mobile' }/>
+                                </Tabs>
+                            </Box>
 
-                        </CardContent>
-                    </Card>
+                            { value === 'desktop' && desktopReports.length > 0 && <Box>
+                                { desktopReports.length > 0 && <svg width={ CHART_WIDTH }
+                                    height={ CHART_HEIGHT }>
+                                    <VictoryAxis
+                                        crossAxis
+                                        dependentAxis
+                                        style={ {
+                                            tickLabels: { fontSize: 14, fill: 'white' },
+                                        } }
+                                        width={ CHART_WIDTH }
+                                        height={ CHART_HEIGHT }
+                                        domain={ [ 0, 100 ] }
+                                        standalone={ false }
+                                    />
 
-                    <Card>
-                        <CardContent>
-                            <Typography color={ 'textPrimary' } variant={ 'h4' }>Stack</Typography>
-                            { latestReport.stacks.join(', ') }
-                        </CardContent>
-                    </Card>
-                </Stack>
-            </Grid> }
+                                    <VictoryLegend x={ 10 } y={ 10 }
+                                        orientation="horizontal"
+                                        standalone={ false }
+                                        height={ 10 }
+                                        width={ CHART_WIDTH }
+                                        style={ {
+                                            title: { fontSize: '14px' },
+                                            labels: { fill: 'white' }
+                                        } }
+                                        colorScale={ Object.values(COLOR) }
+                                        data={
+                                            lines.map((line) => ({ name: line.key }))
+                                        }
+                                    />
+                                    { lines.map((line) => (<VictoryLine
+                                        standalone={ false }
+                                        key={ line.key }
+                                        height={ CHART_HEIGHT }
+                                        width={ CHART_WIDTH }
+                                        minDomain={ { y: 0 } }
+                                        maxDomain={ { y: 100 } }
+                                        style={ {
+                                            data: { stroke: line.color },
+                                        } }
+                                        x={ 'date' }
+                                        y={ line.key }
+                                        data={ [...desktopReports].reverse() }
+                                    />)) }
+                                </svg> }
+                                <DataGrid
+                                    rows={ desktopReports }
+                                    columns={ columns }
+                                    getRowId={ (r) => r.date }
+                                    autoHeight
+                                />
+                            </Box> }
 
-            { desktopReports.length > 0 && <Grid item xs={ 12 } xl={ 6 }>
-                <Card>
-                    <CardContent>
-                        <Typography>Desktop</Typography>
-                        <svg width={ CHART_WIDTH }
-                            height={ CHART_HEIGHT }>
-                            <VictoryAxis
-                                crossAxis
-                                dependentAxis
-                                width={ CHART_WIDTH }
-                                height={ CHART_HEIGHT }
-                                domain={ [ 0, 100 ] }
-                                standalone={ false }
-                            />
 
-                            <VictoryLegend x={ 10 } y={ 10 }
-                                orientation="horizontal"
-                                standalone={ false }
-                                height={ 10 }
-                                width={ CHART_WIDTH }
-                                style={ { title: { fontSize: '14px' } } }
-                                colorScale={ Object.values(COLOR) }
-                                data={
-                                    lines.map((line) => ({ name: line.key }))
-                                }
-                            />
-                            { lines.map((line) => (<VictoryLine
-                                standalone={ false }
-                                key={ line.key }
-                                height={ CHART_HEIGHT }
-                                width={ CHART_WIDTH }
-                                minDomain={ { y: 0 } }
-                                maxDomain={ { y: 100 } }
-                                style={ {
-                                    data: { stroke: line.color },
-                                } }
-                                x={ 'date' }
-                                y={ line.key }
-                                data={ desktopReports }
-                            />)) }
-                        </svg>
-                    </CardContent>
-                </Card>
-            </Grid> }
+                            { value === 'mobile' && mobileReports.length > 0 && <Box>
+                                { mobileReports.length > 0 && <svg width={ CHART_WIDTH }
+                                    height={ CHART_HEIGHT }>
+                                    <VictoryAxis
+                                        crossAxis
+                                        dependentAxis
+                                        style={ {
+                                            tickLabels: { fontSize: 14, fill: 'white' },
+                                        } }
+                                        width={ CHART_WIDTH }
+                                        height={ CHART_HEIGHT }
+                                        domain={ [ 0, 100 ] }
+                                        standalone={ false }
+                                    />
 
-            { mobileReports.length > 0 && <Grid item xs={ 12 } xl={ 6 }>
-                <Card>
-                    <CardContent>
-                        <Typography>Mobile</Typography>
-                        <svg width={ CHART_WIDTH }
-                            height={ CHART_HEIGHT }>
-                            <VictoryAxis
-                                crossAxis
-                                dependentAxis
-                                width={ CHART_WIDTH }
-                                height={ CHART_HEIGHT }
-                                domain={ [ 0, 100 ] }
-                                standalone={ false }
-                            />
+                                    <VictoryLegend x={ 10 } y={ 10 }
+                                        orientation="horizontal"
+                                        standalone={ false }
+                                        colorScale={ Object.values(COLOR) }
+                                        style={ {
+                                            title: { fontSize: '14px' },
+                                            labels: { fill: 'white' }
+                                        } }
+                                        data={
+                                            lines.map((line) => ({ name: line.key }))
+                                        }
+                                    />
+                                    { lines.map((line) => (<VictoryLine
+                                        standalone={ false }
+                                        key={ line.key }
+                                        height={ CHART_HEIGHT }
+                                        width={ CHART_WIDTH }
+                                        minDomain={ { y: 0 } }
+                                        maxDomain={ { y: 100 } }
+                                        style={ {
+                                            data: { stroke: line.color },
+                                        } }
+                                        x={ 'date' }
+                                        y={ line.key }
+                                        data={ [...mobileReports].reverse() }
+                                    />)) }
+                                </svg> }
 
-                            <VictoryLegend x={ 10 } y={ 10 }
-                                orientation="horizontal"
-                                standalone={ false }
-                                colorScale={ Object.values(COLOR) }
-                                data={
-                                    lines.map((line) => ({ name: line.key }))
-                                }
-                            />
-                            { lines.map((line) => (<VictoryLine
-                                standalone={ false }
-                                key={ line.key }
-                                height={ CHART_HEIGHT }
-                                width={ CHART_WIDTH }
-                                minDomain={ { y: 0 } }
-                                maxDomain={ { y: 100 } }
-                                style={ {
-                                    data: { stroke: line.color },
-                                } }
-                                x={ 'date' }
-                                y={ line.key }
-                                data={ mobileReports }
-                            />)) }
-                        </svg>
-                    </CardContent>
-                </Card>
-            </Grid> }
+                                <DataGrid
+                                    rows={ mobileReports }
+                                    columns={ columns }
+                                    getRowId={ (r) => r.date }
+                                    autoHeight
+                                />
+                            </Box> }
+
+                        </Card>
+                    </Grid>
+                </Grid>
+            </Grid>
         </Grid>
-
-        <Card sx={{ mt: 4 }}>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                <Tabs value={value} onChange={handleChange}>
-                    <Tab label="Desktop" value={'desktop'} />
-                    <Tab label="Mobile" value={'mobile'} />
-                </Tabs>
-            </Box>
-
-            {value === 'desktop' && desktopReports.length > 0 && <Box>
-                        <DataGrid
-                            rows={desktopReports}
-                            columns={columns}
-                            getRowId={(r) => r.date}
-                            autoHeight
-                        />
-            </Box>}
-
-
-            {value === 'mobile' && mobileReports.length > 0 && <Box>
-                        <DataGrid
-                            rows={mobileReports}
-                            columns={columns}
-                            getRowId={(r) => r.date}
-                            autoHeight
-                        />
-            </Box>}
-
-        </Card>
     </Layout>
 }
 

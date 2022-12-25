@@ -6,7 +6,7 @@ import {
     Card,
     CardActions,
     CardContent, CardMedia, Chip,
-    Grid,
+    Grid, ListItemText, MenuItem,
     Table,
     TableBody,
     TableCell,
@@ -50,17 +50,20 @@ export const getServerSideProps: GetServerSideProps<ReportsPageProps> = async ()
 }
 
 export const ReportsPage = ({ navigation, projects, desktopReports }: ReportsPageProps) => {
-    return <Layout navigation={navigation}>
-        <Typography color={'white'} variant={'h1'}>Projects</Typography>
-        <Grid container spacing={2}>
-            {projects.map((project) => {
+    return <Layout navigation={ navigation } showBack={ false } showSidebar={ false } title={ 'Lighthouse Inspector' }
+        actions={ <Link href={ `/projects/new` }>
+            <Button fullWidth variant={ 'contained' } color={ 'primary' }>New</Button>
+        </Link> }>
+        <Typography color={ 'white' } variant={ 'h1' }>Projects</Typography>
+        <Grid container spacing={ 2 }>
+            { projects.map((project) => {
                 const report = desktopReports[project.id];
                 return (
-                    <Grid key={project.id} item xs={12} lg={6} xl={3}>
+                    <Grid key={ project.id } item xs={ 12 } lg={ 6 } xl={ 3 }>
                         <ProjectCard project={ project } report={ report }/>
                     </Grid>
                 )
-            })}
+            }) }
         </Grid>
     </Layout>
 }

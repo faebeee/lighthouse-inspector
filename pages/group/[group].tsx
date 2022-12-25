@@ -66,24 +66,13 @@ export const ReportsPage = ({ projects, navigation, desktopReports, group }: Rep
     }
     return <Layout navigation={navigation} title={group}
         actions={<>
-            <Button variant={'contained'} onClick={runGroup}>Run</Button>
+            <Button variant={'text'} onClick={runGroup}>Run</Button>
         </>}>
         <Grid container spacing={2}>
-
-            {projects.map((project) => {
-                const report = desktopReports[project.id];
-                return (
-                    <Grid key={project.id} item xs={12} lg={6} xl={3}>
-                        <ProjectCard project={ project } report={ report }/>
-                    </Grid>
-                )
-            })}
-
             <Grid item xs={12}>
                 <Card>
                     <CardContent>
                         <Typography variant='h4'>Latest Reports</Typography>
-
 
                         <TableContainer>
                             <Table size="small">
@@ -105,30 +94,43 @@ export const ReportsPage = ({ projects, navigation, desktopReports, group }: Rep
                                         const report = desktopReports[project.id];
                                         return (<TableRow key={project.id}>
                                             <TableCell>
-                                                <Link href={`/projects/${project.id}`}>
-                                                    <Typography color={'secondary'}>{project.name}</Typography>
+                                                <Link href={ `/projects/${ project.id }` }>
+                                                    <Typography color={ 'secondary' }>{ project.name }</Typography>
                                                 </Link>
                                             </TableCell>
                                             <TableCell>
-                                                <Link href={project.url} target={'_blank'}>
-                                                    <Typography color={'secondary'}>{project.url}</Typography>
+                                                <Link href={ project.url } target={ '_blank' }>
+                                                    <Typography color={ 'secondary' }>{ project.url }</Typography>
                                                 </Link>
                                             </TableCell>
-                                            <TableCell>{report?.performance}</TableCell>
-                                            <TableCell>{report?.accessibility}</TableCell>
-                                            <TableCell>{report?.bestPractices}</TableCell>
-                                            <TableCell>{report?.SEO}</TableCell>
-                                            <TableCell>{report?.PWA}</TableCell>
-                                            <TableCell>{report?.type}</TableCell>
-                                            <TableCell>{report && format(new Date(report.date), DATE_FORMAT)}</TableCell>
+                                            <TableCell>{ report?.performance }</TableCell>
+                                            <TableCell>{ report?.accessibility }</TableCell>
+                                            <TableCell>{ report?.bestPractices }</TableCell>
+                                            <TableCell>{ report?.SEO }</TableCell>
+                                            <TableCell>{ report?.PWA }</TableCell>
+                                            <TableCell>{ report?.type }</TableCell>
+                                            <TableCell>{ report && format(new Date(report.date), DATE_FORMAT) }</TableCell>
                                         </TableRow>)
-                                    })}
+                                    }) }
                                 </TableBody>
                             </Table>
                         </TableContainer>
                     </CardContent>
                 </Card>
             </Grid>
+
+            <Grid item xs={ 12 } sx={ { mt: 4 } }>
+                <Typography variant='h4' color={ 'textPrimary' }>Sites</Typography>
+            </Grid>
+
+            { projects.map((project) => {
+                const report = desktopReports[project.id];
+                return (
+                    <Grid key={ project.id } item xs={ 12 } lg={ 6 } xl={ 3 }>
+                        <ProjectCard project={ project } report={ report }/>
+                    </Grid>
+                )
+            }) }
         </Grid>
     </Layout>
 }

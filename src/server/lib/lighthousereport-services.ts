@@ -7,6 +7,9 @@ export const getReportsForProject = (project: Project, type?: string) => {
         where: {
             projectId: project.id,
             type,
+        },
+        orderBy: {
+            date: 'desc',
         }
     });
 }
