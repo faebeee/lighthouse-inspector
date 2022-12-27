@@ -4,6 +4,7 @@ import { VictoryChart, VictoryChartProps } from "victory";
 
 export function ResponsiveVictoryChart({ ...props }: PropsWithChildren<VictoryChartProps>) {
     const ref = useRef<HTMLDivElement>(null);
+    // @ts-ignore
     const { width, height } = useSize(ref.current);
     const p = {
         ...props,

@@ -22,6 +22,7 @@ export const StatsChart = ({ data, height }: StatsChartProps) => {
             maxDomain={ 100 }
             style={ {
                 data: {
+                    // @ts-ignore
                     fill: (d) => d.data[d.index].fill, stroke: "black", strokeWidth: 2
                 }
             } }
