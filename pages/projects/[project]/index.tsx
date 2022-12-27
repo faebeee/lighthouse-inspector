@@ -1,21 +1,21 @@
 import { GetServerSideProps } from "next";
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from "axios";
 import Link from "next/link";
-import Image from "next/image";
 import { getProjectById, getProjects } from "../../../src/server/lib/project-services";
 import { Layout } from "../../../src/components/layout";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { Button, Card, CardContent, Grid, Tab, Tabs, TextField } from "@mui/material";
+import { Button, Card, CardActions, CardContent, Grid, Tab, Tabs, TextField } from "@mui/material";
 import { Stack } from "@mui/system";
 import Typography from "@mui/material/Typography";
-import { VictoryAxis, VictoryLegend, VictoryLine } from "victory";
 import { COLOR, DATE_FORMAT } from "../../../config";
 import Box from "@mui/material/Box";
 import { LighthouseRunReport, Project } from "@prisma/client";
 import { getReportsForProject, transformForSerialisation } from "../../../src/server/lib/lighthousereport-services";
 import { getNavigation, NavigationEntry } from "../../../src/utils/get-navigation";
 import { format } from "date-fns";
+import { HistoryChart } from "../../../src/components/history-chart";
+import { StatsChart } from "../../../src/components/stats-chart";
 
 export type ProjectPageProps = {
     project: Project;
@@ -51,8 +51,6 @@ export const getServerSideProps: GetServerSideProps<ProjectPageProps> = async (r
     }
 }
 
-const CHART_WIDTH = 600;
-const CHART_HEIGHT = 400;
 
 export const ProjectPage = ({
     project,
@@ -64,7 +62,7 @@ export const ProjectPage = ({
     const [group, setGroup] = useState(project.group);
     const [name, setName] = useState(project.name);
     const [value, setValue] = useState<string>('desktop');
-    const latestReport = desktopReports.length > 0 ? desktopReports[0] : null;
+    const latestReport = value ==='desktop' ? (desktopReports.length > 0 ? desktopReports[0] : null): (mobileReports.length > 0 ? mobileReports[0] : null);
     const handleChange = (event: React.SyntheticEvent, newValue: string) => {
         setValue(newValue);
     };
@@ -120,11 +118,11 @@ export const ProjectPage = ({
     ];
 
     const lines = [
-        { key: 'performance', color: COLOR.PERFORMANCE },
-        { key: 'accessibility', color: COLOR.ACCESSIBILITY },
-        { key: 'bestPractices', color: COLOR.BEST_PRACTICE },
-        { key: 'SEO', color: COLOR.SEO },
-        { key: 'PWA', color: COLOR.PWA },
+        { label: 'performance', color: COLOR.PERFORMANCE },
+        { label: 'accessibility', color: COLOR.ACCESSIBILITY },
+        { label: 'bestPractices', color: COLOR.BEST_PRACTICE },
+        { label: 'SEO', color: COLOR.SEO },
+        { label: 'PWA', color: COLOR.PWA },
     ]
 
     return <Layout
@@ -138,33 +136,7 @@ export const ProjectPage = ({
             <Grid item xs={ 12 } xl={ 4 }>
                 <Grid container spacing={ 2 }>
                     <Grid item xs={ 12 }>
-                        <Stack direction={ 'row' } spacing={ 2 }>
-                            { latestReport &&
-                                <img height={ 300 } alt={ 'desktop' }
-                                    src={ `/api/reports/${ latestReport.id }/thumbnail` }/> }
-                            { latestReport &&
-                                <img height={ 300 } alt={ 'mobile' }
-                                    src={ `/api/reports/${ latestReport.id }/thumbnail?type=mobile` }/> }
-                        </Stack>
-                    </Grid>
-
-                    <Grid item xs={ 12 }>
                         <Stack spacing={ 2 }>
-                            <Card>
-                                <CardContent>
-                                    <Stack direction={ 'row' } spacing={ 2 }>
-                                        <TextField label={ 'Name' } value={ name }
-                                            onChange={ (e) => setName(e.target.value) }/>
-                                        <TextField label={ 'Group' } value={ group }
-                                            onChange={ (e) => setGroup(e.target.value) }/>
-                                        <TextField fullWidth label={ 'Url' } value={ project.url } disabled/>
-                                        <Button variant={ 'outlined' } disabled={ isLoading }
-                                            onClick={ updateProject }>{ isLoading ? 'Loading...' : 'Save' }</Button>
-                                    </Stack>
-
-                                </CardContent>
-                            </Card>
-
                             <Card>
                                 <CardContent>
                                     <Typography color={ 'textPrimary' } variant={ 'subtitle2' }>URL</Typography>
@@ -182,11 +154,62 @@ export const ProjectPage = ({
                                 </CardContent>
                             </Card> }
 
+                            <Stack direction={ 'row' } spacing={ 2 }>
+                                { value === 'desktop' && latestReport &&
+                                    <img width={ '100%' } alt={ 'desktop' }
+                                        src={ `/api/reports/${ latestReport.id }/thumbnail` }/> }
+                                { value === 'mobile' && latestReport &&
+                                    <img width={ 300 } alt={ 'mobile' }
+                                        src={ `/api/reports/${ latestReport.id }/thumbnail?type=mobile` }/> }
+                            </Stack>
+
+                            <Card>
+                                <CardContent>
+                                    <Stack direction={ 'row' } spacing={ 2 }>
+                                        <TextField label={ 'Name' } value={ name }
+                                            onChange={ (e) => setName(e.target.value) }/>
+                                        <TextField label={ 'Group' } value={ group }
+                                            onChange={ (e) => setGroup(e.target.value) }/>
+                                        <TextField fullWidth label={ 'Url' } value={ project.url } disabled/>
+                                        <Button variant={ 'outlined' } disabled={ isLoading }
+                                            onClick={ updateProject }>{ isLoading ? 'Loading...' : 'Save' }</Button>
+                                    </Stack>
+
+                                </CardContent>
+                            </Card>
+
                             { latestReport && latestReport.stacks?.length > 0 && <Card>
                                 <CardContent>
                                     <Typography color={ 'textPrimary' } variant={ 'subtitle2' }>Stack</Typography>
                                     <Typography variant={ 'h6' }>{ latestReport?.stacks.join(', ') }</Typography>
                                 </CardContent>
+                            </Card> }
+
+
+                            { latestReport && <Card>
+                                <CardContent>
+                                    <Typography color={ 'textPrimary' } variant={ 'subtitle2' }>Stats</Typography>
+                                    { latestReport && <StatsChart height={ 400 } data={ [
+                                        { x: 'Performance', y: latestReport.performance, fill: COLOR.PERFORMANCE },
+                                        {
+                                            x: 'Accessibility',
+                                            y: latestReport.accessibility,
+                                            fill: COLOR.ACCESSIBILITY
+                                        },
+                                        {
+                                            x: 'Best Practices',
+                                            y: latestReport.bestPractices,
+                                            fill: COLOR.BEST_PRACTICE
+                                        },
+                                        { x: 'SEO', y: latestReport.SEO, fill: COLOR.SEO },
+                                        { x: 'PWA', y: latestReport.PWA, fill: COLOR.PWA },
+                                    ] }/> }
+                                </CardContent>
+                                <CardActions>
+                                    <Link href={ `/api/reports/${ latestReport?.id }` } target={ '_blank' }>
+                                        <Button variant={ 'text' }>Open Report</Button>
+                                    </Link>
+                                </CardActions>
                             </Card> }
                         </Stack>
                     </Grid>
@@ -205,49 +228,8 @@ export const ProjectPage = ({
                             </Box>
 
                             { value === 'desktop' && desktopReports.length > 0 && <Box>
-                                { desktopReports.length > 0 && <svg width={ CHART_WIDTH }
-                                    height={ CHART_HEIGHT }>
-                                    <VictoryAxis
-                                        crossAxis
-                                        dependentAxis
-                                        style={ {
-                                            tickLabels: { fontSize: 14, fill: 'white' },
-                                        } }
-                                        width={ CHART_WIDTH }
-                                        height={ CHART_HEIGHT }
-                                        domain={ [ 0, 100 ] }
-                                        standalone={ false }
-                                    />
-
-                                    <VictoryLegend x={ 10 } y={ 10 }
-                                        orientation="horizontal"
-                                        standalone={ false }
-                                        height={ 10 }
-                                        width={ CHART_WIDTH }
-                                        style={ {
-                                            title: { fontSize: '14px' },
-                                            labels: { fill: 'white' }
-                                        } }
-                                        colorScale={ Object.values(COLOR) }
-                                        data={
-                                            lines.map((line) => ({ name: line.key }))
-                                        }
-                                    />
-                                    { lines.map((line) => (<VictoryLine
-                                        standalone={ false }
-                                        key={ line.key }
-                                        height={ CHART_HEIGHT }
-                                        width={ CHART_WIDTH }
-                                        minDomain={ { y: 0 } }
-                                        maxDomain={ { y: 100 } }
-                                        style={ {
-                                            data: { stroke: line.color },
-                                        } }
-                                        x={ 'date' }
-                                        y={ line.key }
-                                        data={ [...desktopReports].reverse() }
-                                    />)) }
-                                </svg> }
+                                { desktopReports.length > 0 &&
+                                    <HistoryChart keys={ lines } data={ [ ...desktopReports ].reverse() }/> }
                                 <DataGrid
                                     rows={ desktopReports }
                                     columns={ columns }
@@ -258,48 +240,8 @@ export const ProjectPage = ({
 
 
                             { value === 'mobile' && mobileReports.length > 0 && <Box>
-                                { mobileReports.length > 0 && <svg width={ CHART_WIDTH }
-                                    height={ CHART_HEIGHT }>
-                                    <VictoryAxis
-                                        crossAxis
-                                        dependentAxis
-                                        style={ {
-                                            tickLabels: { fontSize: 14, fill: 'white' },
-                                        } }
-                                        width={ CHART_WIDTH }
-                                        height={ CHART_HEIGHT }
-                                        domain={ [ 0, 100 ] }
-                                        standalone={ false }
-                                    />
-
-                                    <VictoryLegend x={ 10 } y={ 10 }
-                                        orientation="horizontal"
-                                        standalone={ false }
-                                        colorScale={ Object.values(COLOR) }
-                                        style={ {
-                                            title: { fontSize: '14px' },
-                                            labels: { fill: 'white' }
-                                        } }
-                                        data={
-                                            lines.map((line) => ({ name: line.key }))
-                                        }
-                                    />
-                                    { lines.map((line) => (<VictoryLine
-                                        standalone={ false }
-                                        key={ line.key }
-                                        height={ CHART_HEIGHT }
-                                        width={ CHART_WIDTH }
-                                        minDomain={ { y: 0 } }
-                                        maxDomain={ { y: 100 } }
-                                        style={ {
-                                            data: { stroke: line.color },
-                                        } }
-                                        x={ 'date' }
-                                        y={ line.key }
-                                        data={ [...mobileReports].reverse() }
-                                    />)) }
-                                </svg> }
-
+                                { mobileReports.length > 0 &&
+                                    <HistoryChart keys={ lines } data={ [ ...mobileReports ].reverse() }/> }
                                 <DataGrid
                                     rows={ mobileReports }
                                     columns={ columns }
@@ -307,7 +249,6 @@ export const ProjectPage = ({
                                     autoHeight
                                 />
                             </Box> }
-
                         </Card>
                     </Grid>
                 </Grid>

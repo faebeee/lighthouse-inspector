@@ -16,9 +16,10 @@ import { Stack } from "@mui/system";
 import Typography from "@mui/material/Typography";
 import Link from "next/link";
 import { format } from "date-fns";
-import { DATE_FORMAT } from "../../config";
+import { COLOR, DATE_FORMAT } from "../../config";
 import React from "react";
 import { LighthouseRunReport, Project } from "@prisma/client";
+import { StatsChart } from "./stats-chart";
 
 export type ProjectCardProps = {
     project: Project;
@@ -42,6 +43,15 @@ export const ProjectCard = ({ report, project }: ProjectCardProps) => {
                 { project.group && <Chip color={ 'primary' } sx={ { ml: 2 } } label={ project.group }/> }
 
             </Stack>
+
+
+            { report && <StatsChart data={ [
+                { x: 'Performance', y: report.performance, fill: COLOR.PERFORMANCE },
+                { x: 'Accessibility', y: report.accessibility, fill: COLOR.ACCESSIBILITY },
+                { x: 'Best Practices', y: report.bestPractices, fill: COLOR.BEST_PRACTICE },
+                { x: 'SEO', y: report.SEO, fill: COLOR.SEO },
+                { x: 'PWA', y: report.PWA, fill: COLOR.PWA },
+            ] }/> }
 
             { report && <TableContainer>
                 <Table>
