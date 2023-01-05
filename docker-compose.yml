@@ -22,3 +22,28 @@ services:
       MINIO_ROOT_USER: masoud
       MINIO_ROOT_PASSWORD: Strong#Pass#2022
     command: server --console-address ":9001" /data
+
+  app:
+    depends_on:
+      - database
+      - minio
+    image: lighthouse-inspector/web
+    build:
+      dockerfile: ./Dockerfile
+      args:
+        - DATABASE_URL=postgresql://postgres:postgres@database:5432/lhi
+        - MINIO_HOST=minio
+        - MINIO_BUCKET=lighthouse-report
+        - MINIO_ACCESS_KEY=zwX1TeYJGdVRpW4a
+        - MINIO_SECRET_KEY=OsF3XMHMYkeP4QRRHLbXPoPWeuQ9mBD1
+    volumes:
+      - ./:/usr/src/app
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@database:5432/lhi
+      - MINIO_HOST=minio
+      - MINIO_BUCKET=lighthouse-report
+      - MINIO_ACCESS_KEY=zwX1TeYJGdVRpW4a
+      - MINIO_SECRET_KEY=OsF3XMHMYkeP4QRRHLbXPoPWeuQ9mBD1
+    ports:
+      - "8081:3000"
+

@@ -21,6 +21,24 @@ export const getProjectById = async (id: number): Promise<Project | null> => {
     })) || null;
 }
 
+export const deleteProject = async (id: number): Promise<void> => {
+    const reports = await getPrisma().lighthouseRunReport.findMany({ where: { projectId: id } });
+
+    await getPrisma().lighthouseRunReport.deleteMany({
+        where: {
+            id: {
+                in: reports.map((r) => r.id),
+            },
+        }
+    });
+
+    await getPrisma().project.delete({
+        where: {
+            id,
+        }
+    });
+}
+
 export const updateProject = async (project: Project, data: Partial<Project>) => {
     return getPrisma().project.update({
         where: {

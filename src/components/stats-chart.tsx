@@ -1,3 +1,4 @@
+import { useTheme } from "@mui/material";
 import React from "react";
 import { VictoryBar, VictoryPolarAxis } from "victory";
 import { ResponsiveVictoryChart } from "./chart";
@@ -8,11 +9,12 @@ export type StatsChartProps = {
 }
 
 export const StatsChart = ({ data, height }: StatsChartProps) => {
+    const theme = useTheme()
     return <ResponsiveVictoryChart polar height={ height } innerRadius={ 0 }>
         <VictoryPolarAxis
             labelPlacement="vertical"
             style={ {
-                tickLabels: { fontSize: 10, fill: 'white' },
+                tickLabels: { fontSize: 10, fill: theme.palette.text.primary },
             } }/>
 
         <VictoryBar

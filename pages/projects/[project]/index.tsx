@@ -16,6 +16,7 @@ import { getNavigation, NavigationEntry } from "../../../src/utils/get-navigatio
 import { format } from "date-fns";
 import { HistoryChart } from "../../../src/components/history-chart";
 import { StatsChart } from "../../../src/components/stats-chart";
+import { useRouter } from "next/router";
 
 export type ProjectPageProps = {
     project: Project;
@@ -58,11 +59,12 @@ export const ProjectPage = ({
     mobileReports,
     navigation,
 }: ProjectPageProps) => {
-    const [isLoading, setIsLoading] = useState(false);
-    const [group, setGroup] = useState(project.group);
-    const [name, setName] = useState(project.name);
-    const [value, setValue] = useState<string>('desktop');
-    const latestReport = value ==='desktop' ? (desktopReports.length > 0 ? desktopReports[0] : null): (mobileReports.length > 0 ? mobileReports[0] : null);
+    const router = useRouter();
+    const [ isLoading, setIsLoading ] = useState(false);
+    const [ group, setGroup ] = useState(project.group);
+    const [ name, setName ] = useState(project.name);
+    const [ value, setValue ] = useState<string>('desktop');
+    const latestReport = value === 'desktop' ? (desktopReports.length > 0 ? desktopReports[0] : null) : (mobileReports.length > 0 ? mobileReports[0] : null);
     const handleChange = (event: React.SyntheticEvent, newValue: string) => {
         setValue(newValue);
     };
@@ -70,7 +72,7 @@ export const ProjectPage = ({
     useEffect(() => {
         setGroup(project.group);
         setName(project.name);
-    }, [project]);
+    }, [ project ]);
 
     const onRunReport = () => {
         setIsLoading(true);
@@ -82,10 +84,21 @@ export const ProjectPage = ({
 
     const updateProject = () => {
         setIsLoading(true);
-        axios.patch(`/api/projects/${project.id}`, {
+        axios.patch(`/api/projects/${ project.id }`, {
             group,
             name
         })
+            .finally(() => {
+                setIsLoading(false);
+            })
+    }
+
+    const onRemove = () => {
+        setIsLoading(true);
+        axios.delete(`/api/projects/${ project.id }`)
+            .then(() => {
+                router.push('/');
+            })
             .finally(() => {
                 setIsLoading(false);
             })
@@ -142,6 +155,11 @@ export const ProjectPage = ({
                                     <Typography color={ 'textPrimary' } variant={ 'subtitle2' }>URL</Typography>
                                     <Typography variant={ 'h6' }>{ project.url }</Typography>
                                 </CardContent>
+
+
+                                <CardActions>
+                                    <Button onClick={ onRemove }>Delete</Button>
+                                </CardActions>
                             </Card>
 
                             { project.group && <Card>

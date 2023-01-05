@@ -54,7 +54,7 @@ export const ReportsPage = ({ navigation, projects, desktopReports }: ReportsPag
         actions={ <Link href={ `/projects/new` }>
             <Button fullWidth variant={ 'contained' } color={ 'primary' }>New</Button>
         </Link> }>
-        <Typography sx={ { mb: 2 } } color={ 'white' } variant={ 'h1' }>Projects</Typography>
+        <Typography sx={ { mb: 2 } } color={ 'textPrimary' } variant={ 'h1' }>Projects</Typography>
         <Grid container spacing={ 2 }>
             { projects.map((project) => {
                 const report = desktopReports[project.id];

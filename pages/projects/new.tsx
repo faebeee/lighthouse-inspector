@@ -45,7 +45,7 @@ export const NewPage = ({ projects, navigation }: NewPageProps) => {
             })
     }
 
-    return <Layout navigation={navigation}>
+    return <Layout navigation={navigation} title={'New Site'}>
         <Stack direction={'row'} spacing={2}>
             <TextField label={'Name'} placeholder='Name' value={name} onChange={(e) => setName(e.target.value)} />
             <TextField label={'Group'} placeholder='Group' value={group} onChange={(e) => setGroup(e.target.value)} />

@@ -1,19 +1,19 @@
-import { ArrowBack, Folder, Newspaper } from "@mui/icons-material";
-import { Button, IconButton, ListItemIcon, ListItemText, MenuItem, MenuList, Stack } from "@mui/material";
+import { ArrowBack } from "@mui/icons-material";
+import { Button, IconButton, ListItemText, MenuItem, MenuList, Stack } from "@mui/material";
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import Image from "next/image";
 import Link from 'next/link';
+import Image from 'next/image';
 import { PropsWithChildren, ReactNode } from 'react';
 import { version } from '../../package.json';
 import { NavigationEntry } from '../utils/get-navigation';
+import { THEME } from "../../config";
 
 export type LayoutProps = PropsWithChildren<{
-    sidebar?: ReactNode;
     title?: string;
     navigation: NavigationEntry[];
     actions?: ReactNode;
@@ -25,7 +25,6 @@ const drawerWidth = 240;
 
 export const Layout = ({
                            children,
-                           sidebar,
                            title,
                            navigation,
                            actions,
@@ -50,14 +49,11 @@ export const Layout = ({
             anchor="left"
         >
             <Toolbar>
-                <Typography>Lighthouse Inspector</Typography>
+                <Image alt={ 'Logo' } src={ THEME.logo } width={ 50 } height={ 40 }/>
             </Toolbar>
 
             <MenuList>
                 <MenuItem>
-                    <ListItemIcon>
-                        <Newspaper/>
-                    </ListItemIcon>
                     <ListItemText>
                         Projects
                     </ListItemText>
@@ -71,9 +67,6 @@ export const Layout = ({
                 </Link>))}
                 <Divider />
                 <MenuItem>
-                    <ListItemIcon>
-                        <Folder />
-                    </ListItemIcon>
                     <ListItemText>
                         Groups
                     </ListItemText>
@@ -114,12 +107,15 @@ export const Layout = ({
                     <Stack direction={ 'row' } flex={ 1 } justifyContent={ 'space-between' } alignItems={ 'center' }
                         spacing={ 1 }>
                         <Stack direction={ 'row' } alignItems={ 'center' } spacing={ 1 }>
+
+                            { !showSidebar && <Image alt={ 'Logo' } src={ THEME.logo } width={ 50 } height={ 40 }/> }
+
                             { showBack && <Link href={ backLink ?? '/' }>
                                 <IconButton>
                                     <ArrowBack/>
                                 </IconButton>
                             </Link> }
-                            <Typography variant="h5" noWrap>
+                            <Typography variant="h5" noWrap color={ 'textPrimary' }>
                                 { title }
                             </Typography>
                         </Stack>

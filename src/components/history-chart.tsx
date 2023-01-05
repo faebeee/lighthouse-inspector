@@ -1,9 +1,7 @@
+import { useTheme } from "@mui/material";
 import { VictoryAxis, VictoryLegend, VictoryLine } from "victory";
 import { COLOR } from "../../config";
 import { ResponsiveVictoryChart } from "./chart";
-
-const CHART_WIDTH = 600;
-const CHART_HEIGHT = 400;
 
 export type StatsChartProps = {
     keys: { label: string, color?: string }[];
@@ -11,12 +9,13 @@ export type StatsChartProps = {
 }
 
 export const HistoryChart = ({ keys, data }: StatsChartProps) => {
+    const theme = useTheme();
     return <ResponsiveVictoryChart innerRadius={50}>
         <VictoryAxis
             crossAxis
             dependentAxis
             style={ {
-                tickLabels: { fontSize: 14, fill: 'white' },
+                tickLabels: { fontSize: 14, fill: theme.palette.text.primary },
             } }
             domain={ [ 0, 100 ] }
             standalone={ false }
@@ -28,7 +27,7 @@ export const HistoryChart = ({ keys, data }: StatsChartProps) => {
             height={ 10 }
             style={ {
                 title: { fontSize: 14 },
-                labels: { fill: 'white' }
+                labels: { fill: theme.palette.text.primary }
             } }
             colorScale={ Object.values(COLOR) }
             data={

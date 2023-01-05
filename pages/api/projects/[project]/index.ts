@@ -1,7 +1,13 @@
-import { getProjectById, updateProject } from "../../../../src/server/lib/project-services";
+import { deleteProject, getProjectById, updateProject } from "../../../../src/server/lib/project-services";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export const projectHandler = async (request: NextApiRequest, response: NextApiResponse) => {
+    if (request.method === 'DELETE') {
+        await deleteProject(parseInt(request.query.project as string));
+        response.send({});
+        return;
+
+    }
     if (request.method === 'PATCH') {
         const project = await getProjectById(parseInt(request.query.project as string));
         if (!project) {

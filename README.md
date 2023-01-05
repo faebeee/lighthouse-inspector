@@ -6,9 +6,6 @@ This uses a `postgres` database and a `minio` asset bucket.
 ## Dashboard
 ![Overview](./doc/overview.png)
 
-## Detail view
-![Details](./doc/details.png)
-
 ## Dev environment
 Start the `minio` and `postgres` container with
 
@@ -29,3 +26,6 @@ MINIO_BUCKET=lighthouse-report
 MINIO_ACCESS_KEY=***
 MINIO_SECRET_KEY=***
 ```
+
+## THEME config
+Set the env var `NEXT_PUBLIC_THEME_MODE` to `dark` or `light`
