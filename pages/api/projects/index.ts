@@ -10,6 +10,7 @@ export const ProjectsHandler = async (request: NextApiRequest, response: NextApi
                     name: request.body.name,
                     url: request.body.url,
                     group: request.body.group,
+                    is_running: false,
                 }
             });
             response.status(201).send(project);

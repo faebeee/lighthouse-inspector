@@ -60,7 +60,7 @@ export const ProjectPage = ({
     navigation,
 }: ProjectPageProps) => {
     const router = useRouter();
-    const [ isLoading, setIsLoading ] = useState(false);
+    const [ isLoading, setIsLoading ] = useState(project.is_running);
     const [ group, setGroup ] = useState(project.group);
     const [ name, setName ] = useState(project.name);
     const [ value, setValue ] = useState<string>('desktop');

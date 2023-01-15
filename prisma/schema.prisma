@@ -16,6 +16,7 @@ model Project {
     url String
     group String?
     reports LighthouseRunReport[]
+    is_running Boolean
 }
 
 model LighthouseRunReport {

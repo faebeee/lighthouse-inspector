@@ -26,7 +26,7 @@ export type ProjectCardProps = {
     report?: LighthouseRunReport | null
 }
 export const ProjectCard = ({ report, project }: ProjectCardProps) => {
-    return <Card>
+    return <Card sx={{background: project.is_running ? '#555' : undefined}}>
         <Stack component={ 'div' } direction={ 'row' } spacing={ 1 }>
             <CardMedia component="img"
                 height={ 300 }
@@ -35,11 +35,12 @@ export const ProjectCard = ({ report, project }: ProjectCardProps) => {
             </CardMedia>
         </Stack>
         <CardContent>
-            <Stack component={ 'div' } direction={ 'row' }>
+            <Stack component={ 'div' } direction={ 'row' } alignItems={'center'}>
                 <Link href={ `/projects/${ project.id }` }>
                     <Typography color={ 'textPrimary' } variant={ 'h5' }>{ project.name }</Typography>
                 </Link>
 
+                {project.is_running && <Typography sx={{ml: 2}} variant={"body2"}>Running...</Typography> }
                 { project.group && <Chip color={ 'primary' } sx={ { ml: 2 } } label={ project.group }/> }
 
             </Stack>

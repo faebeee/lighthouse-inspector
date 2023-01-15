@@ -1,6 +1,6 @@
-import { LighthouseRunReport, Project } from "@prisma/client";
-import { getPrisma } from "../get-prisma";
-import { getLatestReportForProject } from "./lighthousereport-services";
+import {LighthouseRunReport, Project} from "@prisma/client";
+import {getPrisma} from "../get-prisma";
+import {getLatestReportForProject} from "./lighthousereport-services";
 
 export const getProjects = async (): Promise<Project[]> => {
     return (await getPrisma().project.findMany()) ?? [];
@@ -22,7 +22,7 @@ export const getProjectById = async (id: number): Promise<Project | null> => {
 }
 
 export const deleteProject = async (id: number): Promise<void> => {
-    const reports = await getPrisma().lighthouseRunReport.findMany({ where: { projectId: id } });
+    const reports = await getPrisma().lighthouseRunReport.findMany({where: {projectId: id}});
 
     await getPrisma().lighthouseRunReport.deleteMany({
         where: {
@@ -47,6 +47,19 @@ export const updateProject = async (project: Project, data: Partial<Project>) =>
         data,
     });
 }
+
+
+export const markProjectAsRunning = async (project: Project, isRunning: boolean) => {
+    return getPrisma().project.update({
+        where: {
+            id: project.id
+        },
+        data: {
+            is_running: isRunning,
+        },
+    });
+}
+
 
 export const getLatestReportsForAllProjects = async (type?: string) => {
     const projects = await getProjects();
