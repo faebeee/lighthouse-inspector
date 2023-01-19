@@ -1,8 +1,9 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getPrisma } from "../../../src/server/get-prisma";
-import { getProjectById, getProjects, updateProject } from "../../../src/server/lib/project-services";
+import { getProjects } from "../../../src/server/lib/project-services";
 
 export const ProjectsHandler = async (request: NextApiRequest, response: NextApiResponse) => {
+    console.log(request);
     if (request.method === 'POST') {
         try {
             const project = await getPrisma().project.create({

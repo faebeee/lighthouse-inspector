@@ -5,4 +5,4 @@
 
 */
 -- AlterTable
-ALTER TABLE "Project" ADD COLUMN     "is_running" BOOLEAN NOT NULL;
+ALTER TABLE "Project" ADD COLUMN     "is_running" BOOLEAN NOT NULL DEFAULT false;
