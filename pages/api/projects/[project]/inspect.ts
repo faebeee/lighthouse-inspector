@@ -12,10 +12,10 @@ export const inspectHandler: NextApiHandler = assertMethod('POST', async (reques
     await markProjectAsRunning(project, true);
     try {
         await runInspection(project);
+        await markProjectAsRunning(project, false);
     } catch (e) {
         await markProjectAsRunning(project, false);
         throw e;
-
     }
 
     return response.send({});

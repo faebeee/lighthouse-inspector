@@ -27,6 +27,7 @@ import { getNavigation, NavigationEntry } from "../../src/utils/get-navigation";
 import { DATE_FORMAT } from "../../config";
 import { format } from "date-fns";
 import { ProjectCard } from "../../src/components/project-card";
+import TravelExploreIcon from "@mui/icons-material/TravelExplore";
 
 export type ReportsPageProps = {
     projects: Project[];
@@ -80,6 +81,7 @@ export const ReportsPage = ({ projects, navigation, desktopReports, group }: Rep
                                     <TableRow>
                                         <TableCell>Project</TableCell>
                                         <TableCell>URL</TableCell>
+                                        <TableCell>Is Running</TableCell>
                                         <TableCell>Performance</TableCell>
                                         <TableCell>Accessibility</TableCell>
                                         <TableCell>Best Practices</TableCell>
@@ -99,10 +101,11 @@ export const ReportsPage = ({ projects, navigation, desktopReports, group }: Rep
                                                 </Link>
                                             </TableCell>
                                             <TableCell>
-                                                <Link href={ project.url } target={ '_blank' }>
-                                                    <Typography color={ 'secondary' }>{ project.url }</Typography>
+                                                <Link href={ project.url } target={ "_blank" }>
+                                                    <Typography color={ "secondary" }>{ project.url }</Typography>
                                                 </Link>
                                             </TableCell>
+                                            <TableCell>{ project.is_running && <TravelExploreIcon /> }</TableCell>
                                             <TableCell>{ report?.performance }</TableCell>
                                             <TableCell>{ report?.accessibility }</TableCell>
                                             <TableCell>{ report?.bestPractices }</TableCell>
