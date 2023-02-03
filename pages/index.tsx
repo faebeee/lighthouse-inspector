@@ -50,7 +50,7 @@ export const getServerSideProps: GetServerSideProps<ReportsPageProps> = async ()
 }
 
 export const ReportsPage = ({ navigation, projects, desktopReports }: ReportsPageProps) => {
-    return <Layout navigation={ navigation } showBack={ false } showSidebar={ false } title={ 'Lighthouse Inspector' }
+    return <Layout navigation={ navigation } showBack={ false } title={ 'Lighthouse Inspector' }
         actions={ <Link href={ `/projects/new` }>
             <Button fullWidth variant={ 'contained' } color={ 'primary' }>New</Button>
         </Link> }>
