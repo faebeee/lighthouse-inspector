@@ -42,11 +42,12 @@ export const ProjectCard = ({ report, project }: ProjectCardProps) => {
                 </Link>
 
                 { project.is_running && <Typography sx={ { ml: 2 } } variant={ "body2" }>Running...</Typography> }
-                { project.group && <Chip color={ "primary" } sx={ { ml: 2 } } label={ project.group } /> }
-                { tagsApi.data?.map((tag: Tag) => <Chip label={ tag.name } key={ tag.id } />) }
-
             </Stack>
 
+            <Stack spacing={ 1 } direction={ "row" } py={ 2 }>
+                { project.group && <Chip label={ project.group } /> }
+                { tagsApi.data?.map((tag: Tag) => <Chip label={ tag.name } key={ tag.id } />) }
+            </Stack>
 
             { report && <StatsChart data={ [
                 { x: "Performance", y: report.performance, fill: COLOR.PERFORMANCE },

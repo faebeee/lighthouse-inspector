@@ -1,82 +1,115 @@
 import { GetServerSideProps } from "next";
 import { Layout } from "../src/components/layout";
-import { getLatestReportsForAllProjects, getProjects } from "../src/server/lib/project-services";
-import { Button, Grid } from "@mui/material";
+import { Button, Chip, Grid, Stack } from "@mui/material";
 import Link from "next/link";
 import Typography from "@mui/material/Typography";
-import React from "react";
-import { LighthouseRunReport, Project } from "@prisma/client";
-import { transformForSerialisation } from "../src/server/lib/lighthousereport-services";
+import React, { useEffect, useState } from "react";
+import { LighthouseRunReport, Project, Tag } from "@prisma/client";
 import { getNavigation, NavigationEntry } from "../src/utils/get-navigation";
-import { DataGrid, GridColDef , GridToolbar} from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
 import { format } from "date-fns";
 import { DATE_FORMAT } from "../config";
+import { useResource } from "../src/hooks/use-resource";
+import { useSelectionList } from "@dreipol/t3-react-utils";
+import Box from "@mui/material/Box";
 
 export type ReportsPageProps = {
     navigation: NavigationEntry[];
-    projects: Project[];
-    desktopReports: Record<number, LighthouseRunReport>;
-    mobileReports: Record<number, LighthouseRunReport>;
+}
+
+export type GridRow = {
+    id: number;
+    projectId: number;
+    url: string;
+    group: string | null;
+    groupLink: string | null;
+    name: string;
+    type: string;
+    performance: number;
+    accessibility: number;
+    bestPractices: number;
+    SEO: number;
+    PWA: number;
+    report: number;
+    reportDate: Date;
 }
 
 export const getServerSideProps: GetServerSideProps<ReportsPageProps> = async () => {
     const navigation = await getNavigation();
-    const projects = await getProjects();
-    const desktopReports = await getLatestReportsForAllProjects("desktop");
-    const mobileReports = await getLatestReportsForAllProjects("mobile");
 
     return {
         props: {
-            navigation,
-            projects,
-            desktopReports: Object.entries(desktopReports).reduce((acc, [ id, report ]) => {
-                // @ts-ignore
-                acc[id] = report ? transformForSerialisation(report) : null;
-                return acc;
-            }, {} as Record<number, LighthouseRunReport>),
-            mobileReports: Object.entries(mobileReports).reduce((acc, [ id, report ]) => {
-                // @ts-ignore
-                acc[id] = report ? transformForSerialisation(report) : null;
-                return acc;
-            }, {} as Record<number, LighthouseRunReport>)
+            navigation
         }
     };
 };
 
-export const ReportsPage = ({ navigation, projects, desktopReports, mobileReports }: ReportsPageProps) => {
-    const rows = projects.map((project) => ({
-        id: desktopReports[project.id].id,
-        url: project.url,
-        group: project.group,
-        groupLink: project.group,
-        name: project.name,
-        type: desktopReports[project.id].type,
-        performance: desktopReports[project.id].performance,
-        accessibility: desktopReports[project.id].accessibility,
-        bestPractices: desktopReports[project.id].bestPractices,
-        SEO: desktopReports[project.id].SEO,
-        PWA: desktopReports[project.id].PWA,
-        report: desktopReports[project.id].id,
-        reportDate: desktopReports[project.id].date
-    }));
-    const allRows = projects.reduce((list, project) => {
-        list.push({
-            id: mobileReports[project.id].id,
-            url: project.url,
-            group: project.group,
-            groupLink: project.group,
-            name: project.name,
-            type: mobileReports[project.id].type,
-            performance: mobileReports[project.id].performance,
-            accessibility: mobileReports[project.id].accessibility,
-            bestPractices: mobileReports[project.id].bestPractices,
-            SEO: mobileReports[project.id].SEO,
-            PWA: mobileReports[project.id].PWA,
-            report: mobileReports[project.id].id,
-            reportDate: mobileReports[project.id].date
-        });
-        return list;
-    }, rows);
+export const ReportsPage = ({ navigation }: ReportsPageProps) => {
+    const [ rows, setRows ] = useState<GridRow[]>([]);
+    const activeTags = useSelectionList<number>([]);
+    const tagsApi = useResource<Tag[]>({ url: `/api/tags` }, 5000);
+    const projectsApi = useResource<Project[]>({
+        url: `/api/projects`, params: {
+            tags: activeTags.list
+        }
+    }, 5000);
+    const desktopReportsApi = useResource<Record<number, LighthouseRunReport>>({
+        url: `/api/reports/`,
+        params: { type: "desktop" }
+    }, 5000);
+
+    const mobileReportsApi = useResource<Record<number, LighthouseRunReport>>({
+        url: `/api/reports/`,
+        params: { type: "mobile" }
+    }, 5000);
+
+    useEffect(() => {
+        if (projectsApi.isLoading || desktopReportsApi.isLoading || mobileReportsApi.isLoading) {
+            return;
+        }
+
+        const data = (projectsApi.data ?? []).reduce((list, project) => {
+            if (desktopReportsApi.data?.[project.id]) {
+                list.push({
+                    id: desktopReportsApi.data?.[project.id].id,
+                    projectId: project.id,
+                    url: project.url,
+                    group: project.group,
+                    groupLink: project.group,
+                    name: project.name,
+                    type: desktopReportsApi.data?.[project.id].type,
+                    performance: desktopReportsApi.data?.[project.id].performance,
+                    accessibility: desktopReportsApi.data?.[project.id].accessibility,
+                    bestPractices: desktopReportsApi.data?.[project.id].bestPractices,
+                    SEO: desktopReportsApi.data?.[project.id].SEO,
+                    PWA: desktopReportsApi.data?.[project.id].PWA,
+                    report: desktopReportsApi.data?.[project.id].id,
+                    reportDate: desktopReportsApi.data?.[project.id].date
+                });
+            }
+            if (mobileReportsApi.data?.[project.id]) {
+                list.push({
+                    id: mobileReportsApi.data?.[project.id].id,
+                    url: project.url,
+                    projectId: project.id,
+                    group: project.group,
+                    groupLink: project.group,
+                    name: project.name,
+                    type: mobileReportsApi.data?.[project.id].type,
+                    performance: mobileReportsApi.data?.[project.id].performance,
+                    accessibility: mobileReportsApi.data?.[project.id].accessibility,
+                    bestPractices: mobileReportsApi.data?.[project.id].bestPractices,
+                    SEO: mobileReportsApi.data?.[project.id].SEO,
+                    PWA: mobileReportsApi.data?.[project.id].PWA,
+                    report: mobileReportsApi.data?.[project.id].id,
+                    reportDate: mobileReportsApi.data?.[project.id].date
+                });
+            }
+            return list;
+        }, [] as GridRow[]);
+
+        setRows(data);
+    }, [ desktopReportsApi.data, mobileReportsApi.data, projectsApi.data ]);
 
     const columns: GridColDef[] = [
         {
@@ -97,7 +130,7 @@ export const ReportsPage = ({ navigation, projects, desktopReports, mobileReport
             field: "name",
             headerName: "Name",
             flex: 1,
-            renderCell: (params) => <Link href={ `/projects/${ params.row.id }` }>
+            renderCell: (params) => <Link href={ `/projects/${ params.row.projectId }` }>
                 <Button color={ "secondary" } variant={ "text" }>{ params.value }</Button>
             </Link>
         },
@@ -119,12 +152,21 @@ export const ReportsPage = ({ navigation, projects, desktopReports, mobileReport
             <Button fullWidth variant={ "contained" } color={ "primary" }>New</Button>
         </Link> }>
         <Typography sx={ { mb: 4 } } color={ "textPrimary" } variant={ "h1" }>Projects</Typography>
+        <Box py={ 2 }>
+            <Stack spacing={ 1 } direction={ "row" }>
+                { tagsApi.data?.map((tag) => <Chip label={ tag.name } key={ tag.id }
+                    onClick={ () => activeTags.toggleItem(tag.id) }
+                    color={ activeTags.has(tag.id) ? "primary" : "default" } />) }
+            </Stack>
+        </Box>
+
         <Grid container spacing={ 2 }>
             <DataGrid
+                loading={ projectsApi.isLoading || desktopReportsApi.isLoading || mobileReportsApi.isLoading }
                 sortModel={ [ { field: "reportDate", sort: "desc" } ] }
-                components={{ Toolbar: GridToolbar }}
+                components={ { Toolbar: GridToolbar } }
                 autoHeight
-                rows={ allRows }
+                rows={ rows }
                 columns={ columns }
                 disableSelectionOnClick
             />

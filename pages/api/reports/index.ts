@@ -4,12 +4,14 @@ import { transformForSerialisation } from "../../../src/server/lib/lighthouserep
 import { LighthouseRunReport } from "@prisma/client";
 
 export const getReportsApiHandler: NextApiHandler = async (req, res) => {
-    const desktopReports = await getLatestReportsForAllProjects("desktop");
-    const a = Object.entries(desktopReports).reduce((acc, [ id, report ]) => {
-        // @ts-ignore
-        acc[id] = report ? transformForSerialisation(report) : null;
-        return acc;
-    }, {} as Record<number, LighthouseRunReport>);
+    const type = req.query["type"] as string;
+    const desktopReports = await getLatestReportsForAllProjects(type);
+    const a = Object.entries(desktopReports)
+        .reduce((acc, [ id, report ]) => {
+            // @ts-ignore
+            acc[id] = report ? transformForSerialisation(report) : null;
+            return acc;
+        }, {} as Record<number, LighthouseRunReport>);
 
     res.send(a);
 };

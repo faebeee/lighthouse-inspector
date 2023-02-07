@@ -1,9 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getPrisma } from "../../../src/server/get-prisma";
-import { getProjects } from "../../../src/server/lib/project-services";
+import { getProjects, getProjectsByTags } from "../../../src/server/lib/project-services";
 
 export const ProjectsHandler = async (request: NextApiRequest, response: NextApiResponse) => {
-    console.log(request);
     if (request.method === 'POST') {
         try {
             const project = await getPrisma().project.create({
@@ -23,6 +22,18 @@ export const ProjectsHandler = async (request: NextApiRequest, response: NextApi
     }
 
     if (request.method === 'GET') {
+        const ids = request.query["tags[]"];
+        if (Array.isArray(ids)) {
+            const projects = await getProjectsByTags(ids.map((i) => parseInt(i)));
+            response.send(projects);
+            return;
+        }
+
+        if (typeof ids === "string") {
+            const projects = await getProjectsByTags([ parseInt(ids) ]);
+            response.send(projects);
+            return;
+        }
         const projects = await getProjects();
         response.send(projects);
         return;
