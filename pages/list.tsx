@@ -8,7 +8,7 @@ import React from "react";
 import { LighthouseRunReport, Project } from "@prisma/client";
 import { transformForSerialisation } from "../src/server/lib/lighthousereport-services";
 import { getNavigation, NavigationEntry } from "../src/utils/get-navigation";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGrid, GridColDef , GridToolbar} from "@mui/x-data-grid";
 import { format } from "date-fns";
 import { DATE_FORMAT } from "../config";
 
@@ -16,6 +16,7 @@ export type ReportsPageProps = {
     navigation: NavigationEntry[];
     projects: Project[];
     desktopReports: Record<number, LighthouseRunReport>;
+    mobileReports: Record<number, LighthouseRunReport>;
 }
 
 export const getServerSideProps: GetServerSideProps<ReportsPageProps> = async () => {
@@ -42,13 +43,14 @@ export const getServerSideProps: GetServerSideProps<ReportsPageProps> = async ()
     };
 };
 
-export const ReportsPage = ({ navigation, projects, desktopReports }: ReportsPageProps) => {
+export const ReportsPage = ({ navigation, projects, desktopReports, mobileReports }: ReportsPageProps) => {
     const rows = projects.map((project) => ({
-        id: project.id,
+        id: desktopReports[project.id].id,
         url: project.url,
         group: project.group,
         groupLink: project.group,
         name: project.name,
+        type: desktopReports[project.id].type,
         performance: desktopReports[project.id].performance,
         accessibility: desktopReports[project.id].accessibility,
         bestPractices: desktopReports[project.id].bestPractices,
@@ -57,15 +59,40 @@ export const ReportsPage = ({ navigation, projects, desktopReports }: ReportsPag
         report: desktopReports[project.id].id,
         reportDate: desktopReports[project.id].date
     }));
+    const allRows = projects.reduce((list, project) => {
+        list.push({
+            id: mobileReports[project.id].id,
+            url: project.url,
+            group: project.group,
+            groupLink: project.group,
+            name: project.name,
+            type: mobileReports[project.id].type,
+            performance: mobileReports[project.id].performance,
+            accessibility: mobileReports[project.id].accessibility,
+            bestPractices: mobileReports[project.id].bestPractices,
+            SEO: mobileReports[project.id].SEO,
+            PWA: mobileReports[project.id].PWA,
+            report: mobileReports[project.id].id,
+            reportDate: mobileReports[project.id].date
+        });
+        return list;
+    }, rows);
+
     const columns: GridColDef[] = [
         {
             field: "reportDate",
             headerName: "Report",
-            width: 120,
+            width: 160,
             renderCell: (params) => (<>{ format(new Date(params.value), DATE_FORMAT) }</>
             )
         },
-        { field: "group", headerName: "Group", width: 90 },
+        { field: "type", headerName: "Type", width: 90 },
+        {
+            field: "group", headerName: "Group", width: 90,
+            renderCell: ({ value }) => <Link href={ `/group/${ value }` }>
+                <Button color={ "secondary" } variant={ "text" }>{ value }</Button>
+            </Link>
+        },
         {
             field: "name",
             headerName: "Name",
@@ -86,15 +113,6 @@ export const ReportsPage = ({ navigation, projects, desktopReports }: ReportsPag
                 <Button color={ "secondary" } variant={ "text" }>Open Report</Button>
             </Link>)
         },
-        {
-            field: "groupLink",
-            headerName: "Group",
-            flex: 1,
-            renderCell: ({ value }) => (value ? <Link href={ `/group/${ value }` }>
-                <Button color={ "secondary" } variant={ "text" }>View Group</Button>
-            </Link> : null)
-        }
-
     ];
     return <Layout navigation={ navigation } backLink={ "/" } title={ "Lighthouse Inspector" }
         actions={ <Link href={ `/projects/new` }>
@@ -103,8 +121,10 @@ export const ReportsPage = ({ navigation, projects, desktopReports }: ReportsPag
         <Typography sx={ { mb: 4 } } color={ "textPrimary" } variant={ "h1" }>Projects</Typography>
         <Grid container spacing={ 2 }>
             <DataGrid
+                sortModel={ [ { field: "reportDate", sort: "desc" } ] }
+                components={{ Toolbar: GridToolbar }}
                 autoHeight
-                rows={ rows }
+                rows={ allRows }
                 columns={ columns }
                 disableSelectionOnClick
             />

@@ -16,6 +16,7 @@ model Project {
     url String
     group String?
     reports LighthouseRunReport[]
+    tags TagsOnProjects[]
     is_running Boolean
 }
 
@@ -33,4 +34,20 @@ model LighthouseRunReport {
     htmlReportFile String?
     type String
     stacks String[] @default([])
+}
+
+model Tag {
+    id Int @id @default(autoincrement())
+    projects TagsOnProjects[]
+    name String
+}
+
+model TagsOnProjects {
+  project       Project     @relation(fields: [projectId], references: [id])
+  projectId     Int
+
+  tag   Tag @relation(fields: [tagId], references: [id])
+  tagId Int // relation scalar field (used in the `@relation` attribute above)
+
+  @@id([tagId, projectId])
 }

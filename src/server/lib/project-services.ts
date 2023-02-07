@@ -1,23 +1,23 @@
-import {LighthouseRunReport, Project} from "@prisma/client";
-import {getPrisma} from "../get-prisma";
-import {getLatestReportForProject} from "./lighthousereport-services";
+import { LighthouseRunReport, Project } from "@prisma/client";
+import { getPrisma } from "../get-prisma";
+import { getLatestReportForProject } from "./lighthousereport-services";
 
 export const getProjects = async (): Promise<Project[]> => {
-    return (await getPrisma().project.findMany()) ?? [];
+    return (await getPrisma().project.findMany({ include: { tags: true } })) ?? [];
 };
 export const getProjectsByGroup = async (group: string): Promise<Project[]> => {
     return getPrisma().project.findMany({
         where: {
-            group,
-        }
+            group
+        },
     });
 };
 
 export const getProjectById = async (id: number): Promise<Project | null> => {
     return (await getPrisma().project.findFirst({
         where: {
-            id,
-        }
+            id
+        },
     })) || null;
 }
 

@@ -59,7 +59,7 @@ export const ReportsPage = ({ navigation, projects, desktopReports }: ReportsPag
             { projects.map((project) => {
                 const report = desktopReports[project.id];
                 return (
-                    <Grid key={ project.id } item xs={ 12 } lg={ 6 } xl={ 3 }>
+                    <Grid key={ project.id } item xs={ 12 } lg={ 6 } xl={ 3 } >
                         <ProjectCard project={ project } report={ report }/>
                     </Grid>
                 )

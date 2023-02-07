@@ -1,5 +1,5 @@
 import { GetServerSideProps } from "next";
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
 import { getProjectById, getProjects } from "../../../src/server/lib/project-services";
@@ -17,6 +17,7 @@ import { format } from "date-fns";
 import { HistoryChart } from "../../../src/components/history-chart";
 import { StatsChart } from "../../../src/components/stats-chart";
 import { useRouter } from "next/router";
+import { ProjectTags } from "../../../src/components/project-tags";
 
 export type ProjectPageProps = {
     project: Project;
@@ -183,24 +184,30 @@ export const ProjectPage = ({
 
                             <Card>
                                 <CardContent>
-                                    <Stack direction={ 'row' } spacing={ 2 }>
-                                        <TextField label={ 'Name' } value={ name }
-                                            onChange={ (e) => setName(e.target.value) }/>
-                                        <TextField label={ 'Group' } value={ group }
-                                            onChange={ (e) => setGroup(e.target.value) }/>
-                                        <TextField fullWidth label={ 'Url' } value={ project.url } disabled/>
-                                        <Button variant={ 'outlined' } disabled={ isLoading }
-                                            onClick={ updateProject }>{ isLoading ? 'Loading...' : 'Save' }</Button>
+                                    <Stack direction={ "row" } spacing={ 2 }>
+                                        <TextField label={ "Name" } value={ name }
+                                            onChange={ (e) => setName(e.target.value) } />
+                                        <TextField label={ "Group" } value={ group }
+                                            onChange={ (e) => setGroup(e.target.value) } />
+                                        <TextField fullWidth label={ "Url" } value={ project.url } disabled />
+                                        <Button variant={ "outlined" } disabled={ isLoading }
+                                            onClick={ updateProject }>{ isLoading ? "Loading..." : "Save" }</Button>
                                     </Stack>
 
                                 </CardContent>
                             </Card>
 
-                            { latestReport && latestReport.stacks?.length > 0 && <Card>
+                            <Card>
                                 <CardContent>
-                                    <Typography color={ 'textPrimary' } variant={ 'subtitle2' }>Stack</Typography>
-                                    <Typography variant={ 'h6' }>{ latestReport?.stacks.join(', ') }</Typography>
+                                    <ProjectTags projectId={ project.id } />
                                 </CardContent>
+                            </Card>
+
+                            { latestReport && latestReport.stacks?.length > 0 && <Card>
+                              <CardContent>
+                                <Typography color={ "textPrimary" } variant={ "subtitle2" }>Stack</Typography>
+                                <Typography variant={ "h6" }>{ latestReport?.stacks.join(", ") }</Typography>
+                              </CardContent>
                             </Card> }
 
 

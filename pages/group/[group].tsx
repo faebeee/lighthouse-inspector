@@ -18,44 +18,36 @@ import {
 } from "@mui/material";
 import Link from "next/link";
 import Typography from "@mui/material/Typography";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { LighthouseRunReport, Project } from "@prisma/client";
-import { transformForSerialisation } from "../../src/server/lib/lighthousereport-services";
-import { Stack } from "@mui/system";
 import axios from "axios";
 import { getNavigation, NavigationEntry } from "../../src/utils/get-navigation";
 import { DATE_FORMAT } from "../../config";
 import { format } from "date-fns";
 import { ProjectCard } from "../../src/components/project-card";
 import TravelExploreIcon from "@mui/icons-material/TravelExplore";
+import { useResource } from "../../src/hooks/use-resource";
 
 export type ReportsPageProps = {
-    projects: Project[];
     navigation: NavigationEntry[];
     group: string;
-    desktopReports: Record<number, LighthouseRunReport>;
 }
 
 export const getServerSideProps: GetServerSideProps<ReportsPageProps> = async (req) => {
-    const projects = await getProjectsByGroup(req.query.group as string);
-    const desktopReports = await getLatestReportsForAllProjects('desktop');
+
     const navigation = await getNavigation();
 
     return {
         props: {
-            projects: projects,
             navigation,
             group: req.query.group as string,
-            desktopReports: Object.entries(desktopReports).reduce((acc, [id, report]) => {
-                // @ts-ignore
-                acc[id] = report ? transformForSerialisation(report) : null;
-                return acc;
-            }, {} as Record<number, LighthouseRunReport>),
         }
     }
 }
 
-export const ReportsPage = ({ projects, navigation, desktopReports, group }: ReportsPageProps) => {
+export const ReportsPage = ({ navigation, group }: ReportsPageProps) => {
+    const projectsApi = useResource<Project[]>({url: `/api/group/${group}`}, 1000)
+    const reportsApi = useResource<Record<number, LighthouseRunReport>>({url: `/api/reports/`}, 1000)
     const [isLoading, setIsLoading] = useState(false);
 
     const runGroup = () => {
@@ -65,6 +57,9 @@ export const ReportsPage = ({ projects, navigation, desktopReports, group }: Rep
                 setIsLoading(false);
             })
     }
+
+    const desktopReports = useMemo(() => reportsApi.data ?? {}, [reportsApi.data]);
+
     return <Layout navigation={navigation} title={group}
         actions={<>
             <Button variant={'text'} onClick={runGroup}>Run</Button>
@@ -92,7 +87,7 @@ export const ReportsPage = ({ projects, navigation, desktopReports, group }: Rep
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {projects.map((project) => {
+                                    {projectsApi.data?.map((project) => {
                                         const report = desktopReports[project.id];
                                         return (<TableRow key={project.id}>
                                             <TableCell>
@@ -126,7 +121,7 @@ export const ReportsPage = ({ projects, navigation, desktopReports, group }: Rep
                 <Typography variant='h4' color={ 'textPrimary' }>Sites</Typography>
             </Grid>
 
-            { projects.map((project) => {
+            { projectsApi.data?.map((project) => {
                 const report = desktopReports[project.id];
                 return (
                     <Grid key={ project.id } item xs={ 12 } lg={ 6 } xl={ 3 }>
