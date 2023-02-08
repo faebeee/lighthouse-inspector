@@ -2,6 +2,7 @@ import { NextApiHandler } from "next";
 import { getPrisma } from "../../../src/server/get-prisma";
 import { getProjectById } from "../../../src/server/lib/project-services";
 import { getAllTags, getTagByName } from "../../../src/server/lib/tag-service";
+import { assertAuth } from "../../../src/server/lib/api-helpers";
 
 export const tagsListApiHandler: NextApiHandler = async (req, res) => {
     if (req.method === "POST") {
@@ -69,4 +70,4 @@ export const tagsListApiHandler: NextApiHandler = async (req, res) => {
     }
 };
 
-export default tagsListApiHandler;
+export default assertAuth(tagsListApiHandler);

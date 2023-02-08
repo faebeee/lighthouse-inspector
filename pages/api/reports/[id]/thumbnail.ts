@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getReportById } from "../../../../src/server/report-services";
 import { getReportFile, hasReportFile } from "../../../../src/server/lib/minio";
+import { assertAuth } from "../../../../src/server/lib/api-helpers";
 
 
 export const thumbnailHandler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -28,4 +29,4 @@ export const thumbnailHandler = async (req: NextApiRequest, res: NextApiResponse
         .setHeader('Content-Length', byteArray.length)
         .send(byteArray);
 }
-export default thumbnailHandler;
+export default assertAuth(thumbnailHandler);

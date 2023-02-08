@@ -2,6 +2,7 @@ import { NextApiHandler } from "next";
 import { getLatestReportsForAllProjects } from "../../../src/server/lib/project-services";
 import { transformForSerialisation } from "../../../src/server/lib/lighthousereport-services";
 import { LighthouseRunReport } from "@prisma/client";
+import { assertAuth } from "../../../src/server/lib/api-helpers";
 
 export const getReportsApiHandler: NextApiHandler = async (req, res) => {
     const type = req.query["type"] as string;
@@ -16,4 +17,4 @@ export const getReportsApiHandler: NextApiHandler = async (req, res) => {
     res.send(a);
 };
 
-export default getReportsApiHandler;
+export default assertAuth(getReportsApiHandler);

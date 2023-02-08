@@ -1,5 +1,5 @@
 import {NextApiHandler, NextApiRequest, NextApiResponse} from "next";
-import {assertMethod} from "../../../../src/server/lib/api-helpers";
+import { assertAuth, assertMethod } from "../../../../src/server/lib/api-helpers";
 import {getProjectById, markProjectAsRunning} from "../../../../src/server/lib/project-services";
 import {runInspection} from "../../../../src/server/utils/run-inspection";
 
@@ -21,4 +21,4 @@ export const inspectHandler: NextApiHandler = assertMethod('POST', async (reques
     return response.send({});
 });
 
-export default inspectHandler;
+export default assertAuth(inspectHandler);

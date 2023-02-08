@@ -1,13 +1,9 @@
 import { GetServerSideProps } from "next";
 import { Layout } from "../../src/components/layout";
-import { getLatestReportsForAllProjects, getProjectsByGroup } from "../../src/server/lib/project-services";
 import {
     Button,
     Card,
-    CardActions,
     CardContent,
-    CardMedia,
-    Chip,
     Grid,
     Table,
     TableBody,
@@ -46,9 +42,12 @@ export const getServerSideProps: GetServerSideProps<ReportsPageProps> = async (r
 }
 
 export const ReportsPage = ({ navigation, group }: ReportsPageProps) => {
-    const projectsApi = useResource<Project[]>({url: `/api/group/${group}`}, 1000)
-    const reportsApi = useResource<Record<number, LighthouseRunReport>>({url: `/api/reports/`}, 1000)
-    const [isLoading, setIsLoading] = useState(false);
+    const projectsApi = useResource<Project[]>({ url: `/api/group/${ group }` }, 1000);
+    const reportsApi = useResource<Record<number, LighthouseRunReport>>({
+        url: `/api/reports/`,
+        params: { type: "desktop" }
+    }, 1000);
+    const [ isLoading, setIsLoading ] = useState(false);
 
     const runGroup = () => {
         setIsLoading(true);

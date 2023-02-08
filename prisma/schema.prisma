@@ -11,43 +11,50 @@ datasource db {
 }
 
 model Project {
-    id Int @id @default(autoincrement())
-    name String
-    url String
-    group String?
-    reports LighthouseRunReport[]
-    tags TagsOnProjects[]
-    is_running Boolean
+  id         Int                   @id @default(autoincrement())
+  name       String
+  url        String
+  group      String?
+  reports    LighthouseRunReport[]
+  tags       TagsOnProjects[]
+  is_running Boolean
+  repoUrl    String?
 }
 
 model LighthouseRunReport {
-    id Int @id @default(autoincrement())
-    project Project @relation(fields: [projectId], references: [id])
-    projectId Int
-    date DateTime
-    finalUrl String
-    performance Float
-    accessibility Float
-    bestPractices Float
-    SEO Float
-    PWA Float
-    htmlReportFile String?
-    type String
-    stacks String[] @default([])
+  id             Int      @id @default(autoincrement())
+  project        Project  @relation(fields: [projectId], references: [id])
+  projectId      Int
+  date           DateTime
+  finalUrl       String
+  performance    Float
+  accessibility  Float
+  bestPractices  Float
+  SEO            Float
+  PWA            Float
+  htmlReportFile String?
+  type           String
+  stacks         String[] @default([])
 }
 
 model Tag {
-    id Int @id @default(autoincrement())
-    projects TagsOnProjects[]
-    name String
+  id       Int              @id @default(autoincrement())
+  projects TagsOnProjects[]
+  name     String
 }
 
 model TagsOnProjects {
-  project       Project     @relation(fields: [projectId], references: [id])
-  projectId     Int
+  project   Project @relation(fields: [projectId], references: [id])
+  projectId Int
 
   tag   Tag @relation(fields: [tagId], references: [id])
   tagId Int // relation scalar field (used in the `@relation` attribute above)
 
   @@id([tagId, projectId])
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  username String @unique
+  password String
 }

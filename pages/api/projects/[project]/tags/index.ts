@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { addTagToProject, createTag, getTagsByProjectId } from "../../../../../src/server/lib/tag-service";
+import { assertAuth } from "../../../../../src/server/lib/api-helpers";
 
 export type Tag = {
     name: string;
@@ -29,4 +30,4 @@ export const projectTagApiHandler = async (request: NextApiRequest, response: Ne
         return;
     }
 };
-export default projectTagApiHandler;
+export default assertAuth(projectTagApiHandler);

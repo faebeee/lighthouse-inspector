@@ -1,16 +1,19 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getPrisma } from "../../../src/server/get-prisma";
 import { getProjects, getProjectsByTags } from "../../../src/server/lib/project-services";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../auth/[...nextauth]";
+import { assertAuth } from "../../../src/server/lib/api-helpers";
 
 export const ProjectsHandler = async (request: NextApiRequest, response: NextApiResponse) => {
-    if (request.method === 'POST') {
+    if (request.method === "POST") {
         try {
             const project = await getPrisma().project.create({
                 data: {
                     name: request.body.name,
                     url: request.body.url,
                     group: request.body.group,
-                    is_running: false,
+                    is_running: false
                 }
             });
             response.status(201).send(project);
@@ -40,4 +43,4 @@ export const ProjectsHandler = async (request: NextApiRequest, response: NextApi
     }
 }
 
-export default ProjectsHandler;
+export default assertAuth(ProjectsHandler);

@@ -8,10 +8,11 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Link from "next/link";
 import Image from "next/image";
-import { PropsWithChildren, ReactNode } from "react";
+import { PropsWithChildren, ReactNode, useMemo } from "react";
 import { version } from "../../package.json";
 import { NavigationEntry } from "../utils/get-navigation";
 import { THEME } from "../../config";
+import { signIn, signOut, useSession } from "next-auth/react";
 
 export type LayoutProps = PropsWithChildren<{
     title?: string;
@@ -32,10 +33,19 @@ export const Layout = ({
                            showBack = true,
                            backLink,
                        }: LayoutProps) => {
+    const { data: session } = useSession();
     const pages = navigation.filter((item) => !item.isGroup);
     const groups = navigation.filter((item) => item.isGroup);
+
+    const hasSidebar = useMemo(() => {
+        if (!session) {
+            return false;
+        }
+        return showSidebar;
+    }, [ showSidebar, session ]);
+
     return <Box>
-        { showSidebar && <Drawer
+        { hasSidebar && <Drawer
           sx={ {
               width: drawerWidth,
               flexShrink: 0,
@@ -100,35 +110,40 @@ export const Layout = ({
             <AppBar position={ 'relative' }
                 variant={ 'outlined' }
                 sx={ {
-                    background: 'transparent',
-                    left: showSidebar ? `${ drawerWidth }px` : 0,
-                    maxWidth: showSidebar ? `calc(100% - ${ drawerWidth }px)` : '100%',
+                    background: "transparent",
+                    left: hasSidebar ? `${ drawerWidth }px` : 0,
+                    maxWidth: hasSidebar ? `calc(100% - ${ drawerWidth }px)` : "100%"
                 } }>
                 <Toolbar variant={ 'regular' }>
                     <Stack direction={ 'row' } flex={ 1 } justifyContent={ 'space-between' } alignItems={ 'center' }
                         spacing={ 1 }>
-                        <Stack direction={ 'row' } alignItems={ 'center' } spacing={ 1 }>
+                        <Stack direction={ "row" } alignItems={ "center" } spacing={ 1 }>
 
-                            { !showSidebar && <Image alt={ 'Logo' } src={ THEME.logo } width={ 50 } height={ 40 }/> }
+                            { !hasSidebar && <Image alt={ "Logo" } src={ THEME.logo } width={ 50 } height={ 40 } /> }
 
-                            { showBack && <Link href={ backLink ?? '/' }>
-                                <IconButton>
-                                    <ArrowBack/>
-                                </IconButton>
+                            { showBack && <Link href={ backLink ?? "/" }>
+                              <IconButton>
+                                <ArrowBack />
+                              </IconButton>
                             </Link> }
-                            <Typography variant="h5" noWrap color={ 'textPrimary' }>
+                            <Typography variant="h5" noWrap color={ "textPrimary" }>
                                 { title }
                             </Typography>
                         </Stack>
-                        { actions }
+                        <Stack direction={ "row" } alignItems={ "flex-end" } spacing={ 1 }>
+                            { session ? actions : <Button onClick={ () => signIn() }>Login</Button> }
+                            { session && <Button variant={ "text" } onClick={ () => signOut() }>
+                                { session.user?.name }
+                            </Button> }
+                        </Stack>
                     </Stack>
                 </Toolbar>
             </AppBar>
             <Box sx={ {
-                marginLeft: showSidebar ? `${ drawerWidth }px` : 0,
-                p: 5,
+                marginLeft: hasSidebar ? `${ drawerWidth }px` : 0,
+                p: 5
             } }>
-                { children }
+                { session && children }
             </Box>
         </Box>
     </Box>

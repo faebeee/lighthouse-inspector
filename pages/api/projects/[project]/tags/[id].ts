@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getTagsByProjectId, removeTagFromProject } from "../../../../../src/server/lib/tag-service";
+import { assertAuth } from "../../../../../src/server/lib/api-helpers";
 
 export const projectTagApiHandler = async (request: NextApiRequest, response: NextApiResponse) => {
     if (request.method === "DELETE") {
@@ -9,4 +10,4 @@ export const projectTagApiHandler = async (request: NextApiRequest, response: Ne
         return;
     }
 };
-export default projectTagApiHandler;
+export default assertAuth(projectTagApiHandler);

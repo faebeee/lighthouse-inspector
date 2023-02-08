@@ -1,5 +1,6 @@
 import { deleteProject, getProjectById, updateProject } from "../../../../src/server/lib/project-services";
 import { NextApiRequest, NextApiResponse } from "next";
+import { assertAuth } from "../../../../src/server/lib/api-helpers";
 
 export const projectHandler = async (request: NextApiRequest, response: NextApiResponse) => {
     if (request.method === 'DELETE') {
@@ -22,4 +23,4 @@ export const projectHandler = async (request: NextApiRequest, response: NextApiR
     }
 
 }
-export default projectHandler;
+export default assertAuth(projectHandler);
