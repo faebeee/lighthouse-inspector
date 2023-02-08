@@ -141,7 +141,6 @@ export const ProjectPage = ({
 
     return <Layout
         backLink={ project.group ? `/group/${ project.group }` : '/' }
-        showSidebar={ false }
         title={ project.name }
         actions={<Button variant={ 'text' } disabled={ isLoading }
             onClick={ onRunReport }>{ isLoading ? 'Loading...' : 'Run' }</Button>}

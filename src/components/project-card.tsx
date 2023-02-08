@@ -56,29 +56,6 @@ export const ProjectCard = ({ report, project }: ProjectCardProps) => {
                 { x: "SEO", y: report.SEO, fill: COLOR.SEO },
                 { x: "PWA", y: report.PWA, fill: COLOR.PWA }
             ] } /> }
-
-            { report && <TableContainer>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Performance</TableCell>
-                    <TableCell>Accessibility</TableCell>
-                    <TableCell>Best Practices</TableCell>
-                    <TableCell>SEO</TableCell>
-                    <TableCell>PWA</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  <TableRow>
-                    <TableCell>{ report.performance }</TableCell>
-                    <TableCell>{ report.accessibility }</TableCell>
-                    <TableCell>{ report.bestPractices }</TableCell>
-                    <TableCell>{ report.SEO }</TableCell>
-                    <TableCell>{ report.PWA }</TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </TableContainer> }
         </CardContent>
         <CardActions>
             { project.group && <Link href={ `/group/${ project.group }` }>

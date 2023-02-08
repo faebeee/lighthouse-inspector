@@ -107,7 +107,7 @@ export const Layout = ({
           </MenuList>
         </Drawer> }
         <Box>
-            <AppBar position={ 'relative' }
+            <AppBar position={ 'sticky' }
                 variant={ 'outlined' }
                 sx={ {
                     background: "transparent",
