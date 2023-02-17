@@ -100,7 +100,8 @@ export const SettingsPage = ({
                 onClick={ onRunReport }>{ isLoading ? "Loading..." : "Run" }</Button> }
         navigation={ navigation }>
         <Grid container spacing={ 2 }>
-            <Grid item xs={ 12 } md={ 4 }>
+
+            <Grid item xs={ 12 } xl={ 4 }>
                 <Card sx={ { minHeight: "320px" } }>
                     <CardContent>
                         <Typography color={ "textPrimary" } variant={ "subtitle2" }>URL</Typography>
@@ -117,7 +118,7 @@ export const SettingsPage = ({
             </Grid>
 
 
-            <Grid item xs={ 12 } md={ 4 }>
+            <Grid item xs={ 12 } xl={ 4 }>
                 <Card sx={ { minHeight: "320px" } }>
                     <CardContent>
                         <Typography color={ "textPrimary" } variant={ "subtitle2" }>Settings</Typography>
@@ -135,7 +136,7 @@ export const SettingsPage = ({
                 </Card>
             </Grid>
 
-            <Grid item xs={ 12 } md={ 4 }>
+            <Grid item xs={ 12 } xl={ 4 }>
                 <Card sx={ { minHeight: "320px" } }>
                     <CardContent>
                         <Typography color={ "textPrimary" } variant={ "subtitle2" }>Tags</Typography>

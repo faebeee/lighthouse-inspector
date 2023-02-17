@@ -26,6 +26,7 @@ export type GridRow = {
     groupLink: string | null;
     name: string;
     type: string;
+    serverResponseTime: number | null;
     performance: number;
     accessibility: number;
     bestPractices: number;
@@ -85,6 +86,7 @@ export const ReportsPage = ({ navigation }: ReportsPageProps) => {
                     groupLink: project.group,
                     name: project.name,
                     type: desktopReportsApi.data?.[project.id].type,
+                    serverResponseTime: desktopReportsApi.data?.[project.id].serverResponseTime,
                     performance: desktopReportsApi.data?.[project.id].performance,
                     accessibility: desktopReportsApi.data?.[project.id].accessibility,
                     bestPractices: desktopReportsApi.data?.[project.id].bestPractices,
@@ -103,6 +105,7 @@ export const ReportsPage = ({ navigation }: ReportsPageProps) => {
                     groupLink: project.group,
                     name: project.name,
                     type: mobileReportsApi.data?.[project.id].type,
+                    serverResponseTime: mobileReportsApi.data?.[project.id].serverResponseTime,
                     performance: mobileReportsApi.data?.[project.id].performance,
                     accessibility: mobileReportsApi.data?.[project.id].accessibility,
                     bestPractices: mobileReportsApi.data?.[project.id].bestPractices,
@@ -141,7 +144,7 @@ export const ReportsPage = ({ navigation }: ReportsPageProps) => {
                 <Button color={ "secondary" } variant={ "text" }>{ params.value }</Button>
             </Link>
         },
-        { field: "url", headerName: "Url", flex: 1 },
+        { field: "serverResponseTime", headerName: "Speed", flex: 1 },
         { field: "performance", headerName: "Performance", flex: 1 },
         { field: "accessibility", headerName: "Accessibility", flex: 1 },
         { field: "bestPractices", headerName: "Best Practices", flex: 1 },
