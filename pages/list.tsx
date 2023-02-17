@@ -12,6 +12,7 @@ import { DATE_FORMAT } from "../config";
 import { useResource } from "../src/hooks/use-resource";
 import { useSelectionList } from "@dreipol/t3-react-utils";
 import Box from "@mui/material/Box";
+import { useEndpoint } from "../src/hooks/use-endpoint";
 
 export type ReportsPageProps = {
     navigation: NavigationEntry[];
@@ -62,6 +63,12 @@ export const ReportsPage = ({ navigation }: ReportsPageProps) => {
         url: `/api/reports/`,
         params: { type: "mobile" }
     }, 5000);
+
+    const inspectEndpoint = useEndpoint<Project[]>({ url: `/api/inspect` }, 2000);
+    const onInspectAllClicked = () => {
+        inspectEndpoint.call("POST");
+    };
+
 
     useEffect(() => {
         if (projectsApi.isLoading || desktopReportsApi.isLoading || mobileReportsApi.isLoading) {
@@ -148,9 +155,14 @@ export const ReportsPage = ({ navigation }: ReportsPageProps) => {
         },
     ];
     return <Layout navigation={ navigation } backLink={ "/" } title={ "Lighthouse Inspector" }
-        actions={ <Link href={ `/projects/new` }>
-            <Button fullWidth variant={ "contained" } color={ "primary" }>New</Button>
-        </Link> }>
+        actions={ <>
+            <Button onClick={ onInspectAllClicked } disabled={ (inspectEndpoint.data ?? []).length > 0 }>
+                Inspect All
+            </Button>
+            <Link href={ `/projects/new` }>
+                <Button fullWidth variant={ "contained" } color={ "primary" }>New</Button>
+            </Link>
+        </> }>
         <Typography sx={ { mb: 4 } } color={ "textPrimary" } variant={ "h1" }>Projects</Typography>
         <Box py={ 2 }>
             <Stack spacing={ 1 } direction={ "row" }>

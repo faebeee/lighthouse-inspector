@@ -6,6 +6,7 @@ import { useCallback } from "react";
 export type Tag = {
     name: string;
     id?: string;
+
 }
 
 export type ProjectTagsProps = {

@@ -22,19 +22,20 @@ model Project {
 }
 
 model LighthouseRunReport {
-  id             Int      @id @default(autoincrement())
-  project        Project  @relation(fields: [projectId], references: [id])
-  projectId      Int
-  date           DateTime
-  finalUrl       String
-  performance    Float
-  accessibility  Float
-  bestPractices  Float
-  SEO            Float
-  PWA            Float
-  htmlReportFile String?
-  type           String
-  stacks         String[] @default([])
+  id                 Int      @id @default(autoincrement())
+  project            Project  @relation(fields: [projectId], references: [id])
+  projectId          Int
+  date               DateTime
+  finalUrl           String
+  performance        Float
+  accessibility      Float
+  bestPractices      Float
+  SEO                Float
+  PWA                Float
+  serverResponseTime Float?
+  htmlReportFile     String?
+  type               String
+  stacks             String[] @default([])
 }
 
 model Tag {

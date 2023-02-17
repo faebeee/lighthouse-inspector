@@ -23,6 +23,7 @@ import { format } from "date-fns";
 import { ProjectCard } from "../../src/components/project-card";
 import TravelExploreIcon from "@mui/icons-material/TravelExplore";
 import { useResource } from "../../src/hooks/use-resource";
+import { useEndpoint } from "../../src/hooks/use-endpoint";
 
 export type ReportsPageProps = {
     navigation: NavigationEntry[];
@@ -48,6 +49,7 @@ export const ReportsPage = ({ navigation, group }: ReportsPageProps) => {
         params: { type: "desktop" }
     }, 1000);
     const [ isLoading, setIsLoading ] = useState(false);
+    const inspectEndpoint = useEndpoint<Project[]>({ url: `/api/inspect` }, 2000);
 
     const runGroup = () => {
         setIsLoading(true);
@@ -61,7 +63,7 @@ export const ReportsPage = ({ navigation, group }: ReportsPageProps) => {
 
     return <Layout navigation={navigation} title={group}
         actions={<>
-            <Button variant={'text'} onClick={runGroup}>Run</Button>
+            <Button variant={'text'} onClick={runGroup} disabled={ (inspectEndpoint.data ?? []).length > 0}>Run</Button>
         </>}>
         <Grid container spacing={2}>
             <Grid item xs={12}>
@@ -76,11 +78,8 @@ export const ReportsPage = ({ navigation, group }: ReportsPageProps) => {
                                         <TableCell>Project</TableCell>
                                         <TableCell>URL</TableCell>
                                         <TableCell>Is Running</TableCell>
+                                        <TableCell>Response Time</TableCell>
                                         <TableCell>Performance</TableCell>
-                                        <TableCell>Accessibility</TableCell>
-                                        <TableCell>Best Practices</TableCell>
-                                        <TableCell>SEO</TableCell>
-                                        <TableCell>PWA</TableCell>
                                         <TableCell>Type</TableCell>
                                         <TableCell>Date</TableCell>
                                     </TableRow>
@@ -100,11 +99,8 @@ export const ReportsPage = ({ navigation, group }: ReportsPageProps) => {
                                                 </Link>
                                             </TableCell>
                                             <TableCell>{ project.is_running && <TravelExploreIcon /> }</TableCell>
+                                            <TableCell>{ report?.serverResponseTime }</TableCell>
                                             <TableCell>{ report?.performance }</TableCell>
-                                            <TableCell>{ report?.accessibility }</TableCell>
-                                            <TableCell>{ report?.bestPractices }</TableCell>
-                                            <TableCell>{ report?.SEO }</TableCell>
-                                            <TableCell>{ report?.PWA }</TableCell>
                                             <TableCell>{ report?.type }</TableCell>
                                             <TableCell>{ report && format(new Date(report.date), DATE_FORMAT) }</TableCell>
                                         </TableRow>)

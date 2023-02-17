@@ -24,6 +24,7 @@ export const persistReport = async (project: Project, data: LighthouseReport, ht
             accessibility: data.categories['accessibility'].score * 100,
             performance: data.categories['performance'].score * 100,
             type: data.configSettings.formFactor,
+            serverResponseTime: data.audits["server-response-time"].numericValue,
             finalUrl: data.finalUrl,
             stacks: data.stackPacks.map((stack) => stack.title),
             projectId: project.id,

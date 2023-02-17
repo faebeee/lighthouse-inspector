@@ -13,6 +13,12 @@ export const assertMethod = (method: Method, handler: NextApiHandler) => (reques
     return handler(request, response);
 };
 
+export const allowed = (method: Method, handler: NextApiHandler) => (request: NextApiRequest, response: NextApiResponse) => {
+    if (request.method === method) {
+        return handler(request, response);
+    }
+};
+
 export const assertAuth = (handler: NextApiHandler) => async (request: NextApiRequest, response: NextApiResponse) => {
     const session = await getServerSession(request, response, authOptions);
     if (!session) {

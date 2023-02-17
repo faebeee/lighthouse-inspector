@@ -10,12 +10,12 @@ export type StatsChartProps = {
 
 export const HistoryChart = ({ keys, data }: StatsChartProps) => {
     const theme = useTheme();
-    return <ResponsiveVictoryChart innerRadius={50}>
+    return <ResponsiveVictoryChart height={ 240 }>
         <VictoryAxis
             crossAxis
             dependentAxis
             style={ {
-                tickLabels: { fontSize: 14, fill: theme.palette.text.primary },
+                tickLabels: { fontSize: 14, fill: theme.palette.text.primary }
             } }
             domain={ [ 0, 100 ] }
             standalone={ false }

@@ -10,6 +10,7 @@ import { ProjectCard } from "../src/components/project-card";
 import { useResource } from "../src/hooks/use-resource";
 import { useSelectionList } from "@dreipol/t3-react-utils";
 import Box from "@mui/material/Box";
+import { useEndpoint } from "../src/hooks/use-endpoint";
 
 export type ReportsPageProps = {
     navigation: NavigationEntry[];
@@ -28,6 +29,11 @@ export const getServerSideProps: GetServerSideProps<ReportsPageProps> = async ()
 export const ReportsPage = ({ navigation }: ReportsPageProps) => {
     const activeTags = useSelectionList<number>([]);
     const tagsApi = useResource<Tag[]>({ url: `/api/tags` }, 5000);
+    const inspectEndpoint = useEndpoint<Project[]>({ url: `/api/inspect` }, 2000);
+    const onInspectAllClicked = () => {
+        inspectEndpoint.call("POST");
+    };
+
     const projectsApi = useResource<Project[]>({
         url: `/api/projects`,
         params: {
@@ -40,9 +46,14 @@ export const ReportsPage = ({ navigation }: ReportsPageProps) => {
     }, 1000);
 
     return <Layout navigation={ navigation } showBack={ false } title={ "Lighthouse Inspector" }
-        actions={ <Link href={ `/projects/new` }>
-            <Button fullWidth variant={ "contained" } color={ "primary" }>New</Button>
-        </Link> }>
+        actions={ <>
+            <Button onClick={ onInspectAllClicked } disabled={ (inspectEndpoint.data ?? []).length > 0 }>
+                Inspect All
+            </Button>
+            <Link href={ `/projects/new` }>
+                <Button fullWidth variant={ "contained" } color={ "primary" }>New</Button>
+            </Link>
+        </> }>
         <Typography sx={ { mb: 2 } } color={ "textPrimary" } variant={ "h1" }>Projects</Typography>
 
         <Box py={ 2 }>

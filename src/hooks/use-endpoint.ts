@@ -5,9 +5,13 @@ import { useEffect, useState } from "react";
 
 import axios from "axios";
 
-export const swrFetcher = (config: { url: string; params: unknown }) => {
-    return axios
-        .get(config.url, { params: config.params })
+export const swrFetcher = (config: { method: string, url: string; params: unknown, data?: object }) => {
+    return axios({
+        url: config.url,
+        params: config.params,
+        method: config.method,
+        data: config.data
+    })
         .then((res) => res.data)
         .catch((e) => {
             console.error(e);
@@ -15,7 +19,7 @@ export const swrFetcher = (config: { url: string; params: unknown }) => {
         });
 };
 
-export type UseResourceProps = {
+export type UseEndpointProps = {
     /**
      * URL of the endpoint
      */
@@ -27,10 +31,10 @@ export type UseResourceProps = {
     params?: object;
 };
 
-export const useResource = <T>({
+export const useEndpoint = <T>({
                                    url,
                                    params = {}
-                               }: UseResourceProps, refreshInterval?: number) => {
+                               }: UseEndpointProps, refreshInterval?: number) => {
     const [ data, setData ] = useState<T | null>(null);
 
     const {
@@ -55,8 +59,13 @@ export const useResource = <T>({
         }
     }, [ response ]);
 
+    const call = (method: string, data?: object) => {
+        return swrFetcher({ url, method, params, data });
+    };
+
     return {
         data,
+        call,
         error,
         mutate,
         isLoading

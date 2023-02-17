@@ -3,7 +3,20 @@ import { getPrisma } from "../get-prisma";
 import { getLatestReportForProject } from "./lighthousereport-services";
 
 export const getProjects = async (): Promise<Project[]> => {
-    return (await getPrisma().project.findMany({ include: { tags: true } })) ?? [];
+    return (await getPrisma().project.findMany({
+        include: { tags: true }
+    })) ?? [];
+};
+
+export const getRunningProjects = async (): Promise<Project[]> => {
+    return (await getPrisma().project.findMany({
+        where: {
+            is_running: true
+        },
+        include: {
+            tags: true
+        }
+    })) ?? [];
 };
 
 export const getProjectsByTags = async (tagId: number[]): Promise<Project[]> => {
@@ -16,7 +29,8 @@ export const getProjectsByTags = async (tagId: number[]): Promise<Project[]> => 
                     }
                 }
             }
-        }, include: { tags: true }
+        },
+        include: { tags: true }
     })) ?? [];
 };
 
