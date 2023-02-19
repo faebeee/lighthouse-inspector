@@ -1,5 +1,4 @@
 import * as chromeLauncher from 'chrome-launcher';
-import psi from 'psi';
 import { LighthouseReport } from "../../../types/lighthouse";
 
 const lighthouse = require('lighthouse');
@@ -29,7 +28,7 @@ export const MOBILE_CONFIG = {
 }
 
 export const inspector = async (url: string, config:unknown = {}) => {
-    const chrome = await chromeLauncher.launch({ chromeFlags: [ '--headless', '--no-gpu' ] });
+    const chrome = await chromeLauncher.launch({ chromeFlags: [ '--headless', '--disable-gpu', '--no-sandbox' ] });
     const options = {
         logLevel: 'info',
         output: [ 'json', 'html' ],

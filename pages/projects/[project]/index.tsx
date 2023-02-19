@@ -228,7 +228,7 @@ export const ProjectPage = ({
                                     alignItems: "center"
                                 } }>
                                     <Typography variant={ "h2" }
-                                        noWrap={ true }>{ Math.round(latestReport?.serverResponseTime) ?? "???" }ms</Typography>
+                                        noWrap={ true }>{ latestReport?.serverResponseTime ? Math.round(latestReport?.serverResponseTime) : "???" }ms</Typography>
                                 </Box>
                             </CardContent>
                         </Card>

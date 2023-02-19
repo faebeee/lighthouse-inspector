@@ -44,6 +44,7 @@ services:
       - MINIO_BUCKET=lighthouse-report
       - MINIO_ACCESS_KEY=zwX1TeYJGdVRpW4a
       - MINIO_SECRET_KEY=OsF3XMHMYkeP4QRRHLbXPoPWeuQ9mBD1
+      - NEXTAUTH_SECRET=mBBB7M61VJBU5VaYCW54g439JERbtH4Ge61j
     ports:
-      - "8081:3000"
+      - "3000:3000"
 
