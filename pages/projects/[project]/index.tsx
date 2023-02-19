@@ -20,6 +20,7 @@ import { ActionsList } from "../../../src/components/actions-list";
 import { useEndpoint } from "../../../src/hooks/use-endpoint";
 import { useResource } from "../../../src/hooks/use-resource";
 import { Stack } from "@mui/system";
+import { SingleStat } from "../../../src/components/single-stat";
 
 export type ProjectPageProps = {
     project: Project;
@@ -227,10 +228,118 @@ export const ProjectPage = ({
                                     alignItems: "center"
                                 } }>
                                     <Typography variant={ "h2" }
-                                        noWrap={ true }>{ latestReport?.serverResponseTime ?? "???" }ms</Typography>
+                                        noWrap={ true }>{ Math.round(latestReport?.serverResponseTime) ?? "???" }ms</Typography>
                                 </Box>
                             </CardContent>
                         </Card>
+                    </Grid>
+
+                    <Grid item xs={ 12 } lg={ 6 } xl={ 3 }>
+                        { latestReport && <Card sx={ { height: "320px" } }>
+                          <CardContent sx={ { display: "flex", flexDirection: "column", height: "100%" } }>
+                            <Typography color={ "textPrimary" } variant={ "subtitle2" }>Performance</Typography>
+                            <Box sx={ {
+                                flex: "1 0 100%",
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center"
+                            } }>
+                              <SingleStat
+                                width={ 300 }
+                                height={ 240 }
+                                value={ latestReport.performance }
+                                label={ "Performance" } />
+                            </Box>
+                          </CardContent>
+                        </Card> }
+                    </Grid>
+
+                    <Grid item xs={ 12 } lg={ 6 } xl={ 3 }>
+                        { latestReport && <Card sx={ { height: "320px" } }>
+                          <CardContent sx={ { display: "flex", flexDirection: "column", height: "100%" } }>
+                            <Typography color={ "textPrimary" } variant={ "subtitle2" }>Accessibility</Typography>
+                            <Box sx={ {
+                                flex: "1 0 100%",
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center"
+                            } }>
+                              <SingleStat
+                                width={ 300 }
+                                height={ 240 }
+                                value={ latestReport.accessibility }
+                                label={ "accessibility" } />
+                            </Box>
+                          </CardContent>
+                        </Card> }
+                    </Grid>
+
+                    <Grid item xs={ 12 } lg={ 6 } xl={ 3 }>
+                        { latestReport && <Card sx={ { height: "320px" } }>
+                          <CardContent sx={ { display: "flex", flexDirection: "column", height: "100%" } }>
+                            <Typography color={ "textPrimary" } variant={ "subtitle2" }>Best Practices</Typography>
+                            <Box sx={ {
+                                flex: "1 0 100%",
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center"
+                            } }>
+                              <SingleStat
+                                width={ 300 }
+                                height={ 240 }
+                                value={ latestReport.bestPractices }
+                                label={ "bestPractices" } />
+                            </Box>
+                          </CardContent>
+                        </Card> }
+                    </Grid>
+
+                    <Grid item xs={ 12 } lg={ 6 } xl={ 3 }>
+                        { latestReport && <Card sx={ { height: "320px" } }>
+                          <CardContent sx={ { display: "flex", flexDirection: "column", height: "100%" } }>
+                            <Typography color={ "textPrimary" } variant={ "subtitle2" }>Report</Typography>
+                            <Box sx={ {
+                                flex: "1 0 100%",
+                                display: "flex",
+                                flexDirection: "column",
+                                justifyContent: "center",
+                                alignItems: "center"
+                            } }>
+                              <Link href={ `/api/reports/${latestReport.id}` } target={ "blank" }>
+                                <Typography variant={ "h6" }
+                                  color={ "primary" }>{ format(new Date(latestReport.date), DATE_FORMAT) }</Typography>
+                              </Link>
+                            </Box>
+                          </CardContent>
+                        </Card> }
+                    </Grid>
+
+                    <Grid item xs={ 12 } lg={ 6 }>
+                        { latestReport && <Card sx={ { height: "320px" } }>
+                          <CardContent sx={ { display: "flex", flexDirection: "column", height: "100%" } }>
+                            <Typography color={ "textPrimary" } variant={ "subtitle2" }>Response History</Typography>
+                              { value === "desktop" &&
+                                <HistoryChart keys={ [ { label: "serverResponseTime", color: COLOR.SPEED } ] }
+                                  data={ [ ...desktopReports ].reverse() } /> }
+
+                              { value === "mobile" &&
+                                <HistoryChart keys={ [ { label: "serverResponseTime", color: COLOR.SPEED } ] }
+                                  data={ [ ...mobileReports ].reverse() } /> }
+                          </CardContent>
+                        </Card> }
+                    </Grid>
+
+                    <Grid item xs={ 12 } lg={ 6 }>
+                        { latestReport && <Card sx={ { height: "320px" } }>
+                          <CardContent sx={ { display: "flex", flexDirection: "column", height: "100%" } }>
+                            <Typography color={ "textPrimary" } variant={ "subtitle2" }>Stats History</Typography>
+                              { value === "desktop" && desktopReports.length > 0 &&
+                                <HistoryChart keys={ lines } data={ [ ...desktopReports ].reverse() } /> }
+
+                              { value === "mobile" && mobileReports.length > 0 &&
+                                <HistoryChart keys={ lines } data={ [ ...mobileReports ].reverse() } /> }
+                          </CardContent>
+                        </Card> }
                     </Grid>
 
                     <Grid item xs={ 12 } lg={ 6 } xl={ 4 }>
@@ -286,34 +395,6 @@ export const ProjectPage = ({
                                   color={ "textSecondary" }>{ project.url }</Typography>
                               </Link>
                             </Box>
-                          </CardContent>
-                        </Card> }
-                    </Grid>
-
-                    <Grid item xs={ 6 }>
-                        { latestReport && <Card sx={ { height: "320px" } }>
-                          <CardContent sx={ { display: "flex", flexDirection: "column", height: "100%" } }>
-                            <Typography color={ "textPrimary" } variant={ "subtitle2" }>Response History</Typography>
-                              { value === "desktop" &&
-                                <HistoryChart keys={ [ { label: "serverResponseTime", color: COLOR.SPEED } ] }
-                                  data={ [ ...desktopReports ].reverse() } /> }
-
-                              { value === "mobile" &&
-                                <HistoryChart keys={ [ { label: "serverResponseTime", color: COLOR.SPEED } ] }
-                                  data={ [ ...mobileReports ].reverse() } /> }
-                          </CardContent>
-                        </Card> }
-                    </Grid>
-
-                    <Grid item xs={ 6 }>
-                        { latestReport && <Card sx={ { height: "320px" } }>
-                          <CardContent sx={ { display: "flex", flexDirection: "column", height: "100%" } }>
-                            <Typography color={ "textPrimary" } variant={ "subtitle2" }>Stats History</Typography>
-                              { value === "desktop" && desktopReports.length > 0 &&
-                                <HistoryChart keys={ lines } data={ [ ...desktopReports ].reverse() } /> }
-
-                              { value === "mobile" && mobileReports.length > 0 &&
-                                <HistoryChart keys={ lines } data={ [ ...mobileReports ].reverse() } /> }
                           </CardContent>
                         </Card> }
                     </Grid>

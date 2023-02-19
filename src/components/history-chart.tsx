@@ -34,15 +34,15 @@ export const HistoryChart = ({ keys, data }: StatsChartProps) => {
                 keys.map((key) => ({ name: key.label }))
             }
         />
-        { keys.map((key) => (<VictoryLine
+        { keys.map((key, index) => (<VictoryLine
             standalone={ false }
             key={ key.label }
             minDomain={ { y: 0 } }
             maxDomain={ { y: 100 } }
             style={ {
-                data: { stroke: key.color },
+                data: { stroke: Object.values(COLOR)[index] }
             } }
-            x={ 'date' }
+            x={ "date" }
             y={ key.label }
             data={ data }
         />)) }
