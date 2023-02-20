@@ -1,4 +1,4 @@
-import * as chromeLauncher from 'chrome-launcher';
+import * as chromeLauncher from "chrome-launcher";
 import { LighthouseReport } from "../../../types/lighthouse";
 
 const lighthouse = require('lighthouse');
@@ -28,15 +28,19 @@ export const MOBILE_CONFIG = {
 }
 
 export const inspector = async (url: string, config:unknown = {}) => {
-    const chrome = await chromeLauncher.launch({ chromeFlags: [ '--headless', '--disable-gpu', '--no-sandbox' ] });
+    const chrome = await chromeLauncher.launch({
+        chromeFlags: [
+            "--no-sandbox", "--disable-dev-shm-usage", "--headless", "in-process-gpu"
+        ]
+    });
     const options = {
-        logLevel: 'info',
-        output: [ 'json', 'html' ],
+        logLevel: "info",
+        output: [ "json", "html" ],
         port: chrome.port,
-        locale: 'en-US',
+        locale: "en-US",
         settings: {
             throttling: constants.throttling.desktopDense4G,
-            screenEmulation: constants.screenEmulationMetrics.desktop,
+            screenEmulation: constants.screenEmulationMetrics.desktop
         }
     };
     const runnerResult = await lighthouse(url, options, config);

@@ -372,7 +372,9 @@ export const ProjectPage = ({
                                 justifyContent: "center",
                                 alignItems: "center"
                             } }>
-                              <Typography variant={ "h2" }>{ project.group }</Typography>
+                                { project.group && <Link href={ project.group ? `/group/${ project.group }` : "" }>
+                                  <Typography color={ "primary" } variant={ "h2" }>{ project.group }</Typography>
+                                </Link> }
                             </Box>
                           </CardContent>
                         </Card> }
@@ -391,8 +393,8 @@ export const ProjectPage = ({
                                 alignItems: "center"
                             } }>
                               <Link href={ project.url } target={ "blank" }>
-                                <Typography variant={ "h6" }
-                                  color={ "textSecondary" }>{ project.url }</Typography>
+                                <Typography variant={ "h5" }
+                                  color={ "primary" }>{ project.url }</Typography>
                               </Link>
                             </Box>
                           </CardContent>
