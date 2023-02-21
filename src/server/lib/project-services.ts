@@ -7,6 +7,14 @@ export const getProjects = async (): Promise<Project[]> => {
         include: { tags: true }
     })) ?? [];
 };
+export const getAutoUpdateProjects = async (): Promise<Project[]> => {
+    return (await getPrisma().project.findMany({
+        where: {
+            interval_reporting: true
+        },
+        include: { tags: true }
+    })) ?? [];
+};
 
 export const getRunningProjects = async (): Promise<Project[]> => {
     return (await getPrisma().project.findMany({

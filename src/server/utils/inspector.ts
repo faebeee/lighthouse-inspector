@@ -27,10 +27,15 @@ export const MOBILE_CONFIG = {
     ],
 }
 
+console.log(process.env.DISABLE_GPU);
+
 export const inspector = async (url: string, config:unknown = {}) => {
     const chrome = await chromeLauncher.launch({
         chromeFlags: [
-            "--no-sandbox", "--disable-dev-shm-usage", "--headless", "in-process-gpu"
+            "--no-sandbox",
+            "--disable-dev-shm-usage",
+            "--headless",
+            ...(process.env.DISABLE_GPU ? ["in-process-gpu"] : [])
         ]
     });
     const options = {

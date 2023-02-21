@@ -34,6 +34,8 @@ export type GridRow = {
     PWA: number;
     report: number;
     reportDate: Date;
+    isRunning: boolean;
+    interval: boolean;
 }
 
 export const getServerSideProps: GetServerSideProps<ReportsPageProps> = async () => {
@@ -85,6 +87,8 @@ export const ReportsPage = ({ navigation }: ReportsPageProps) => {
                     group: project.group,
                     groupLink: project.group,
                     name: project.name,
+                    isRunning: project.is_running,
+                    interval: project.interval_reporting,
                     type: desktopReportsApi.data?.[project.id].type,
                     serverResponseTime: desktopReportsApi.data?.[project.id].serverResponseTime,
                     performance: desktopReportsApi.data?.[project.id].performance,
@@ -104,6 +108,8 @@ export const ReportsPage = ({ navigation }: ReportsPageProps) => {
                     group: project.group,
                     groupLink: project.group,
                     name: project.name,
+                    isRunning: project.is_running,
+                    interval: project.interval_reporting,
                     type: mobileReportsApi.data?.[project.id].type,
                     serverResponseTime: mobileReportsApi.data?.[project.id].serverResponseTime,
                     performance: mobileReportsApi.data?.[project.id].performance,
@@ -144,6 +150,8 @@ export const ReportsPage = ({ navigation }: ReportsPageProps) => {
                 <Button color={ "secondary" } variant={ "text" }>{ params.value }</Button>
             </Link>
         },
+        { field: "isRunning", headerName: "Is Running", flex: 1 },
+        { field: "interval", headerName: "Auto Update", flex: 1 },
         { field: "serverResponseTime", headerName: "Speed", flex: 1 },
         { field: "performance", headerName: "Performance", flex: 1 },
         { field: "accessibility", headerName: "Accessibility", flex: 1 },

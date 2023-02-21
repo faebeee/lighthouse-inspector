@@ -48,3 +48,26 @@ services:
     ports:
       - "3000:3000"
 
+
+  cron:
+    depends_on:
+      - database
+      - minio
+    image: lighthouse-inspector/cron
+    build:
+      dockerfile: ./cron.Dockerfile
+      args:
+        - DATABASE_URL=postgresql://postgres:postgres@database:5432/lhi
+        - MINIO_HOST=minio
+        - MINIO_BUCKET=lighthouse-report
+        - MINIO_ACCESS_KEY=zwX1TeYJGdVRpW4a
+        - MINIO_SECRET_KEY=OsF3XMHMYkeP4QRRHLbXPoPWeuQ9mBD1
+    volumes:
+      - ./:/usr/src/app
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@database:5432/lhi
+      - MINIO_HOST=minio
+      - MINIO_BUCKET=lighthouse-report
+      - MINIO_ACCESS_KEY=zwX1TeYJGdVRpW4a
+      - MINIO_SECRET_KEY=OsF3XMHMYkeP4QRRHLbXPoPWeuQ9mBD1
+

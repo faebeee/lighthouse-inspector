@@ -11,14 +11,15 @@ datasource db {
 }
 
 model Project {
-  id         Int                   @id @default(autoincrement())
-  name       String
-  url        String
-  group      String?
-  reports    LighthouseRunReport[]
-  tags       TagsOnProjects[]
-  is_running Boolean
-  repoUrl    String?
+  id                 Int                   @id @default(autoincrement())
+  name               String
+  url                String
+  group              String?
+  reports            LighthouseRunReport[]
+  tags               TagsOnProjects[]
+  is_running         Boolean
+  repoUrl            String?
+  interval_reporting Boolean               @default(false)
 }
 
 model LighthouseRunReport {

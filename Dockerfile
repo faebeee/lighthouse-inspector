@@ -16,6 +16,7 @@ RUN apk add --no-cache \
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 ENV CHROMIUM_PATH /usr/bin/chromium-browser
 ENV GOOGLE_CHROME_BIN /usr/bin/chromium-browser
+ENV DISABLE_GPU true
 
 COPY package.json package-lock.json /app/
 
@@ -26,4 +27,4 @@ RUN npm install
 ENV NODE_ENV=production
 RUN npm run build
 
-CMD ["npm", "run", "start"]
+CMD ["npm","run", "start"]

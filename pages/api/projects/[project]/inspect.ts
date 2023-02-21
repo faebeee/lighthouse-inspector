@@ -1,22 +1,15 @@
-import {NextApiHandler, NextApiRequest, NextApiResponse} from "next";
+import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
 import { assertAuth, assertMethod } from "../../../../src/server/lib/api-helpers";
-import {getProjectById, markProjectAsRunning} from "../../../../src/server/lib/project-services";
-import {runInspection} from "../../../../src/server/utils/run-inspection";
+import { getProjectById } from "../../../../src/server/lib/project-services";
+import { auditRunnerForProject } from "../../../../src/server/utils/audit-runner-for-project";
 
-export const inspectHandler: NextApiHandler = assertMethod('POST', async (request: NextApiRequest, response: NextApiResponse) => {
+export const inspectHandler: NextApiHandler = assertMethod("POST", async (request: NextApiRequest, response: NextApiResponse) => {
     const project = await getProjectById(parseInt(request.query.project as string));
     if (!project || project.is_running) {
         response.send(404);
         return;
     }
-    await markProjectAsRunning(project, true);
-    try {
-        await runInspection(project);
-        await markProjectAsRunning(project, false);
-    } catch (e) {
-        await markProjectAsRunning(project, false);
-        throw e;
-    }
+    await auditRunnerForProject(project);
 
     return response.send({});
 });

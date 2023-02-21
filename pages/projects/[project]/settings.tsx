@@ -4,7 +4,7 @@ import axios from "axios";
 import Link from "next/link";
 import { getProjectById, getProjects } from "../../../src/server/lib/project-services";
 import { Layout } from "../../../src/components/layout";
-import { Button, Card, CardActions, CardContent, Grid, TextField } from "@mui/material";
+import { Button, Card, CardActions, CardContent, Grid, Switch, TextField } from "@mui/material";
 import { Stack } from "@mui/system";
 import Typography from "@mui/material/Typography";
 import { LighthouseRunReport, Project } from "@prisma/client";
@@ -51,6 +51,7 @@ export const SettingsPage = ({
     const [ group, setGroup ] = useState(project.group);
     const [ name, setName ] = useState(project.name);
     const [ value, setValue ] = useState<string>("desktop");
+    const [ isIntervalOn, setIsInvervalOn ] = useState<boolean>(project.interval_reporting);
     const inspectEndpoint = useEndpoint<Project[]>({ url: `/api/inspect` }, 2000);
 
     const handleChange = (event: React.SyntheticEvent, newValue: string) => {
@@ -91,6 +92,18 @@ export const SettingsPage = ({
             });
     };
 
+    const handleIntervalReportingChange = (value: boolean) => {
+        setIsLoading(true);
+        axios.patch(`/api/projects/${ project.id }`, {
+            interval_reporting: value
+        })
+            .then(() => {
+                setIsInvervalOn(value);
+            })
+            .finally(() => {
+                setIsLoading(false);
+            });
+    };
 
     return <Layout
         backLink={ `/projects/${ project.id }` }
@@ -141,6 +154,17 @@ export const SettingsPage = ({
                     <CardContent>
                         <Typography color={ "textPrimary" } variant={ "subtitle2" }>Tags</Typography>
                         <ProjectTags projectId={ project.id } />
+                    </CardContent>
+                </Card>
+            </Grid>
+
+            <Grid item xs={ 12 } xl={ 4 }>
+                <Card sx={ { minHeight: "320px" } }>
+                    <CardContent>
+                        <Typography color={ "textPrimary" } variant={ "subtitle2" }>Auto Interval Reporting</Typography>
+                        <Switch checked={ isIntervalOn }
+                            disabled={ isLoading }
+                            onChange={ (e, value) => handleIntervalReportingChange(value) } />
                     </CardContent>
                 </Card>
             </Grid>
