@@ -131,7 +131,7 @@ export const ProjectPage = ({
             <Grid item xs={ 12 }>
                 <Grid container spacing={ 2 }>
                     <Grid container item xs={ 12 } xl={ 6 } spacing={ 2 }>
-                        <Grid item xs={ 12 } xl={ 4 }>
+                        <Grid item xs={ 12 } md={6} xl={ 4 }>
                             { latestReport && <Widget title={ "Performance" }>
                               <SingleStat
                                 width={ 300 }
@@ -141,7 +141,7 @@ export const ProjectPage = ({
                             </Widget> }
                         </Grid>
 
-                        <Grid item xs={ 12 } xl={ 4 }>
+                        <Grid item xs={ 12 } md={6} xl={ 4 }>
                             { latestReport && <Widget title={ "Accessibility" }>
                               <SingleStat
                                 width={ 300 }
@@ -151,7 +151,7 @@ export const ProjectPage = ({
                             </Widget> }
                         </Grid>
 
-                        <Grid item xs={ 12 } xl={ 4 }>
+                        <Grid item xs={ 12 } md={6} xl={ 4 }>
                             { latestReport && <Widget title={ "Best Practices" }>
                               <SingleStat
                                 width={ 300 }
@@ -193,7 +193,7 @@ export const ProjectPage = ({
                     </Grid>
 
                     <Grid container item xs={ 12 } xl={ 6 } spacing={ 2 }>
-                        <Grid item xs={ 12 } lg={ 6 } xl={ 4 }>
+                        <Grid item xs={ 12 } md={6} xl={ 4 }>
                             <Widget title={ "Initial Server Response Time" }>
                                 {latestReport && <NumericValue goodThreshold={ 800 } poorThreshold={ 1200 }
                                     value={ latestReport.serverResponseTime ?? 0 }
@@ -201,7 +201,7 @@ export const ProjectPage = ({
                             </Widget>
                         </Grid>
 
-                        <Grid item xs={ 12 } lg={ 6 } xl={ 4 }>
+                        <Grid item xs={ 12 } md={6} xl={ 4 }>
                             <Widget title={ "Time to interactive" }>
                                 {latestReport && <NumericValue goodThreshold={ 800 } poorThreshold={ 1200 }
                                     value={ latestReport.tti ?? 0 }
@@ -209,7 +209,7 @@ export const ProjectPage = ({
                             </Widget>
                         </Grid>
 
-                        <Grid item xs={ 12 } lg={ 6 } xl={ 4 }>
+                        <Grid item xs={ 12 } md={ 6 } xl={ 4 }>
                             { latestReport && <Widget title={ "Report" }>
                               <Link href={ `/api/reports/${ latestReport.id }` } target={ "blank" }>
                                 <Typography variant={ "h6" }
@@ -245,7 +245,7 @@ export const ProjectPage = ({
 
 
                     <Grid container item xs={ 12 } spacing={ 2 }>
-                        <Grid item xs={ 12 } lg={ 4 }>
+                        <Grid item xs={ 12 } md={ 4 }>
                             { latestReport && <Widget title={ "Screenshot" }><>
                                 { value === "desktop" && latestReport &&
                                   <img width={ "100%" } alt={ "desktop" }
@@ -258,7 +258,7 @@ export const ProjectPage = ({
                         </Grid>
 
 
-                        <Grid item xs={ 12 } lg={ 6 } xl={ 2 }>
+                        <Grid item xs={ 12 } md={ 6 } xl={ 2 }>
                             <Widget title={ "Project Running" }>
                                 <>
                                     { project.is_running && <Chip label={ "Is running" } color={ "primary" } /> }
@@ -266,7 +266,7 @@ export const ProjectPage = ({
                             </Widget>
                         </Grid>
 
-                        <Grid item xs={ 12 } lg={ 6 } xl={ 2 }>
+                        <Grid item xs={ 12 } md={ 6 } xl={ 2 }>
                             { latestReport && <Widget title={ "Group" }>
                                 { project.group && <Link href={ project.group ? `/group/${ project.group }` : "" }>
                                   <Typography color={ "primary" } variant={ "h2" }>{ project.group }</Typography>
@@ -274,7 +274,7 @@ export const ProjectPage = ({
                             </Widget> }
                         </Grid>
 
-                        <Grid item xs={ 12 } lg={ 6 } xl={ 2 }>
+                        <Grid item xs={ 12 } md={ 6 } xl={ 2 }>
                             <Widget title={ "Tags" }>
                                 <Stack direction={ "row" } spacing={ 1 }>
                                     { tagsApi.data?.map((tag: Tag) => <Chip label={ tag.name } key={ tag.id } />) }
@@ -282,7 +282,7 @@ export const ProjectPage = ({
                             </Widget>
                         </Grid>
 
-                        <Grid item xs={ 12 } lg={ 6 } xl={ 2 }>
+                        <Grid item xs={ 12 } md={ 6 } xl={ 2 }>
                             <Widget title={ "URL" }>
                                 <Link href={ project.url } target={ "blank" }>
                                     <Typography variant={ "h5" }
