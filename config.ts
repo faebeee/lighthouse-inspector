@@ -1,18 +1,20 @@
 import { PaletteMode } from "@mui/material";
 
-export const REPORTS_FOLDER = '_reports';
-export const REPORTFILE_PROJECT_DELIMITER = '::';
-export const REPORTFILE_DATE_FORMAT = 'yyyy-MM-dd-hhmmss';
-export const DATE_FORMAT = 'yyyy-MM-dd hh:mm:ss';
+export const REPORTS_FOLDER = "_reports";
+export const REPORTFILE_PROJECT_DELIMITER = "::";
+export const REPORTFILE_DATE_FORMAT = "yyyy-MM-dd-hhmmss";
+export const DATE_FORMAT = "yyyy-MM-dd hh:mm:ss";
+
+export const CHART_BLUR = "5px";
 
 const THEME_LIGHT = {
-    logo: '/lighthouse_logo_dark.png',
-    mode: 'light' as PaletteMode,
-    primary: 'rgb(68,97,211)',
-    secondary: 'rgb(68,173,211)',
-    background: '#F7F7FB',
-    cardBackground: '#FCFDFD',
-}
+    logo: "/lighthouse_logo_dark.png",
+    mode: "light" as PaletteMode,
+    primary: "rgb(68,97,211)",
+    secondary: "rgb(68,173,211)",
+    background: "#F7F7FB",
+    cardBackground: "#FCFDFD"
+};
 
 const THEME_DARK = {
     logo: '/lighthouse_logo.png',

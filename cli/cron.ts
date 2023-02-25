@@ -3,15 +3,19 @@
 import { getAutoUpdateProjects } from "../src/server/lib/project-services";
 import { auditRunnerForProjects } from "../src/server/utils/audit-runner-for-project";
 import cron from "node-cron";
+import { getLogger } from "../src/server/logger";
 
 const exec = async () => {
     const projects = await getAutoUpdateProjects();
-    console.log(`Run for ${ projects.length } projects`);
+    const startDate = new Date();
+    getLogger().info(`Run for ${ projects.length } projects`);
     await auditRunnerForProjects(projects);
-    console.log("Complete");
+    const endDate = new Date();
+    const diff = endDate.getTime() - startDate.getTime();
+    getLogger().info(`Completed in ${ diff / 1000 }s`);
 };
 
-cron.schedule("* */2 * * *", () => {
+cron.schedule("0 * * * *", () => {
     exec();
 });
-console.log('Cron setup');
+getLogger().info("Cron setup");

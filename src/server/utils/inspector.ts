@@ -27,8 +27,6 @@ export const MOBILE_CONFIG = {
     ],
 }
 
-console.log(process.env.DISABLE_GPU);
-
 export const inspector = async (url: string, config:unknown = {}) => {
     const chrome = await chromeLauncher.launch({
         chromeFlags: [
@@ -39,10 +37,10 @@ export const inspector = async (url: string, config:unknown = {}) => {
         ]
     });
     const options = {
-        logLevel: "info",
         output: [ "json", "html" ],
         port: chrome.port,
         locale: "en-US",
+        quiet:true,
         settings: {
             throttling: constants.throttling.desktopDense4G,
             screenEmulation: constants.screenEmulationMetrics.desktop

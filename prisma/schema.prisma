@@ -34,6 +34,7 @@ model LighthouseRunReport {
   SEO                Float
   PWA                Float
   serverResponseTime Float?
+  tti                Float?
   htmlReportFile     String?
   type               String
   stacks             String[] @default([])

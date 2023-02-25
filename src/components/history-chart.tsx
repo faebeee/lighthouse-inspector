@@ -1,7 +1,8 @@
 import { useTheme } from "@mui/material";
-import { VictoryAxis, VictoryLegend, VictoryLine } from "victory";
-import { COLOR } from "../../config";
+import { VictoryAxis, VictoryLegend, VictoryLine, VictoryTooltip } from "victory";
+import { CHART_BLUR, COLOR } from "../../config";
 import { ResponsiveVictoryChart } from "./chart";
+import { format } from "date-fns";
 
 export type StatsChartProps = {
     keys: { label: string, color?: string }[];
@@ -10,7 +11,7 @@ export type StatsChartProps = {
 
 export const HistoryChart = ({ keys, data }: StatsChartProps) => {
     const theme = useTheme();
-    return <ResponsiveVictoryChart height={ 240 }>
+    return <ResponsiveVictoryChart height={ 320 }>
         <VictoryAxis
             crossAxis
             dependentAxis
@@ -18,6 +19,15 @@ export const HistoryChart = ({ keys, data }: StatsChartProps) => {
                 tickLabels: { fontSize: 14, fill: theme.palette.text.primary }
             } }
             domain={ [ 0, 100 ] }
+            standalone={ false }
+        />
+        <VictoryAxis
+            style={ {
+                tickLabels: { fontSize: 14, fill: theme.palette.text.primary }
+            } }
+            tickFormat={ (t) => {
+                return format(new Date(t), "d.M hh:mm");
+            } }
             standalone={ false }
         />
 
@@ -39,6 +49,20 @@ export const HistoryChart = ({ keys, data }: StatsChartProps) => {
             key={ key.label }
             minDomain={ { y: 0 } }
             maxDomain={ { y: 100 } }
+            labelComponent={ <VictoryTooltip /> }
+            style={ {
+                data: { stroke: Object.values(COLOR)[index], filter: `blur(${ CHART_BLUR })` }
+            } }
+            x={ "date" }
+            y={ key.label }
+            data={ data }
+        />)) }
+        { keys.map((key, index) => (<VictoryLine
+            labelComponent={ <VictoryTooltip /> }
+            standalone={ false }
+            key={ `chart-${ key.label }` }
+            minDomain={ { y: 0 } }
+            maxDomain={ { y: 100 } }
             style={ {
                 data: { stroke: Object.values(COLOR)[index] }
             } }
@@ -46,5 +70,5 @@ export const HistoryChart = ({ keys, data }: StatsChartProps) => {
             y={ key.label }
             data={ data }
         />)) }
-    </ResponsiveVictoryChart>
+    </ResponsiveVictoryChart>;
 }

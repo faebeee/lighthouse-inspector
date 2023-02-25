@@ -13,7 +13,7 @@ export function ResponsiveVictoryChart({ ...props }: PropsWithChildren<VictoryCh
 
 
     return (
-        <div className="chart" ref={ ref }>
+        <div className="chart" ref={ ref } style={ { width: "100%" } }>
             { width && <VictoryChart { ...p } /> }
         </div>
     );

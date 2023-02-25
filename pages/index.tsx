@@ -50,9 +50,6 @@ export const ReportsPage = ({ navigation }: ReportsPageProps) => {
             <Button onClick={ onInspectAllClicked } disabled={ (inspectEndpoint.data ?? []).length > 0 }>
                 Inspect All
             </Button>
-            <Link href={ `/projects/new` }>
-                <Button fullWidth variant={ "contained" } color={ "primary" }>New</Button>
-            </Link>
         </> }>
         <Typography sx={ { mb: 2 } } color={ "textPrimary" } variant={ "h1" }>Projects</Typography>
 

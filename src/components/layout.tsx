@@ -8,11 +8,12 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Link from "next/link";
 import Image from "next/image";
-import { PropsWithChildren, ReactNode, useMemo } from "react";
+import React, { PropsWithChildren, ReactNode, useMemo } from "react";
 import { version } from "../../package.json";
 import { NavigationEntry } from "../utils/get-navigation";
 import { THEME } from "../../config";
 import { signIn, signOut, useSession } from "next-auth/react";
+import { RunningIndicator } from "./running-indicator";
 
 export type LayoutProps = PropsWithChildren<{
     title?: string;
@@ -65,6 +66,35 @@ export const Layout = ({
           <MenuList>
             <MenuItem>
               <ListItemText>
+                <Link href={ `/projects/new` }>
+                  <Button fullWidth variant={ "contained" } color={ "primary" }>New</Button>
+                </Link>
+              </ListItemText>
+            </MenuItem>
+
+            <MenuItem>
+              <ListItemText>
+                Menu
+              </ListItemText>
+            </MenuItem>
+            <Link href={ "/" }>
+              <MenuItem>
+                <ListItemText>
+                  <Typography color={ "secondary" }>Dashboard</Typography>
+                </ListItemText>
+              </MenuItem>
+            </Link>
+            <Link href={ "/list" }>
+              <MenuItem>
+                <ListItemText>
+                  <Typography color={ "secondary" }>List</Typography>
+                </ListItemText>
+              </MenuItem>
+            </Link>
+            <Divider />
+
+            <MenuItem>
+              <ListItemText>
                 Projects
               </ListItemText>
             </MenuItem>
@@ -90,21 +120,16 @@ export const Layout = ({
               </Link>)) }
 
             <Divider />
-            <Link href={ `/list` }>
-              <MenuItem>
-                <ListItemText>
-                  <Button fullWidth variant={ "text" } color={ "primary" }>Show List</Button>
-                </ListItemText>
-              </MenuItem>
-            </Link>
-
-            <Divider />
-            <Link href={ "https://github.com/faebeee/lighthouse-inspector" } target={ "_blank" }>
-              <MenuItem>
-                <Typography variant={ "caption" } color={ "secondary" }>Github - v{ version }</Typography>
-              </MenuItem>
-            </Link>
           </MenuList>
+
+          <RunningIndicator />
+
+          <Divider />
+          <Link href={ "https://github.com/faebeee/lighthouse-inspector" } target={ "_blank" }>
+            <MenuItem>
+              <Typography variant={ "caption" } color={ "secondary" }>Github - v{ version }</Typography>
+            </MenuItem>
+          </Link>
         </Drawer> }
         <Box>
             <AppBar position={ 'sticky' }
@@ -129,9 +154,11 @@ export const Layout = ({
                             <Typography variant="h5" noWrap color={ "textPrimary" }>
                                 { title }
                             </Typography>
+
+                            { session && actions }
                         </Stack>
                         <Stack direction={ "row" } alignItems={ "flex-end" } spacing={ 1 }>
-                            { session ? actions : <Button onClick={ () => signIn() }>Login</Button> }
+                            { !session && <Button onClick={ () => signIn() }>Login</Button> }
                             { session && <Button variant={ "text" } onClick={ () => signOut() }>
                                 { session.user?.name }
                             </Button> }

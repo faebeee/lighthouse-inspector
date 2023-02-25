@@ -1,26 +1,26 @@
 import { GetServerSideProps } from "next";
-import React, { useEffect, useState } from "react";
+import React, { useMemo, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
 import { getProjectById, getProjects } from "../../../src/server/lib/project-services";
 import { Layout } from "../../../src/components/layout";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { Button, Card, CardActions, CardContent, Chip, Grid, Tab, Tabs } from "@mui/material";
+import { Button, Chip, Grid, Stack, Tab, Tabs } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { COLOR, DATE_FORMAT } from "../../../config";
 import Box from "@mui/material/Box";
 import { LighthouseRunReport, Project, Tag } from "@prisma/client";
-import { getReportsForProject, transformForSerialisation } from "../../../src/server/lib/lighthousereport-services";
 import { getNavigation, NavigationEntry } from "../../../src/utils/get-navigation";
 import { format } from "date-fns";
-import { HistoryChart } from "../../../src/components/history-chart";
-import { StatsChart } from "../../../src/components/stats-chart";
-import { useRouter } from "next/router";
 import { ActionsList } from "../../../src/components/actions-list";
 import { useEndpoint } from "../../../src/hooks/use-endpoint";
 import { useResource } from "../../../src/hooks/use-resource";
-import { Stack } from "@mui/system";
 import { SingleStat } from "../../../src/components/single-stat";
+import { Widget } from "../../../src/components/widget";
+import { StatsChart } from "../../../src/components/stats-chart";
+import { HistoryChart } from "../../../src/components/history-chart";
+import { NumericValue } from "../../../src/components/numeric-value";
+import { useRouter } from "next/router";
+import { useSearchParams } from "next/navigation";
 
 export type ProjectPageProps = {
     project: Project;
@@ -39,8 +39,6 @@ export const getServerSideProps: GetServerSideProps<ProjectPageProps> = async (r
         }
     }
     const projects = await getProjects();
-    const desktopReports = await getReportsForProject(project!, 'desktop') ?? [];
-    const mobileReports = await getReportsForProject(project!, 'mobile') ?? [];
     const navigation = await getNavigation();
 
     return {
@@ -48,93 +46,61 @@ export const getServerSideProps: GetServerSideProps<ProjectPageProps> = async (r
             project,
             navigation,
             projects,
-            // @ts-ignore
-            desktopReports: desktopReports.map(transformForSerialisation),
-            // @ts-ignore
-            mobileReports: mobileReports.map(transformForSerialisation),
         }
     }
 }
 
 export const ProjectPage = ({
-    project,
-    desktopReports,
-    mobileReports,
-    navigation,
-}: ProjectPageProps) => {
-    const router = useRouter();
+                                project: initialProject,
+                                navigation
+                            }: ProjectPageProps) => {
+    const projectApi = useResource<Project>({
+        url: `/api/projects/${ initialProject.id }`
+    }, 2000);
+    const project = useMemo(() => projectApi.data ?? initialProject, [ initialProject, projectApi.data ]);
     const [ isLoading, setIsLoading ] = useState(project.is_running);
-    const [ group, setGroup ] = useState(project.group);
-    const [ name, setName ] = useState(project.name);
     const [ value, setValue ] = useState<string>("desktop");
-    const latestReport = value === "desktop" ? (desktopReports.length > 0 ? desktopReports[0] : null) : (mobileReports.length > 0 ? mobileReports[0] : null);
+    const searchParams = useSearchParams();
+    const limit = searchParams.get('limit') ? searchParams.get('limit'): 10
+    const desktopReportsApi = useResource<LighthouseRunReport[]>({
+        url: `/api/projects/${ project.id }/reports`,
+        params: { type: "desktop", limit }
+    }, 2000);
+
+    const mobileReportsApi = useResource<LighthouseRunReport[]>({
+        url: `/api/projects/${ project.id }/reports`,
+        params: {
+            type: "mobile",
+            limit
+        }
+    }, 2000);
+
     const inspectEndpoint = useEndpoint<Project[]>({ url: `/api/inspect` }, 2000);
+
     const tagsApi = useResource<Tag[]>({ url: `/api/projects/${ project.id }/tags` });
+
+    const desktopReports = useMemo(() => (!!desktopReportsApi.data && desktopReportsApi.data.length) > 0 ? (desktopReportsApi.data ?? []) : [], [ desktopReportsApi ]);
+    const mobileReports = useMemo(() => (!!mobileReportsApi.data && mobileReportsApi.data.length) > 0 ? (mobileReportsApi.data ?? []) : [], [ mobileReportsApi ]);
+
+    const latestReport = useMemo(() => {
+        if (value === "desktop") {
+            return (desktopReports.length > 0 ? desktopReports[0] : null);
+        }
+        return (mobileReports.length > 0 ? mobileReports[0] : null);
+    }, [ value, desktopReports, mobileReports ]);
+
 
     const handleChange = (event: React.SyntheticEvent, newValue: string) => {
         setValue(newValue);
     };
-    useEffect(() => {
-        setGroup(project.group);
-        setName(project.name);
-    }, [ project ]);
 
     const onRunReport = () => {
         setIsLoading(true);
-        axios.post(`/api/projects/${project.id}/inspect`)
+        axios.post(`/api/projects/${ project.id }/inspect`)
             .finally(() => {
                 setIsLoading(false);
             })
     }
-
-    const updateProject = () => {
-        setIsLoading(true);
-        axios.patch(`/api/projects/${ project.id }`, {
-            group,
-            name
-        })
-            .finally(() => {
-                setIsLoading(false);
-            })
-    }
-
-    const onRemove = () => {
-        setIsLoading(true);
-        axios.delete(`/api/projects/${ project.id }`)
-            .then(() => {
-                router.push('/');
-            })
-            .finally(() => {
-                setIsLoading(false);
-            })
-    }
-
-    const columns: GridColDef[] = [
-        { field: "id", headerName: "ID" },
-        {
-            field: "date",
-            headerName: "date",
-            flex: 1,
-            renderCell: (data) => <Typography>{ format(new Date(data.value), DATE_FORMAT) }</Typography>
-        },
-        { field: "serverResponseTime", headerName: "Speed", flex: 1 },
-        { field: "performance", headerName: "performance", flex: 1 },
-        { field: "accessibility", headerName: "accessibility", flex: 1 },
-        { field: "bestPractices", headerName: "bestPractices", flex: 1 },
-        { field: "SEO", headerName: "seo", flex: 1 },
-        { field: "PWA", headerName: "pwa", flex: 1 },
-        {
-            field: "htmlReportFile",
-            headerName: "htmlReportFile",
-            flex: 1,
-            renderCell: (data) => <Link target={ "_blank" }
-                href={ `/api/reports/${ data.row.id }` }>
-                <Typography color={ "secondary" }>
-                    HTML Report
-                </Typography>
-            </Link>
-        }
-    ];
 
     const lines = [
         { label: 'performance', color: COLOR.PERFORMANCE },
@@ -146,10 +112,11 @@ export const ProjectPage = ({
 
     return <Layout
         backLink={ project.group ? `/group/${ project.group }` : "/" }
-        title={ project.name }
+        title={ `${ project.name } | Overview` }
         actions={ <>
-            <ActionsList project={ project } />
             <Button href={ `/projects/${ project.id }/settings` }>Settings</Button>
+            <Button href={ `/projects/${ project.id }/data` }>Data</Button>
+            <ActionsList project={ project } />
             <Button variant={ "text" } disabled={ isLoading || (inspectEndpoint.data ?? []).length > 0 }
                 onClick={ onRunReport }>{ isLoading ? "Loading..." : "Run" }</Button>
         </> }
@@ -163,34 +130,50 @@ export const ProjectPage = ({
         <Grid container spacing={ 2 }>
             <Grid item xs={ 12 }>
                 <Grid container spacing={ 2 }>
+                    <Grid container item xs={ 12 } xl={ 6 } spacing={ 2 }>
+                        <Grid item xs={ 12 } xl={ 4 }>
+                            { latestReport && <Widget title={ "Performance" }>
+                              <SingleStat
+                                width={ 300 }
+                                height={ 240 }
+                                value={ latestReport.performance }
+                                label={ "Performance" } />
+                            </Widget> }
+                        </Grid>
 
-                    <Grid item xs={ 12 } lg={ 6 } xl={ 4 }>
-                        { latestReport && <Card sx={ { height: "320px" } }>
-                          <CardContent sx={ { display: "flex", flexDirection: "column", height: "100%" } }>
-                            <Typography color={ "textPrimary" } variant={ "subtitle2" }>Screenshot</Typography>
-                            <Box sx={ {
-                                flex: "1 0 100%",
-                                display: "flex",
-                                flexDirection: "column",
-                                justifyContent: "center",
-                                alignItems: "center"
-                            } }>
-                                { value === "desktop" && latestReport &&
-                                  <img width={ "100%" } alt={ "desktop" }
-                                    src={ `/api/reports/${ latestReport.id }/thumbnail` } /> }
-                                { value === "mobile" && latestReport &&
-                                  <img width={ 300 } alt={ "mobile" }
-                                    src={ `/api/reports/${ latestReport.id }/thumbnail?type=mobile` } /> }
-                            </Box>
-                          </CardContent>
-                        </Card> }
-                    </Grid>
+                        <Grid item xs={ 12 } xl={ 4 }>
+                            { latestReport && <Widget title={ "Accessibility" }>
+                              <SingleStat
+                                width={ 300 }
+                                height={ 240 }
+                                value={ latestReport.accessibility }
+                                label={ "accessibility" } />
+                            </Widget> }
+                        </Grid>
 
-                    <Grid item xs={ 12 } lg={ 6 } xl={ 4 }>
-                        { latestReport && <Card sx={ { height: "320px" } }>
-                          <CardContent>
-                            <Typography color={ "textPrimary" } variant={ "subtitle2" }>Stats</Typography>
-                              { latestReport && <StatsChart height={ 280 } data={ [
+                        <Grid item xs={ 12 } xl={ 4 }>
+                            { latestReport && <Widget title={ "Best Practices" }>
+                              <SingleStat
+                                width={ 300 }
+                                height={ 240 }
+                                value={ latestReport.bestPractices }
+                                label={ "bestPractices" } />
+                            </Widget> }
+                        </Grid>
+
+                        <Grid item xs={ 12 }>
+                            <Widget title={ "Stats History" }>
+                                { value === "desktop" && desktopReports.length > 0 &&
+                                  <HistoryChart keys={ lines } data={ [ ...desktopReports ].reverse() } /> }
+
+                                { value === "mobile" && mobileReports.length > 0 &&
+                                  <HistoryChart keys={ lines } data={ [ ...mobileReports ].reverse() } /> }
+                            </Widget>
+                        </Grid>
+
+                        <Grid item xs={ 12 }>
+                            { latestReport && <Widget title={ "Stats" }>
+                              <StatsChart height={ 280 } data={ [
                                   { x: "Performance", y: latestReport.performance, fill: COLOR.PERFORMANCE },
                                   {
                                       x: "Accessibility",
@@ -204,223 +187,109 @@ export const ProjectPage = ({
                                   },
                                   { x: "SEO", y: latestReport.SEO, fill: COLOR.SEO },
                                   { x: "PWA", y: latestReport.PWA, fill: COLOR.PWA }
-                              ] } /> }
-                          </CardContent>
-                          <CardActions>
-                            <Link href={ `/api/reports/${ latestReport?.id }` } target={ "_blank" }>
-                              <Button variant={ "text" }>Open Report</Button>
-                            </Link>
-                          </CardActions>
-                        </Card> }
+                              ] } />
+                            </Widget> }
+                        </Grid>
                     </Grid>
 
+                    <Grid container item xs={ 12 } xl={ 6 } spacing={ 2 }>
+                        <Grid item xs={ 12 } lg={ 6 } xl={ 4 }>
+                            <Widget title={ "Initial Server Response Time" }>
+                                {latestReport && <NumericValue goodThreshold={ 800 } poorThreshold={ 1200 }
+                                    value={ latestReport.serverResponseTime ?? 0 }
+                                    unit={ "ms" } /> }
+                            </Widget>
+                        </Grid>
 
-                    <Grid item xs={ 12 } lg={ 6 } xl={ 4 }>
-                        <Card sx={ { height: "320px" } }>
-                            <CardContent sx={ { display: "flex", flexDirection: "column", height: "100%" } }>
-                                <Typography color={ "textPrimary" } variant={ "subtitle2" }>Initial Server Response
-                                    Time</Typography>
-                                <Box sx={ {
-                                    flex: "1 0 100%",
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    justifyContent: "center",
-                                    alignItems: "center"
-                                } }>
-                                    <Typography variant={ "h2" }
-                                        noWrap={ true }>{ latestReport?.serverResponseTime ? Math.round(latestReport?.serverResponseTime) : "???" }ms</Typography>
-                                </Box>
-                            </CardContent>
-                        </Card>
-                    </Grid>
+                        <Grid item xs={ 12 } lg={ 6 } xl={ 4 }>
+                            <Widget title={ "Time to interactive" }>
+                                {latestReport && <NumericValue goodThreshold={ 800 } poorThreshold={ 1200 }
+                                    value={ latestReport.tti ?? 0 }
+                                    unit={ "ms" } />}
+                            </Widget>
+                        </Grid>
 
-                    <Grid item xs={ 12 } lg={ 6 } xl={ 3 }>
-                        { latestReport && <Card sx={ { height: "320px" } }>
-                          <CardContent sx={ { display: "flex", flexDirection: "column", height: "100%" } }>
-                            <Typography color={ "textPrimary" } variant={ "subtitle2" }>Performance</Typography>
-                            <Box sx={ {
-                                flex: "1 0 100%",
-                                display: "flex",
-                                flexDirection: "column",
-                                alignItems: "center"
-                            } }>
-                              <SingleStat
-                                width={ 300 }
-                                height={ 240 }
-                                value={ latestReport.performance }
-                                label={ "Performance" } />
-                            </Box>
-                          </CardContent>
-                        </Card> }
-                    </Grid>
-
-                    <Grid item xs={ 12 } lg={ 6 } xl={ 3 }>
-                        { latestReport && <Card sx={ { height: "320px" } }>
-                          <CardContent sx={ { display: "flex", flexDirection: "column", height: "100%" } }>
-                            <Typography color={ "textPrimary" } variant={ "subtitle2" }>Accessibility</Typography>
-                            <Box sx={ {
-                                flex: "1 0 100%",
-                                display: "flex",
-                                flexDirection: "column",
-                                alignItems: "center"
-                            } }>
-                              <SingleStat
-                                width={ 300 }
-                                height={ 240 }
-                                value={ latestReport.accessibility }
-                                label={ "accessibility" } />
-                            </Box>
-                          </CardContent>
-                        </Card> }
-                    </Grid>
-
-                    <Grid item xs={ 12 } lg={ 6 } xl={ 3 }>
-                        { latestReport && <Card sx={ { height: "320px" } }>
-                          <CardContent sx={ { display: "flex", flexDirection: "column", height: "100%" } }>
-                            <Typography color={ "textPrimary" } variant={ "subtitle2" }>Best Practices</Typography>
-                            <Box sx={ {
-                                flex: "1 0 100%",
-                                display: "flex",
-                                flexDirection: "column",
-                                alignItems: "center"
-                            } }>
-                              <SingleStat
-                                width={ 300 }
-                                height={ 240 }
-                                value={ latestReport.bestPractices }
-                                label={ "bestPractices" } />
-                            </Box>
-                          </CardContent>
-                        </Card> }
-                    </Grid>
-
-                    <Grid item xs={ 12 } lg={ 6 } xl={ 3 }>
-                        { latestReport && <Card sx={ { height: "320px" } }>
-                          <CardContent sx={ { display: "flex", flexDirection: "column", height: "100%" } }>
-                            <Typography color={ "textPrimary" } variant={ "subtitle2" }>Report</Typography>
-                            <Box sx={ {
-                                flex: "1 0 100%",
-                                display: "flex",
-                                flexDirection: "column",
-                                justifyContent: "center",
-                                alignItems: "center"
-                            } }>
-                              <Link href={ `/api/reports/${latestReport.id}` } target={ "blank" }>
+                        <Grid item xs={ 12 } lg={ 6 } xl={ 4 }>
+                            { latestReport && <Widget title={ "Report" }>
+                              <Link href={ `/api/reports/${ latestReport.id }` } target={ "blank" }>
                                 <Typography variant={ "h6" }
                                   color={ "primary" }>{ format(new Date(latestReport.date), DATE_FORMAT) }</Typography>
                               </Link>
-                            </Box>
-                          </CardContent>
-                        </Card> }
+                            </Widget> }
+                        </Grid>
+
+                        <Grid item xs={ 12 }>
+                            <Widget title={ "Response History" }>
+                                { value === "desktop" &&
+                                  <HistoryChart keys={ [ { label: "serverResponseTime", color: COLOR.SPEED } ] }
+                                    data={ [ ...desktopReports ].reverse() } /> }
+
+                                { value === "mobile" &&
+                                  <HistoryChart keys={ [ { label: "serverResponseTime", color: COLOR.SPEED } ] }
+                                    data={ [ ...mobileReports ].reverse() } /> }
+                            </Widget>
+                        </Grid>
+
+                        <Grid item xs={ 12 }>
+                            <Widget title={ "Time to interactive History" }>
+                                { value === "desktop" &&
+                                  <HistoryChart keys={ [ { label: "tti", color: COLOR.SPEED } ] }
+                                    data={ [ ...desktopReports ].reverse() } /> }
+
+                                { value === "mobile" &&
+                                  <HistoryChart keys={ [ { label: "tti", color: COLOR.SPEED } ] }
+                                    data={ [ ...mobileReports ].reverse() } /> }
+                            </Widget>
+                        </Grid>
                     </Grid>
 
-                    <Grid item xs={ 12 } lg={ 6 }>
-                        { latestReport && <Card sx={ { height: "320px" } }>
-                          <CardContent sx={ { display: "flex", flexDirection: "column", height: "100%" } }>
-                            <Typography color={ "textPrimary" } variant={ "subtitle2" }>Response History</Typography>
-                              { value === "desktop" &&
-                                <HistoryChart keys={ [ { label: "serverResponseTime", color: COLOR.SPEED } ] }
-                                  data={ [ ...desktopReports ].reverse() } /> }
 
-                              { value === "mobile" &&
-                                <HistoryChart keys={ [ { label: "serverResponseTime", color: COLOR.SPEED } ] }
-                                  data={ [ ...mobileReports ].reverse() } /> }
-                          </CardContent>
-                        </Card> }
-                    </Grid>
+                    <Grid container item xs={ 12 } spacing={ 2 }>
+                        <Grid item xs={ 12 } lg={ 4 }>
+                            { latestReport && <Widget title={ "Screenshot" }><>
+                                { value === "desktop" && latestReport &&
+                                  <img width={ "100%" } alt={ "desktop" }
+                                    src={ `/api/reports/${ latestReport.id }/thumbnail` } /> }
+                                { value === "mobile" && latestReport &&
+                                  <img width={ 300 } alt={ "mobile" }
+                                    src={ `/api/reports/${ latestReport.id }/thumbnail?type=mobile` } /> }
+                            </>
+                            </Widget> }
+                        </Grid>
 
-                    <Grid item xs={ 12 } lg={ 6 }>
-                        { latestReport && <Card sx={ { height: "320px" } }>
-                          <CardContent sx={ { display: "flex", flexDirection: "column", height: "100%" } }>
-                            <Typography color={ "textPrimary" } variant={ "subtitle2" }>Stats History</Typography>
-                              { value === "desktop" && desktopReports.length > 0 &&
-                                <HistoryChart keys={ lines } data={ [ ...desktopReports ].reverse() } /> }
 
-                              { value === "mobile" && mobileReports.length > 0 &&
-                                <HistoryChart keys={ lines } data={ [ ...mobileReports ].reverse() } /> }
-                          </CardContent>
-                        </Card> }
-                    </Grid>
+                        <Grid item xs={ 12 } lg={ 6 } xl={ 2 }>
+                            <Widget title={ "Project Running" }>
+                                <>
+                                    { project.is_running && <Chip label={ "Is running" } color={ "primary" } /> }
+                                    { !project.is_running && <Chip label={ "not running" } /> }</>
+                            </Widget>
+                        </Grid>
 
-                    <Grid item xs={ 12 } lg={ 6 } xl={ 4 }>
-                        { latestReport && <Card sx={ { height: "320px" } }>
-                          <CardContent sx={ { display: "flex", flexDirection: "column", height: "100%" } }>
-                            <Typography color={ "textPrimary" } variant={ "subtitle2" }>Tags</Typography>
-                            <Box sx={ {
-                                flex: "1 0 100%",
-                                display: "flex",
-                                flexDirection: "column",
-                                justifyContent: "center",
-                                alignItems: "center"
-                            } }>
-                              <Stack direction={ "row" } spacing={ 1 }>
-                                  { tagsApi.data?.map((tag: Tag) => <Chip label={ tag.name } key={ tag.id } />) }
-                              </Stack>
-                            </Box>
-                          </CardContent>
-                        </Card> }
-                    </Grid>
-
-                    <Grid item xs={ 12 } lg={ 6 } xl={ 4 }>
-                        { latestReport && <Card sx={ { height: "320px" } }>
-                          <CardContent sx={ { display: "flex", flexDirection: "column", height: "100%" } }>
-                            <Typography color={ "textPrimary" } variant={ "subtitle2" }>Group</Typography>
-                            <Box sx={ {
-                                flex: "1 0 100%",
-                                display: "flex",
-                                flexDirection: "column",
-                                justifyContent: "center",
-                                alignItems: "center"
-                            } }>
+                        <Grid item xs={ 12 } lg={ 6 } xl={ 2 }>
+                            { latestReport && <Widget title={ "Group" }>
                                 { project.group && <Link href={ project.group ? `/group/${ project.group }` : "" }>
                                   <Typography color={ "primary" } variant={ "h2" }>{ project.group }</Typography>
                                 </Link> }
-                            </Box>
-                          </CardContent>
-                        </Card> }
-                    </Grid>
+                            </Widget> }
+                        </Grid>
 
+                        <Grid item xs={ 12 } lg={ 6 } xl={ 2 }>
+                            <Widget title={ "Tags" }>
+                                <Stack direction={ "row" } spacing={ 1 }>
+                                    { tagsApi.data?.map((tag: Tag) => <Chip label={ tag.name } key={ tag.id } />) }
+                                </Stack>
+                            </Widget>
+                        </Grid>
 
-                    <Grid item xs={ 12 } lg={ 6 } xl={ 4 }>
-                        { latestReport && <Card sx={ { height: "320px" } }>
-                          <CardContent sx={ { display: "flex", flexDirection: "column", height: "100%" } }>
-                            <Typography color={ "textPrimary" } variant={ "subtitle2" }>URL</Typography>
-                            <Box sx={ {
-                                flex: "1 0 100%",
-                                display: "flex",
-                                flexDirection: "column",
-                                justifyContent: "center",
-                                alignItems: "center"
-                            } }>
-                              <Link href={ project.url } target={ "blank" }>
-                                <Typography variant={ "h5" }
-                                  color={ "primary" }>{ project.url }</Typography>
-                              </Link>
-                            </Box>
-                          </CardContent>
-                        </Card> }
-                    </Grid>
-
-                    <Grid item xs={ 12 }>
-                        <Card>
-                            { value === "desktop" && desktopReports.length > 0 && <Box>
-                              <DataGrid
-                                rows={ desktopReports }
-                                columns={ columns }
-                                getRowId={ (r) => r.date }
-                                autoHeight
-                              />
-                            </Box> }
-
-                            { value === "mobile" && mobileReports.length > 0 && <Box>
-                              <DataGrid
-                                rows={ mobileReports }
-                                columns={ columns }
-                                getRowId={ (r) => r.date }
-                                autoHeight
-                              />
-                            </Box> }
-                        </Card>
+                        <Grid item xs={ 12 } lg={ 6 } xl={ 2 }>
+                            <Widget title={ "URL" }>
+                                <Link href={ project.url } target={ "blank" }>
+                                    <Typography variant={ "h5" }
+                                        color={ "primary" }>{ project.url }</Typography>
+                                </Link>
+                            </Widget>
+                        </Grid>
                     </Grid>
                 </Grid>
             </Grid>

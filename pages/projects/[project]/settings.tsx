@@ -50,13 +50,10 @@ export const SettingsPage = ({
     const [ isLoading, setIsLoading ] = useState(project.is_running);
     const [ group, setGroup ] = useState(project.group);
     const [ name, setName ] = useState(project.name);
-    const [ value, setValue ] = useState<string>("desktop");
     const [ isIntervalOn, setIsInvervalOn ] = useState<boolean>(project.interval_reporting);
     const inspectEndpoint = useEndpoint<Project[]>({ url: `/api/inspect` }, 2000);
 
-    const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-        setValue(newValue);
-    };
+
     useEffect(() => {
         setGroup(project.group);
         setName(project.name);
@@ -107,10 +104,12 @@ export const SettingsPage = ({
 
     return <Layout
         backLink={ `/projects/${ project.id }` }
-        title={ project.name }
-        actions={
+        title={ `${ project.name } | Settings` }
+        actions={ <>
+            <Button href={ `/projects/${ project.id }` }>Overview</Button>
             <Button variant={ "text" } disabled={ isLoading || (inspectEndpoint.data ?? []).length > 0 }
-                onClick={ onRunReport }>{ isLoading ? "Loading..." : "Run" }</Button> }
+                onClick={ onRunReport }>{ isLoading ? "Loading..." : "Run" }</Button>
+        </> }
         navigation={ navigation }>
         <Grid container spacing={ 2 }>
 

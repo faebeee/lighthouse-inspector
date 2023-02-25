@@ -16,7 +16,9 @@ export const createTag = (name: string) => {
 };
 
 export const getAllTags = () => {
-    return getPrisma().tag.findMany();
+    return getPrisma().tag.findMany({
+        orderBy: { name: "asc" }
+    });
 };
 
 export const getTagsByProjectId = (id: number) => {
@@ -28,7 +30,8 @@ export const getTagsByProjectId = (id: number) => {
                         projectId: id
                     }
                 }
-            }
+            },
+            orderBy: { name: "asc" }
         });
 };
 

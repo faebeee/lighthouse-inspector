@@ -1,10 +1,12 @@
 import { LighthouseRunReport, Project } from "@prisma/client";
 import { getPrisma } from "../get-prisma";
 import { getLatestReportForProject } from "./lighthousereport-services";
+import { getLogger } from "../logger";
 
 export const getProjects = async (): Promise<Project[]> => {
     return (await getPrisma().project.findMany({
-        include: { tags: true }
+        include: { tags: true },
+        orderBy: { name: "asc" }
     })) ?? [];
 };
 export const getAutoUpdateProjects = async (): Promise<Project[]> => {
@@ -23,7 +25,8 @@ export const getRunningProjects = async (): Promise<Project[]> => {
         },
         include: {
             tags: true
-        }
+        },
+        orderBy: { name: "asc" }
     })) ?? [];
 };
 
@@ -38,7 +41,8 @@ export const getProjectsByTags = async (tagId: number[]): Promise<Project[]> => 
                 }
             }
         },
-        include: { tags: true }
+        include: { tags: true },
+        orderBy: { name: "asc" }
     })) ?? [];
 };
 
@@ -46,7 +50,8 @@ export const getProjectsByGroup = async (group: string): Promise<Project[]> => {
     return getPrisma().project.findMany({
         where: {
             group
-        }
+        },
+        orderBy: { name: "asc" }
     });
 };
 
@@ -87,6 +92,7 @@ export const updateProject = async (project: Project, data: Partial<Project>) =>
 
 
 export const markProjectAsRunning = async (project: Project, isRunning: boolean) => {
+    getLogger().debug(`Mark project #${ project.id } ${ project.name } as Running{${ isRunning }}`);
     return getPrisma().project.update({
         where: {
             id: project.id

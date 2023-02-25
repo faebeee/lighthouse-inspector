@@ -2,15 +2,16 @@ import { LighthouseRunReport, Project } from "@prisma/client";
 import { getPrisma } from "../get-prisma";
 import { LighthouseReport } from "../../../types/lighthouse";
 
-export const getReportsForProject = (project: Project, type?: string) => {
+export const getReportsForProject = (project: Project, type?: string, max = 10): Promise<LighthouseRunReport[]> => {
     return getPrisma().lighthouseRunReport.findMany({
         where: {
             projectId: project.id,
-            type,
+            type
         },
         orderBy: {
-            date: 'desc',
-        }
+            date: "desc"
+        },
+        take: max
     });
 }
 
@@ -25,6 +26,7 @@ export const persistReport = async (project: Project, data: LighthouseReport, ht
             performance: data.categories['performance'].score * 100,
             type: data.configSettings.formFactor,
             serverResponseTime: data.audits["server-response-time"].numericValue,
+            tti: data.audits["interactive"].numericValue,
             finalUrl: data.finalUrl,
             stacks: data.stackPacks.map((stack) => stack.title),
             projectId: project.id,
