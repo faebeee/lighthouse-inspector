@@ -7,9 +7,10 @@ import { format } from "date-fns";
 export type StatsChartProps = {
     keys: { label: string, color?: string }[];
     data: any[];
+    hideXAxis?: boolean
 }
 
-export const HistoryChart = ({ keys, data }: StatsChartProps) => {
+export const HistoryChart = ({ keys, data, hideXAxis = false }: StatsChartProps) => {
     const theme = useTheme();
     return <ResponsiveVictoryChart height={ 320 }>
         <VictoryAxis
@@ -21,7 +22,7 @@ export const HistoryChart = ({ keys, data }: StatsChartProps) => {
             domain={ [ 0, 100 ] }
             standalone={ false }
         />
-        <VictoryAxis
+        {!hideXAxis && <VictoryAxis
             style={ {
                 tickLabels: { fontSize: 14, fill: theme.palette.text.primary }
             } }
@@ -29,7 +30,7 @@ export const HistoryChart = ({ keys, data }: StatsChartProps) => {
                 return format(new Date(t), "d.M hh:mm");
             } }
             standalone={ false }
-        />
+        />}
 
         <VictoryLegend x={ 10 } y={ 10 }
             orientation="horizontal"

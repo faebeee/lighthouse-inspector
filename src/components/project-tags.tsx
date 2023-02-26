@@ -1,7 +1,7 @@
 import { useResource } from "../hooks/use-resource";
-import { Autocomplete, Chip, TextField } from "@mui/material";
+import { Alert, Autocomplete, Chip, Snackbar, TextField } from "@mui/material";
 import axios from "axios";
-import { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 
 export type Tag = {
     name: string;
@@ -15,11 +15,13 @@ export type ProjectTagsProps = {
 export const ProjectTags = ({ projectId }: ProjectTagsProps) => {
     const api = useResource<Tag[]>({ url: `/api/projects/${ projectId }/tags` });
     const allTagsApi = useResource<Tag[]>({ url: `/api/tags/` });
+    const [ showSuccessMessage, setShowSuccessMessage ] = useState(false);
 
     const handleDelete = useCallback((tag: Tag) => {
         axios.delete<Tag[]>(`/api/projects/${ projectId }/tags/${ tag.id }`)
             .then((response) => {
                 api.mutate(response.data);
+                setShowSuccessMessage(true)
             })
     }, [ projectId ]);
 
@@ -29,8 +31,17 @@ export const ProjectTags = ({ projectId }: ProjectTagsProps) => {
         })
             .then((response) => {
                 api.mutate(response.data);
+                setShowSuccessMessage(true)
             })
     }, [ projectId ]);
+
+    const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+        if (reason === "clickaway") {
+            return;
+        }
+
+        setShowSuccessMessage(false);
+    };
 
     return <>
         { allTagsApi.data && <Autocomplete
@@ -55,5 +66,11 @@ export const ProjectTags = ({ projectId }: ProjectTagsProps) => {
           }
           renderInput={ (params) => <TextField { ...params } label="Tags" fullWidth /> }
         /> }
+
+        <Snackbar open={ showSuccessMessage } autoHideDuration={ 6000 } onClose={ handleClose }>
+            <Alert onClose={ handleClose } severity="success" sx={ { width: "100%" } }>
+                Project updated
+            </Alert>
+        </Snackbar>
     </>;
 };

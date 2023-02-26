@@ -5,7 +5,7 @@ import Link from "next/link";
 import { getProjectById, getProjects } from "../../../src/server/lib/project-services";
 import { Layout } from "../../../src/components/layout";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { Button, Card, CardContent, Grid, Tab, Tabs } from "@mui/material";
+import { Button, Card, Grid, Tab, Tabs } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { COLOR, DATE_FORMAT } from "../../../config";
 import Box from "@mui/material/Box";
@@ -17,6 +17,8 @@ import { useEndpoint } from "../../../src/hooks/use-endpoint";
 import { useResource } from "../../../src/hooks/use-resource";
 import { HistoryChart } from "../../../src/components/history-chart";
 import { useSearchParams } from "next/navigation";
+import Divider from "@mui/material/Divider";
+import { Widget } from "../../../src/components/widget";
 
 export type ProjectPageProps = {
     project: Project;
@@ -94,6 +96,7 @@ export const ProjectPage = ({
             flex: 1,
             renderCell: (data) => <Typography>{ format(new Date(data.value), DATE_FORMAT) }</Typography>
         },
+        { field: "tti", headerName: "Time To Interactive", flex: 1 },
         { field: "serverResponseTime", headerName: "Speed", flex: 1 },
         { field: "performance", headerName: "performance", flex: 1 },
         { field: "accessibility", headerName: "accessibility", flex: 1 },
@@ -125,10 +128,12 @@ export const ProjectPage = ({
         backLink={ `/projects/${ project.id }` }
         title={ `${ project.name } | Data` }
         actions={ <>
-            <Button href={ `/projects/${ project.id }/settings` }>Settings</Button>
             <Button href={ `/projects/${ project.id }` }>Overview</Button>
+            <Button href={ `/projects/${ project.id }/settings` }>Settings</Button>
+            <Button href={ `/projects/${ project.id }/data` }>Data</Button>
+            <Divider orientation={ "vertical" } variant={ "fullWidth" } color={ "primary" } />
             <ActionsList project={ project } />
-            <Button variant={ "text" } disabled={ isLoading || (inspectEndpoint.data ?? []).length > 0 }
+            <Button variant={ "contained" } disabled={ isLoading || (inspectEndpoint.data ?? []).length > 0 }
                 onClick={ onRunReport }>{ isLoading ? "Loading..." : "Run" }</Button>
         </> }
         navigation={ navigation }>
@@ -143,16 +148,31 @@ export const ProjectPage = ({
                 <Grid container spacing={ 2 }>
 
                     <Grid item xs={ 12 }>
-                        <Card sx={ { height: "320px" } }>
-                            <CardContent sx={ { display: "flex", flexDirection: "column", height: "100%" } }>
-                                <Typography color={ "textPrimary" } variant={ "subtitle2" }>Stats History</Typography>
-                                { value === "desktop" && desktopReports.length > 0 &&
-                                  <HistoryChart keys={ lines } data={ [ ...desktopReports ].reverse() } /> }
+                        <Widget title={ "Stats History" }>
+                            { value === "desktop" && desktopReports.length > 0 &&
+                              <HistoryChart keys={ lines } data={ [ ...desktopReports ].reverse() } /> }
 
-                                { value === "mobile" && mobileReports.length > 0 &&
-                                  <HistoryChart keys={ lines } data={ [ ...mobileReports ].reverse() } /> }
-                            </CardContent>
-                        </Card>
+                            { value === "mobile" && mobileReports.length > 0 &&
+                              <HistoryChart keys={ lines } data={ [ ...mobileReports ].reverse() } /> }
+                        </Widget>
+                    </Grid>
+
+                    <Grid item xs={ 12 }>
+                        <Widget title={ "Response History" }>
+                            { value === "desktop" &&
+                              <HistoryChart keys={ [
+                                  { label: "serverResponseTime", color: COLOR.SPEED },
+                                  { label: "tti", color: COLOR.SPEED }
+                              ] }
+                                data={ [ ...desktopReports ].reverse() } /> }
+
+                            { value === "mobile" &&
+                              <HistoryChart keys={ [
+                                  { label: "serverResponseTime", color: COLOR.SPEED },
+                                  { label: "tti", color: COLOR.SPEED }
+                              ] }
+                                data={ [ ...mobileReports ].reverse() } /> }
+                        </Widget>
                     </Grid>
 
                     <Grid item xs={ 12 }>

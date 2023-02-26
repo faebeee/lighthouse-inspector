@@ -21,6 +21,7 @@ import { HistoryChart } from "../../../src/components/history-chart";
 import { NumericValue } from "../../../src/components/numeric-value";
 import { useRouter } from "next/router";
 import { useSearchParams } from "next/navigation";
+import Divider from "@mui/material/Divider";
 
 export type ProjectPageProps = {
     project: Project;
@@ -114,10 +115,12 @@ export const ProjectPage = ({
         backLink={ project.group ? `/group/${ project.group }` : "/" }
         title={ `${ project.name } | Overview` }
         actions={ <>
+            <Button href={ `/projects/${ project.id }` }>Overview</Button>
             <Button href={ `/projects/${ project.id }/settings` }>Settings</Button>
             <Button href={ `/projects/${ project.id }/data` }>Data</Button>
+            <Divider orientation={ "vertical" } variant={'fullWidth'} color={'primary'} />
             <ActionsList project={ project } />
-            <Button variant={ "text" } disabled={ isLoading || (inspectEndpoint.data ?? []).length > 0 }
+            <Button variant={'contained'} disabled={ isLoading || (inspectEndpoint.data ?? []).length > 0 }
                 onClick={ onRunReport }>{ isLoading ? "Loading..." : "Run" }</Button>
         </> }
         navigation={ navigation }>
@@ -130,122 +133,8 @@ export const ProjectPage = ({
         <Grid container spacing={ 2 }>
             <Grid item xs={ 12 }>
                 <Grid container spacing={ 2 }>
-                    <Grid container item xs={ 12 } xl={ 6 } spacing={ 2 }>
-                        <Grid item xs={ 12 } md={6} xl={ 4 }>
-                            { latestReport && <Widget title={ "Performance" }>
-                              <SingleStat
-                                width={ 300 }
-                                height={ 240 }
-                                value={ latestReport.performance }
-                                label={ "Performance" } />
-                            </Widget> }
-                        </Grid>
-
-                        <Grid item xs={ 12 } md={6} xl={ 4 }>
-                            { latestReport && <Widget title={ "Accessibility" }>
-                              <SingleStat
-                                width={ 300 }
-                                height={ 240 }
-                                value={ latestReport.accessibility }
-                                label={ "accessibility" } />
-                            </Widget> }
-                        </Grid>
-
-                        <Grid item xs={ 12 } md={6} xl={ 4 }>
-                            { latestReport && <Widget title={ "Best Practices" }>
-                              <SingleStat
-                                width={ 300 }
-                                height={ 240 }
-                                value={ latestReport.bestPractices }
-                                label={ "bestPractices" } />
-                            </Widget> }
-                        </Grid>
-
-                        <Grid item xs={ 12 }>
-                            <Widget title={ "Stats History" }>
-                                { value === "desktop" && desktopReports.length > 0 &&
-                                  <HistoryChart keys={ lines } data={ [ ...desktopReports ].reverse() } /> }
-
-                                { value === "mobile" && mobileReports.length > 0 &&
-                                  <HistoryChart keys={ lines } data={ [ ...mobileReports ].reverse() } /> }
-                            </Widget>
-                        </Grid>
-
-                        <Grid item xs={ 12 }>
-                            { latestReport && <Widget title={ "Stats" }>
-                              <StatsChart height={ 280 } data={ [
-                                  { x: "Performance", y: latestReport.performance, fill: COLOR.PERFORMANCE },
-                                  {
-                                      x: "Accessibility",
-                                      y: latestReport.accessibility,
-                                      fill: COLOR.ACCESSIBILITY
-                                  },
-                                  {
-                                      x: "Best Practices",
-                                      y: latestReport.bestPractices,
-                                      fill: COLOR.BEST_PRACTICE
-                                  },
-                                  { x: "SEO", y: latestReport.SEO, fill: COLOR.SEO },
-                                  { x: "PWA", y: latestReport.PWA, fill: COLOR.PWA }
-                              ] } />
-                            </Widget> }
-                        </Grid>
-                    </Grid>
-
-                    <Grid container item xs={ 12 } xl={ 6 } spacing={ 2 }>
-                        <Grid item xs={ 12 } md={6} xl={ 4 }>
-                            <Widget title={ "Initial Server Response Time" }>
-                                {latestReport && <NumericValue goodThreshold={ 800 } poorThreshold={ 1200 }
-                                    value={ latestReport.serverResponseTime ?? 0 }
-                                    unit={ "ms" } /> }
-                            </Widget>
-                        </Grid>
-
-                        <Grid item xs={ 12 } md={6} xl={ 4 }>
-                            <Widget title={ "Time to interactive" }>
-                                {latestReport && <NumericValue goodThreshold={ 800 } poorThreshold={ 1200 }
-                                    value={ latestReport.tti ?? 0 }
-                                    unit={ "ms" } />}
-                            </Widget>
-                        </Grid>
-
-                        <Grid item xs={ 12 } md={ 6 } xl={ 4 }>
-                            { latestReport && <Widget title={ "Report" }>
-                              <Link href={ `/api/reports/${ latestReport.id }` } target={ "blank" }>
-                                <Typography variant={ "h6" }
-                                  color={ "primary" }>{ format(new Date(latestReport.date), DATE_FORMAT) }</Typography>
-                              </Link>
-                            </Widget> }
-                        </Grid>
-
-                        <Grid item xs={ 12 }>
-                            <Widget title={ "Response History" }>
-                                { value === "desktop" &&
-                                  <HistoryChart keys={ [ { label: "serverResponseTime", color: COLOR.SPEED } ] }
-                                    data={ [ ...desktopReports ].reverse() } /> }
-
-                                { value === "mobile" &&
-                                  <HistoryChart keys={ [ { label: "serverResponseTime", color: COLOR.SPEED } ] }
-                                    data={ [ ...mobileReports ].reverse() } /> }
-                            </Widget>
-                        </Grid>
-
-                        <Grid item xs={ 12 }>
-                            <Widget title={ "Time to interactive History" }>
-                                { value === "desktop" &&
-                                  <HistoryChart keys={ [ { label: "tti", color: COLOR.SPEED } ] }
-                                    data={ [ ...desktopReports ].reverse() } /> }
-
-                                { value === "mobile" &&
-                                  <HistoryChart keys={ [ { label: "tti", color: COLOR.SPEED } ] }
-                                    data={ [ ...mobileReports ].reverse() } /> }
-                            </Widget>
-                        </Grid>
-                    </Grid>
-
-
                     <Grid container item xs={ 12 } spacing={ 2 }>
-                        <Grid item xs={ 12 } md={ 4 }>
+                        <Grid item xs={ 12 } md={ 6 } xl={4}>
                             { latestReport && <Widget title={ "Screenshot" }><>
                                 { value === "desktop" && latestReport &&
                                   <img width={ "100%" } alt={ "desktop" }
@@ -291,6 +180,122 @@ export const ProjectPage = ({
                             </Widget>
                         </Grid>
                     </Grid>
+
+                    <Grid container item xs={ 12 } xl={ 6 } spacing={ 2 }>
+                        <Grid item xs={ 12 } md={6} xl={ 4 }>
+                            { latestReport && <Widget title={ "Performance" }>
+                              <SingleStat
+                                width={ 300 }
+                                height={ 240 }
+                                value={ latestReport.performance }
+                                label={ "Performance" } />
+                            </Widget> }
+                        </Grid>
+
+                        <Grid item xs={ 12 } md={6} xl={ 4 }>
+                            { latestReport && <Widget title={ "Accessibility" }>
+                              <SingleStat
+                                width={ 300 }
+                                height={ 240 }
+                                value={ latestReport.accessibility }
+                                label={ "accessibility" } />
+                            </Widget> }
+                        </Grid>
+
+                        <Grid item xs={ 12 } md={6} xl={ 4 }>
+                            { latestReport && <Widget title={ "Best Practices" }>
+                              <SingleStat
+                                width={ 300 }
+                                height={ 240 }
+                                value={ latestReport.bestPractices }
+                                label={ "bestPractices" } />
+                            </Widget> }
+                        </Grid>
+
+                        <Grid item xs={ 12 } md={6} xl={ 4 }>
+                            <Widget title={ "Initial Server Response Time" }>
+                                {latestReport && <NumericValue goodThreshold={ 800 } poorThreshold={ 1200 }
+                                  value={ latestReport.serverResponseTime ?? 0 }
+                                  unit={ "ms" } /> }
+                            </Widget>
+                        </Grid>
+
+                        <Grid item xs={ 12 } md={6} xl={ 4 }>
+                            <Widget title={ "Time to interactive" }>
+                                {latestReport && <NumericValue goodThreshold={ 800 } poorThreshold={ 1200 }
+                                  value={ latestReport.tti ?? 0 }
+                                  unit={ "ms" } />}
+                            </Widget>
+                        </Grid>
+
+                        <Grid item xs={ 12 } md={ 6 } xl={ 4 }>
+                            { latestReport && <Widget title={ "Report" }>
+                              <Link href={ `/api/reports/${ latestReport.id }` } target={ "blank" }>
+                                <Typography variant={ "h6" }
+                                  color={ "primary" }>{ format(new Date(latestReport.date), DATE_FORMAT) }</Typography>
+                              </Link>
+                            </Widget> }
+                        </Grid>
+
+                        <Grid item xs={ 12 }>
+                            { latestReport && <Widget title={ "Stats" }>
+                              <StatsChart height={ 280 } data={ [
+                                  { x: "Performance", y: latestReport.performance, fill: COLOR.PERFORMANCE },
+                                  {
+                                      x: "Accessibility",
+                                      y: latestReport.accessibility,
+                                      fill: COLOR.ACCESSIBILITY
+                                  },
+                                  {
+                                      x: "Best Practices",
+                                      y: latestReport.bestPractices,
+                                      fill: COLOR.BEST_PRACTICE
+                                  },
+                                  { x: "SEO", y: latestReport.SEO, fill: COLOR.SEO },
+                                  { x: "PWA", y: latestReport.PWA, fill: COLOR.PWA }
+                              ] } />
+                            </Widget> }
+                        </Grid>
+                    </Grid>
+
+                    <Grid container item xs={ 12 } xl={ 6 } spacing={ 2 }>
+                        <Grid item xs={ 12 }>
+                            <Widget title={ "Stats History" }>
+                                { value === "desktop" && desktopReports.length > 0 &&
+                                  <HistoryChart keys={ lines } data={ [ ...desktopReports ].reverse() } /> }
+
+                                { value === "mobile" && mobileReports.length > 0 &&
+                                  <HistoryChart keys={ lines } data={ [ ...mobileReports ].reverse() } /> }
+                            </Widget>
+                        </Grid>
+
+                        <Grid item xs={ 12 }>
+                            <Widget title={ "Response History" }>
+                                { value === "desktop" &&
+                                  <HistoryChart keys={ [ { label: "serverResponseTime", color: COLOR.SPEED } ] }
+                                    data={ [ ...desktopReports ].reverse() } /> }
+
+                                { value === "mobile" &&
+                                  <HistoryChart keys={ [ { label: "serverResponseTime", color: COLOR.SPEED } ] }
+                                    data={ [ ...mobileReports ].reverse() } /> }
+                            </Widget>
+                        </Grid>
+
+                        <Grid item xs={ 12 }>
+                            <Widget title={ "Time to interactive History" }>
+                                { value === "desktop" &&
+                                  <HistoryChart keys={ [ { label: "tti", color: COLOR.SPEED } ] }
+                                    data={ [ ...desktopReports ].reverse() } /> }
+
+                                { value === "mobile" &&
+                                  <HistoryChart keys={ [ { label: "tti", color: COLOR.SPEED } ] }
+                                    data={ [ ...mobileReports ].reverse() } /> }
+                            </Widget>
+                        </Grid>
+                    </Grid>
+
+
+
                 </Grid>
             </Grid>
         </Grid>

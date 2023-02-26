@@ -77,7 +77,7 @@ export const ReportsPage = ({ navigation, group }: ReportsPageProps) => {
                                     <TableRow>
                                         <TableCell>Project</TableCell>
                                         <TableCell>URL</TableCell>
-                                        <TableCell>Is Running</TableCell>
+                                        <TableCell>TTI</TableCell>
                                         <TableCell>Response Time</TableCell>
                                         <TableCell>Performance</TableCell>
                                         <TableCell>Type</TableCell>
@@ -90,7 +90,7 @@ export const ReportsPage = ({ navigation, group }: ReportsPageProps) => {
                                         return (<TableRow key={project.id}>
                                             <TableCell>
                                                 <Link href={ `/projects/${ project.id }` }>
-                                                    <Typography color={ 'secondary' }>{ project.name }</Typography>
+                                                    <Typography color={ "secondary" }>{ project.name }</Typography>
                                                 </Link>
                                             </TableCell>
                                             <TableCell>
@@ -98,8 +98,8 @@ export const ReportsPage = ({ navigation, group }: ReportsPageProps) => {
                                                     <Typography color={ "secondary" }>{ project.url }</Typography>
                                                 </Link>
                                             </TableCell>
-                                            <TableCell>{ project.is_running && <TravelExploreIcon /> }</TableCell>
-                                            <TableCell>{ report?.serverResponseTime }</TableCell>
+                                            <TableCell>{ Math.round(report?.tti ?? 0) }ms</TableCell>
+                                            <TableCell>{ Math.round(report?.serverResponseTime ?? 0) }ms</TableCell>
                                             <TableCell>{ report?.performance }</TableCell>
                                             <TableCell>{ report?.type }</TableCell>
                                             <TableCell>{ report && format(new Date(report.date), DATE_FORMAT) }</TableCell>

@@ -1,17 +1,4 @@
-import {
-    Button,
-    Card,
-    CardActions,
-    CardContent,
-    CardMedia,
-    Chip,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow
-} from "@mui/material";
+import { Button, Card, CardActions, CardContent, CardMedia, Chip } from "@mui/material";
 import { Stack } from "@mui/system";
 import Typography from "@mui/material/Typography";
 import Link from "next/link";
@@ -20,6 +7,7 @@ import React from "react";
 import { LighthouseRunReport, Project, Tag } from "@prisma/client";
 import { StatsChart } from "./stats-chart";
 import { useResource } from "../hooks/use-resource";
+import { HistoryChart } from "./history-chart";
 
 export type ProjectCardProps = {
     project: Project;
@@ -27,11 +15,24 @@ export type ProjectCardProps = {
 }
 export const ProjectCard = ({ report, project }: ProjectCardProps) => {
     const tagsApi = useResource<Tag[]>({ url: `/api/projects/${ project.id }/tags` });
-    return <Card sx={{background: project.is_running ? '#555' : undefined}}>
-        <Stack component={ 'div' } direction={ 'row' } spacing={ 1 }>
+    const reportsApi = useResource<Tag[]>({
+        url: `/api/projects/${ project.id }/reports`,
+        params: { type: "desktop", limit: 5 }
+    });
+
+    const lines = [
+        { label: "performance", color: COLOR.PERFORMANCE },
+        { label: "accessibility", color: COLOR.ACCESSIBILITY },
+        { label: "bestPractices", color: COLOR.BEST_PRACTICE },
+        { label: "SEO", color: COLOR.SEO },
+        { label: "PWA", color: COLOR.PWA }
+    ];
+
+    return <Card sx={ { background: project.is_running ? "#555" : undefined } }>
+        <Stack component={ "div" } direction={ "row" } spacing={ 1 }>
             <CardMedia component="img"
                 height={ 300 }
-                style={ { objectFit: 'cover' } }
+                style={ { objectFit: "cover" } }
                 image={ `/api/reports/${ report?.id }/thumbnail` }>
             </CardMedia>
         </Stack>
@@ -48,6 +49,8 @@ export const ProjectCard = ({ report, project }: ProjectCardProps) => {
                 { project.group && <Chip label={ project.group } /> }
                 { tagsApi.data?.map((tag: Tag) => <Chip label={ tag.name } key={ tag.id } />) }
             </Stack>
+
+            { reportsApi.data && <HistoryChart hideXAxis keys={ lines } data={ [ ...reportsApi.data ].reverse() } /> }
 
             { report && <StatsChart data={ [
                 { x: "Performance", y: report.performance, fill: COLOR.PERFORMANCE },

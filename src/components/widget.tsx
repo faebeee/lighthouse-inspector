@@ -9,9 +9,9 @@ export type WidgetProps = PropsWithChildren<{
 }>;
 
 export const Widget = ({ actions, children, title }: WidgetProps) => {
-    return <Card sx={ { height: "420px" } }>
+    return <Card sx={ { height: "380px" } }>
         <CardContent sx={ { display: "flex", flexDirection: "column", height: "100%" } }>
-            <Typography color={ "textPrimary" } variant={ "subtitle2" }>{ title }</Typography>
+            <Typography color={ "textSecondary" } variant={ "h6" }>{ title }</Typography>
             <Box sx={ {
                 width: '100%',
                 flex: "1 0 100%",
