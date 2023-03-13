@@ -5,6 +5,16 @@ export const REPORTFILE_PROJECT_DELIMITER = "::";
 export const REPORTFILE_DATE_FORMAT = "yyyy-MM-dd-hhmmss";
 export const DATE_FORMAT = "yyyy-MM-dd hh:mm:ss";
 
+export const SERVER_RESPONSE_TIME_THRESHOLD = {
+    GOOD: 800,
+    POOR: 1200
+};
+export const TIME_TO_INTERACTIVE_THRESHOLD = {
+    GOOD: 600,
+    POOR: 1200
+};
+
+
 export const CHART_BLUR = "5px";
 
 const THEME_LIGHT = {
@@ -33,7 +43,8 @@ export const COLOR = {
     BEST_PRACTICE: 'rgba(68,211,113,0.7)',
     SEO: 'rgba(68,211,70,0.7)',
     PWA: 'rgba(147,211,68,0.7)',
-    SPEED: 'rgb(114,9,24)',
+    RESPONSE_TIME: 'rgba(183,181,57,0.9)',
+    TTI: 'rgba(30,196,160,0.9)',
 }
 export const STATUS_COLORS = {
     VERY_GOOD: 'rgb(137,232,8, 0.8)',
@@ -50,3 +61,16 @@ export const SCORE_MAP = {
     40: STATUS_COLORS.BAD,
     0: STATUS_COLORS.POOR,
 }
+
+export const AUDIT_HISTORY_CHART_LINES = [
+    { label: "performance", color: COLOR.PERFORMANCE },
+    { label: "accessibility", color: COLOR.ACCESSIBILITY },
+    { label: "bestPractices", color: COLOR.BEST_PRACTICE },
+    { label: "SEO", color: COLOR.SEO },
+    { label: "PWA", color: COLOR.PWA }
+];
+
+export const SERVER_HISTORY_CHART_LINES = [
+    { label: "tti", color: COLOR.TTI },
+    { label: "serverResponseTime", color: COLOR.RESPONSE_TIME },
+];

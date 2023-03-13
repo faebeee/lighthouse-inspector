@@ -2,12 +2,11 @@ import { Button, Card, CardActions, CardContent, CardMedia, Chip } from "@mui/ma
 import { Stack } from "@mui/system";
 import Typography from "@mui/material/Typography";
 import Link from "next/link";
-import { COLOR } from "../../config";
 import React from "react";
 import { LighthouseRunReport, Project, Tag } from "@prisma/client";
-import { StatsChart } from "./stats-chart";
 import { useResource } from "../hooks/use-resource";
-import { HistoryChart } from "./history-chart";
+import { ProjectResultHistoryChart } from "./project-result-history-chart";
+import { AUDIT_HISTORY_CHART_LINES } from "../../config";
 
 export type ProjectCardProps = {
     project: Project;
@@ -15,18 +14,6 @@ export type ProjectCardProps = {
 }
 export const ProjectCard = ({ report, project }: ProjectCardProps) => {
     const tagsApi = useResource<Tag[]>({ url: `/api/projects/${ project.id }/tags` });
-    const reportsApi = useResource<Tag[]>({
-        url: `/api/projects/${ project.id }/reports`,
-        params: { type: "desktop", limit: 5 }
-    });
-
-    const lines = [
-        { label: "performance", color: COLOR.PERFORMANCE },
-        { label: "accessibility", color: COLOR.ACCESSIBILITY },
-        { label: "bestPractices", color: COLOR.BEST_PRACTICE },
-        { label: "SEO", color: COLOR.SEO },
-        { label: "PWA", color: COLOR.PWA }
-    ];
 
     return <Card sx={ { background: project.is_running ? "#555" : undefined } }>
         <Stack component={ "div" } direction={ "row" } spacing={ 1 }>
@@ -50,15 +37,8 @@ export const ProjectCard = ({ report, project }: ProjectCardProps) => {
                 { tagsApi.data?.map((tag: Tag) => <Chip label={ tag.name } key={ tag.id } />) }
             </Stack>
 
-            { reportsApi.data && <HistoryChart hideXAxis keys={ lines } data={ [ ...reportsApi.data ].reverse() } /> }
 
-            { report && <StatsChart data={ [
-                { x: "Performance", y: report.performance, fill: COLOR.PERFORMANCE },
-                { x: "Accessibility", y: report.accessibility, fill: COLOR.ACCESSIBILITY },
-                { x: "Best Practices", y: report.bestPractices, fill: COLOR.BEST_PRACTICE },
-                { x: "SEO", y: report.SEO, fill: COLOR.SEO },
-                { x: "PWA", y: report.PWA, fill: COLOR.PWA }
-            ] } /> }
+            <ProjectResultHistoryChart lines={ AUDIT_HISTORY_CHART_LINES } project={ project } />
         </CardContent>
         <CardActions>
             { project.group && <Link href={ `/group/${ project.group }` }>

@@ -10,6 +10,7 @@ export type SettingsFormProps = {
 export const SettingsForm = ({ project }: SettingsFormProps) => {
     const [ group, setGroup ] = useState(project.group);
     const [ name, setName ] = useState(project.name);
+    const [ url, setUrl ] = useState(project.url);
     const [ showSuccessMessage, setShowSuccessMessage ] = useState(false);
     const [ isLoading, setIsLoading ] = useState(project.is_running);
 
@@ -30,7 +31,8 @@ export const SettingsForm = ({ project }: SettingsFormProps) => {
         setIsLoading(true);
         axios.patch(`/api/projects/${ project.id }`, {
             group,
-            name
+            name,
+            url
         })
             .then(() => setShowSuccessMessage(true))
             .finally(() => {
@@ -44,7 +46,8 @@ export const SettingsForm = ({ project }: SettingsFormProps) => {
                 onChange={ (e) => setName(e.target.value) } />
             <TextField label={ "Group" } value={ group }
                 onChange={ (e) => setGroup(e.target.value) } />
-            <TextField fullWidth label={ "Url" } value={ project.url } disabled />
+            <TextField fullWidth label={ "Url" } value={ url }
+                onChange={ (e) => setUrl(e.target.value) } />
             <Button variant={ "contained" } disabled={ isLoading }
                 onClick={ updateProject }>{ isLoading ? "Loading..." : "Save" }</Button>
         </Stack>

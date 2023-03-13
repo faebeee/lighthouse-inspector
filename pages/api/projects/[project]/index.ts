@@ -27,6 +27,7 @@ export const projectHandler = async (request: NextApiRequest, response: NextApiR
         const updatedProject = await updateProject(project, {
             name: request.body.name ?? project.name,
             group: request.body.group ?? project.group,
+            url: request.body.url ?? project.url,
             interval_reporting: request.body.interval_reporting
         })
         response.send(updatedProject);

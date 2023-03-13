@@ -4,7 +4,7 @@ import React, { PropsWithChildren, ReactNode } from "react";
 import Box from "@mui/material/Box";
 
 export type WidgetProps = PropsWithChildren<{
-    title: string;
+    title: ReactNode;
     actions?: ReactNode
 }>;
 

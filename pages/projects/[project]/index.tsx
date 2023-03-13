@@ -4,9 +4,9 @@ import axios from "axios";
 import Link from "next/link";
 import { getProjectById, getProjects } from "../../../src/server/lib/project-services";
 import { Layout } from "../../../src/components/layout";
-import { Button, Chip, Grid, Stack, Tab, Tabs } from "@mui/material";
+import { Button, CardMedia, Chip, Grid, Stack, Tab, Tabs } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import { COLOR, DATE_FORMAT } from "../../../config";
+import { COLOR, DATE_FORMAT, SERVER_RESPONSE_TIME_THRESHOLD, TIME_TO_INTERACTIVE_THRESHOLD } from "../../../config";
 import Box from "@mui/material/Box";
 import { LighthouseRunReport, Project, Tag } from "@prisma/client";
 import { getNavigation, NavigationEntry } from "../../../src/utils/get-navigation";
@@ -19,7 +19,6 @@ import { Widget } from "../../../src/components/widget";
 import { StatsChart } from "../../../src/components/stats-chart";
 import { HistoryChart } from "../../../src/components/history-chart";
 import { NumericValue } from "../../../src/components/numeric-value";
-import { useRouter } from "next/router";
 import { useSearchParams } from "next/navigation";
 import Divider from "@mui/material/Divider";
 
@@ -134,14 +133,17 @@ export const ProjectPage = ({
             <Grid item xs={ 12 }>
                 <Grid container spacing={ 2 }>
                     <Grid container item xs={ 12 } spacing={ 2 }>
-                        <Grid item xs={ 12 } md={ 6 } xl={4}>
-                            { latestReport && <Widget title={ "Screenshot" }><>
-                                { value === "desktop" && latestReport &&
-                                  <img width={ "100%" } alt={ "desktop" }
-                                    src={ `/api/reports/${ latestReport.id }/thumbnail` } /> }
+                        <Grid item xs={ 12 } md={ 6 } xl={ 4 }>
+                            { latestReport && <Widget title={ "Full Page Screenshot" }><>
+                                { value === "desktop" && latestReport && <CardMedia component="img"
+                                  height={ 300 }
+                                  style={ { objectFit: "contain" } }
+                                  image={ `/api/reports/${ latestReport.id }/full-screenshot` } /> }
                                 { value === "mobile" && latestReport &&
-                                  <img width={ 300 } alt={ "mobile" }
-                                    src={ `/api/reports/${ latestReport.id }/thumbnail?type=mobile` } /> }
+                                  <CardMedia component="img"
+                                    height={ 300 }
+                                    style={ { objectFit: "contain" } }
+                                    image={ `/api/reports/${ latestReport.id }/full-screenshot?type=mobile` } /> }
                             </>
                             </Widget> }
                         </Grid>
@@ -214,7 +216,8 @@ export const ProjectPage = ({
 
                         <Grid item xs={ 12 } md={6} xl={ 4 }>
                             <Widget title={ "Initial Server Response Time" }>
-                                {latestReport && <NumericValue goodThreshold={ 800 } poorThreshold={ 1200 }
+                                { latestReport && <NumericValue goodThreshold={ SERVER_RESPONSE_TIME_THRESHOLD.GOOD }
+                                  poorThreshold={ SERVER_RESPONSE_TIME_THRESHOLD.POOR }
                                   value={ latestReport.serverResponseTime ?? 0 }
                                   unit={ "ms" } /> }
                             </Widget>
@@ -222,9 +225,10 @@ export const ProjectPage = ({
 
                         <Grid item xs={ 12 } md={6} xl={ 4 }>
                             <Widget title={ "Time to interactive" }>
-                                {latestReport && <NumericValue goodThreshold={ 800 } poorThreshold={ 1200 }
+                                { latestReport && <NumericValue goodThreshold={ TIME_TO_INTERACTIVE_THRESHOLD.GOOD }
+                                  poorThreshold={ TIME_TO_INTERACTIVE_THRESHOLD.POOR }
                                   value={ latestReport.tti ?? 0 }
-                                  unit={ "ms" } />}
+                                  unit={ "ms" } /> }
                             </Widget>
                         </Grid>
 
@@ -272,11 +276,11 @@ export const ProjectPage = ({
                         <Grid item xs={ 12 }>
                             <Widget title={ "Response History" }>
                                 { value === "desktop" &&
-                                  <HistoryChart keys={ [ { label: "serverResponseTime", color: COLOR.SPEED } ] }
+                                  <HistoryChart keys={ [ { label: "serverResponseTime", color: COLOR.RESPONSE_TIME } ] }
                                     data={ [ ...desktopReports ].reverse() } /> }
 
                                 { value === "mobile" &&
-                                  <HistoryChart keys={ [ { label: "serverResponseTime", color: COLOR.SPEED } ] }
+                                  <HistoryChart keys={ [ { label: "serverResponseTime", color: COLOR.RESPONSE_TIME } ] }
                                     data={ [ ...mobileReports ].reverse() } /> }
                             </Widget>
                         </Grid>
@@ -284,11 +288,11 @@ export const ProjectPage = ({
                         <Grid item xs={ 12 }>
                             <Widget title={ "Time to interactive History" }>
                                 { value === "desktop" &&
-                                  <HistoryChart keys={ [ { label: "tti", color: COLOR.SPEED } ] }
+                                  <HistoryChart keys={ [ { label: "tti", color: COLOR.RESPONSE_TIME } ] }
                                     data={ [ ...desktopReports ].reverse() } /> }
 
                                 { value === "mobile" &&
-                                  <HistoryChart keys={ [ { label: "tti", color: COLOR.SPEED } ] }
+                                  <HistoryChart keys={ [ { label: "tti", color: COLOR.RESPONSE_TIME } ] }
                                     data={ [ ...mobileReports ].reverse() } /> }
                             </Widget>
                         </Grid>
