@@ -1,11 +1,11 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { assertAuth } from "../../../../src/server/lib/api-helpers";
-import { deleteSite, getSiteById, updateSite } from "../../../../src/server/lib/site";
+import { deleteSite, getSiteById, updateSite } from "../../../../../../src/server/lib/site";
+import { assertAuth } from "../../../../../../src/server/lib/api-helpers";
 
 export const siteHandler = async (request: NextApiRequest, response: NextApiResponse) => {
     const currentSiteId = parseInt(request.query.site as string);
     if (request.method === "GET") {
-        const site = await getSiteById(currentSiteId);
+        const [ site ] = await Promise.all([ getSiteById(currentSiteId) ]);
         if (!site) {
             response.status(404).send({});
             return;

@@ -1,11 +1,11 @@
 import React from "react";
 import { Button, Link, Menu, MenuItem } from "@mui/material";
-import { Project } from "@prisma/client";
+import { Site } from "@prisma/client";
 
 export type ActionsListProps = {
-    project: Project;
+    site: Site;
 }
-export const ActionsList = ({ project }: ActionsListProps) => {
+export const ActionsList = ({ site }: ActionsListProps) => {
     const [ anchorEl, setAnchorEl ] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -35,10 +35,10 @@ export const ActionsList = ({ project }: ActionsListProps) => {
                     horizontal: "left"
                 } }
             >
-                <Link href={ `https://validator.schema.org/#url=${ project.url }` } target={ "_blank" }>
+                <Link href={ `https://validator.schema.org/#url=${ site.url }` } target={ "_blank" }>
                     <MenuItem>Open in Schema markup Validator</MenuItem>
                 </Link>
-                <Link href={ `https://www.projectwallace.com/analyze-css?url=${ project.url }` } target={ "_blank" }>
+                <Link href={ `https://www.projectwallace.com/analyze-css?url=${ site.url }` } target={ "_blank" }>
                     <MenuItem>Open CSS Analyzer</MenuItem>
                 </Link>
             </Menu>

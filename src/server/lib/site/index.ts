@@ -1,4 +1,4 @@
-import { Site } from "@prisma/client";
+import { Project, Site } from "@prisma/client";
 import { getPrisma } from "../../get-prisma";
 import { getLogger } from "../../logger";
 
@@ -63,4 +63,14 @@ export const getSites = async (): Promise<Site[]> => {
     return (await getPrisma().site.findMany({
         orderBy: { name: "asc" }
     })) ?? [];
+};
+
+export const getSitesByProject = async (project: Project): Promise<Site[]> => {
+    try {
+        return getPrisma().site.findMany({
+            where: { projectId: project.id }
+        });
+    } catch {
+        return [];
+    }
 };

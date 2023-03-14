@@ -1,8 +1,8 @@
 import { NextApiHandler } from "next";
 import { getPrisma } from "../../../src/server/get-prisma";
-import { getSiteById } from "../../../src/server/lib/project-services";
 import { getAllTags, getTagByName } from "../../../src/server/lib/tag-service";
 import { assertAuth } from "../../../src/server/lib/api-helpers";
+import { getSiteById } from "../../../src/server/lib/site";
 
 export const tagsListApiHandler: NextApiHandler = async (req, res) => {
     if (req.method === "POST") {

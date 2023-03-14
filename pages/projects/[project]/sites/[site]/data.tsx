@@ -2,26 +2,26 @@ import { GetServerSideProps } from "next";
 import React, { useMemo, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
-import { getSiteById, getSites } from "../../../src/server/lib/project-services";
-import { Layout } from "../../../src/components/layout";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { Button, Card, Grid, Tab, Tabs } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import { COLOR, DATE_FORMAT } from "../../../config";
 import Box from "@mui/material/Box";
-import { LighthouseRunReport, Project } from "@prisma/client";
-import { getNavigation, NavigationEntry } from "../../../src/utils/get-navigation";
+import { LighthouseRunReport, Project, Site } from "@prisma/client";
 import { format } from "date-fns";
-import { ActionsList } from "../../../src/components/actions-list";
-import { useEndpoint } from "../../../src/hooks/use-endpoint";
-import { useResource } from "../../../src/hooks/use-resource";
-import { HistoryChart } from "../../../src/components/history-chart";
 import { useSearchParams } from "next/navigation";
 import Divider from "@mui/material/Divider";
-import { Widget } from "../../../src/components/widget";
+import { useResource } from "../../../../../src/hooks/use-resource";
+import { getSiteById } from "../../../../../src/server/lib/site";
+import { getNavigation, NavigationEntry } from "../../../../../src/utils/get-navigation";
+import { useEndpoint } from "../../../../../src/hooks/use-endpoint";
+import { AUDIT_HISTORY_CHART_LINES, DATE_FORMAT, SERVER_HISTORY_CHART_LINES } from "../../../../../config";
+import { ActionsList } from "../../../../../src/components/actions-list";
+import { Layout } from "../../../../../src/components/layout";
+import { Widget } from "../../../../../src/components/widget";
+import { HistoryChart } from "../../../../../src/components/history-chart";
 
 export type ProjectPageProps = {
-    project: Project;
+    site: Site;
     navigation: NavigationEntry[];
     projects: Project[];
     desktopReports: LighthouseRunReport[];
@@ -30,43 +30,41 @@ export type ProjectPageProps = {
 
 // @ts-ignore
 export const getServerSideProps: GetServerSideProps<ProjectPageProps> = async (req) => {
-    const project = await getSiteById(parseInt(req.query.project as string));
-    if (!project) {
+    const site = await getSiteById(parseInt(req.query.project as string));
+    if (!site) {
         return {
             notFound: true
         };
     }
-    const projects = await getSites();
     const navigation = await getNavigation();
 
     return {
         props: {
-            project,
-            navigation,
-            projects
+            site,
+            navigation
         }
     };
 };
 
 export const ProjectPage = ({
-                                project: initialProject,
+                                site: initialSite,
                                 navigation
                             }: ProjectPageProps) => {
-    const projectApi = useResource<Project>({
-        url: `/api/projects/${ initialProject.id }`
+    const sitesApi = useResource<Site>({
+        url: `/api/projects/${ initialSite.projectId }/sites/${ initialSite.id }`
     }, 2000);
-    const project = useMemo(() => projectApi.data ?? initialProject, [ initialProject, projectApi.data ]);
-    const [ isLoading, setIsLoading ] = useState(project.is_running);
+    const site = useMemo(() => sitesApi.data ?? initialSite, [ initialSite, sitesApi.data ]);
+    const [ isLoading, setIsLoading ] = useState(site.is_running);
     const [ value, setValue ] = useState<string>("desktop");
     const searchParams = useSearchParams();
-    const limit = searchParams.get('limit') ? searchParams.get('limit'): 10
+    const limit = searchParams.get("limit") ? searchParams.get("limit") : 10;
     const desktopReportsApi = useResource<LighthouseRunReport[]>({
-        url: `/api/projects/${ project.id }/reports`,
+        url: `/api/projects/${ site.projectId }/sites/${ site.id }/reports`,
         params: { type: "desktop", limit }
     }, 2000);
 
     const mobileReportsApi = useResource<LighthouseRunReport[]>({
-        url: `/api/projects/${ project.id }/reports`,
+        url: `/api/projects/${ site.projectId }/sites/${ site.id }/reports`,
         params: { type: "mobile", limit }
     }, 2000);
 
@@ -82,7 +80,7 @@ export const ProjectPage = ({
 
     const onRunReport = () => {
         setIsLoading(true);
-        axios.post(`/api/projects/${ project.id }/inspect`)
+        axios.post(`/api/projects/${ site.projectId }/sites/${ site.id }/inspect`)
             .finally(() => {
                 setIsLoading(false);
             });
@@ -116,23 +114,15 @@ export const ProjectPage = ({
         }
     ];
 
-    const lines = [
-        { label: "performance", color: COLOR.PERFORMANCE },
-        { label: "accessibility", color: COLOR.ACCESSIBILITY },
-        { label: "bestPractices", color: COLOR.BEST_PRACTICE },
-        { label: "SEO", color: COLOR.SEO },
-        { label: "PWA", color: COLOR.PWA }
-    ];
 
     return <Layout
-        backLink={ `/projects/${ project.id }` }
-        title={ `${ project.name } | Data` }
+        backLink={ `/projects/${ site.projectId }` }
+        title={ `${ site.name } | Data` }
         actions={ <>
-            <Button href={ `/projects/${ project.id }` }>Overview</Button>
-            <Button href={ `/projects/${ project.id }/settings` }>Settings</Button>
-            <Button href={ `/projects/${ project.id }/data` }>Data</Button>
+            <Button href={ `/projects/${ site.projectId }/sites/${ site.id }` }>Overview</Button>
+            <Button href={ `/projects/${ site.projectId }/sites/${ site.id }/data` }>Data</Button>
             <Divider orientation={ "vertical" } variant={ "fullWidth" } color={ "primary" } />
-            <ActionsList project={ project } />
+            <ActionsList site={ site } />
             <Button variant={ "contained" } disabled={ isLoading || (inspectEndpoint.data ?? []).length > 0 }
                 onClick={ onRunReport }>{ isLoading ? "Loading..." : "Run" }</Button>
         </> }
@@ -150,27 +140,23 @@ export const ProjectPage = ({
                     <Grid item xs={ 12 }>
                         <Widget title={ "Stats History" }>
                             { value === "desktop" && desktopReports.length > 0 &&
-                              <HistoryChart keys={ lines } data={ [ ...desktopReports ].reverse() } /> }
+                              <HistoryChart keys={ AUDIT_HISTORY_CHART_LINES }
+                                data={ [ ...desktopReports ].reverse() } /> }
 
                             { value === "mobile" && mobileReports.length > 0 &&
-                              <HistoryChart keys={ lines } data={ [ ...mobileReports ].reverse() } /> }
+                              <HistoryChart keys={ AUDIT_HISTORY_CHART_LINES }
+                                data={ [ ...mobileReports ].reverse() } /> }
                         </Widget>
                     </Grid>
 
                     <Grid item xs={ 12 }>
                         <Widget title={ "Response History" }>
                             { value === "desktop" &&
-                              <HistoryChart keys={ [
-                                  { label: "serverResponseTime", color: COLOR.RESPONSE_TIME },
-                                  { label: "tti", color: COLOR.TTI }
-                              ] }
+                              <HistoryChart keys={ SERVER_HISTORY_CHART_LINES }
                                 data={ [ ...desktopReports ].reverse() } /> }
 
                             { value === "mobile" &&
-                              <HistoryChart keys={ [
-                                  { label: "serverResponseTime", color: COLOR.RESPONSE_TIME },
-                                  { label: "tti", color: COLOR.TTI }
-                              ] }
+                              <HistoryChart keys={ SERVER_HISTORY_CHART_LINES }
                                 data={ [ ...mobileReports ].reverse() } /> }
                         </Widget>
                     </Grid>

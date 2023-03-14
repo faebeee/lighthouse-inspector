@@ -7,8 +7,8 @@ import sha1 from "sha1";
 const exec = async () => {
     await getPrisma().user.create({
         data: {
-            username: "fabs",
-            password: sha1("prw7v")
+            username: "admin",
+            password: sha1("admin")
         }
     });
 };

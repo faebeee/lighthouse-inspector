@@ -1,13 +1,13 @@
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
 import { allowed, assertAuth } from "../../../src/server/lib/api-helpers";
-import { getSites, getRunningSites, markSiteAsRunning } from "../../../src/server/lib/project-services";
+import { getRunningSites, getSites, markSiteAsRunning } from "../../../src/server/lib/site";
 import { runInspection } from "../../../src/server/utils/run-inspection";
 
 
 const onPost = allowed("POST", async (request: NextApiRequest, response: NextApiResponse) => {
-    const projects = await getSites();
-    for (let i = 0; i < projects.length; i++) {
-        const project = projects[i];
+    const sites = await getSites();
+    for (let i = 0; i < sites.length; i++) {
+        const project = sites[i];
         await markSiteAsRunning(project, true);
         try {
             await runInspection(project);

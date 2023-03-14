@@ -84,13 +84,6 @@ export const Layout = ({
                 </ListItemText>
               </MenuItem>
             </Link>
-            <Link href={ "/list" }>
-              <MenuItem>
-                <ListItemText>
-                  <Typography color={ "secondary" }>List</Typography>
-                </ListItemText>
-              </MenuItem>
-            </Link>
             <Divider />
 
             <MenuItem>
@@ -105,20 +98,6 @@ export const Layout = ({
                       </ListItemText>
                   </MenuItem>
               </Link>)) }
-            <Divider />
-            <MenuItem>
-              <ListItemText>
-                Groups
-              </ListItemText>
-            </MenuItem>
-              { groups.map((nav) => (<Link href={ nav.url } key={ nav.label }>
-                  <MenuItem>
-                      <ListItemText>
-                          <Typography color={ "secondary" }>{ nav.label }</Typography>
-                      </ListItemText>
-                  </MenuItem>
-              </Link>)) }
-
             <Divider />
           </MenuList>
 

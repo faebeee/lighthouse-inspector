@@ -1,9 +1,9 @@
 #!/usr/bin/env ts-node
 
-import { getAutoUpdateProjects } from "../src/server/lib/project-services";
 import { auditRunnerForProjects } from "../src/server/utils/audit-runner-for-site";
 import cron from "node-cron";
 import { getLogger } from "../src/server/logger";
+import { getAutoUpdateProjects } from "../src/server/lib/project";
 
 const exec = async () => {
     const projects = await getAutoUpdateProjects();

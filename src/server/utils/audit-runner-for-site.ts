@@ -1,7 +1,7 @@
 import { runInspection } from "./run-inspection";
-import { Site } from "@prisma/client";
+import { Project, Site } from "@prisma/client";
 import { getLogger } from "../logger";
-import { markSiteAsRunning } from "../lib/site";
+import { getSitesByProject, markSiteAsRunning } from "../lib/site";
 
 export const auditRunnerForSite = async (site: Site) => {
     await markSiteAsRunning(site, true);
@@ -16,10 +16,19 @@ export const auditRunnerForSite = async (site: Site) => {
         await markSiteAsRunning(site, false);
     }
 };
-export const auditRunnerForProjects = async (sites: Site[]) => {
+export const auditRunnerForSites = async (sites: Site[]) => {
     for (let i = 0; i < sites.length; i++) {
         const site = sites[i];
-        getLogger().info(`Run for #${ site.id } ${ site.name }`);
+        getLogger().info(`Run for Site #${ site.id } ${ site.name }`);
         await auditRunnerForSite(site);
+    }
+};
+
+export const auditRunnerForProjects = async (projects: Project[]) => {
+    for (let i = 0; i < projects.length; i++) {
+        const project = projects[i];
+        getLogger().info(`Run for Project #${ project.id } ${ project.name }`);
+        const sites = await getSitesByProject(project);
+        await auditRunnerForSites(sites);
     }
 };

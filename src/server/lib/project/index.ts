@@ -26,4 +26,20 @@ export const getAutoUpdateProjects = async (): Promise<Project[]> => {
     })) ?? [];
 };
 
+export const getProjectById = async (projectId: number): Promise<Project | null> => {
+    try {
+        return getPrisma().project.findFirst({
+            where: { id: projectId }
+        });
+    } catch {
+        return null;
+    }
+};
 
+export const getProjects = async (): Promise<Project[]> => {
+    try {
+        return getPrisma().project.findMany();
+    } catch {
+        return [];
+    }
+};

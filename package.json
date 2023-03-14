@@ -3,12 +3,12 @@
   "version": "0.23.1",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 8081",
+    "dev": "next dev -p 8082",
     "build": "next build",
     "up": "npm run cron &",
     "start": "next start -p 8082",
     "lint": "next lint",
-    "cron": "ts-node --project tsconfig.node.json ./cli/cron.ts",
+    "cron": "ts-node  --project tsconfig.node.json -r dotenv/config ./cli/cron.ts",
     "cli:create-user": "ts-node --project tsconfig.node.json ./cli/create-user.ts",
     "prisma:generate": "npx prisma generate",
     "prisma:generate:watch": "npx prisma generate --watch"
@@ -54,6 +54,7 @@
     "@types/psi": "^4.1.2",
     "@types/sha1": "^1.1.3",
     "autoprefixer": "^10.4.13",
+    "dotenv": "^16.0.3",
     "postcss": "^8.4.19",
     "prisma": "^4.10.1"
   }

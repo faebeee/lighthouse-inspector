@@ -4,7 +4,7 @@ import { Button, Chip, Grid, Stack } from "@mui/material";
 import Link from "next/link";
 import Typography from "@mui/material/Typography";
 import React from "react";
-import { LighthouseRunReport, Project, Tag } from "@prisma/client";
+import { LighthouseRunReport, Project, Site, Tag } from "@prisma/client";
 import { getNavigation, NavigationEntry } from "../src/utils/get-navigation";
 import { ProjectCard } from "../src/components/project-card";
 import { useResource } from "../src/hooks/use-resource";
@@ -29,13 +29,13 @@ export const getServerSideProps: GetServerSideProps<ReportsPageProps> = async ()
 export const ReportsPage = ({ navigation }: ReportsPageProps) => {
     const activeTags = useSelectionList<number>([]);
     const tagsApi = useResource<Tag[]>({ url: `/api/tags` }, 5000);
-    const inspectEndpoint = useEndpoint<Project[]>({ url: `/api/inspect` }, 2000);
+    const inspectEndpoint = useEndpoint<Site[]>({ url: `/api/inspect` }, 2000);
     const onInspectAllClicked = () => {
         inspectEndpoint.call("POST");
     };
 
-    const projectsApi = useResource<Project[]>({
-        url: `/api/projects`,
+    const sitesApi = useResource<Site[]>({
+        url: `/api/sites`,
         params: {
             tags: activeTags.list
         }
@@ -51,7 +51,7 @@ export const ReportsPage = ({ navigation }: ReportsPageProps) => {
                 Inspect All
             </Button>
         </> }>
-        <Typography sx={ { mb: 2 } } color={ "textPrimary" } variant={ "h1" }>Projects</Typography>
+        <Typography sx={ { mb: 2 } } color={ "textPrimary" } variant={ "h1" }>Sites</Typography>
 
         <Box py={ 2 }>
             <Stack spacing={ 1 } direction={ "row" }>
@@ -62,14 +62,14 @@ export const ReportsPage = ({ navigation }: ReportsPageProps) => {
         </Box>
 
         <Grid container spacing={ 2 }>
-            { projectsApi.data?.map((project) => {
-                const report = desktopReportsApi.data?.[project.id];
+            { sitesApi.data?.map((site) => {
+                const report = desktopReportsApi.data?.[site.id];
                 if (!report) {
                     return;
                 }
                 return (
-                    <Grid key={ project.id } item xs={ 12 } lg={ 6 } xl={ 3 }>
-                        <ProjectCard project={ project } report={ report } />
+                    <Grid key={ site.id } item xs={ 12 } lg={ 6 } xl={ 3 }>
+                        <ProjectCard site={ site } report={ report } />
                     </Grid>
                 );
             }) }

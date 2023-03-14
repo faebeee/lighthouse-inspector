@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { assertAuth } from "../../../../src/server/lib/api-helpers";
-import { getSiteById } from "../../../../src/server/lib/site";
-import { getReportsForProject } from "../../../../src/server/lib/report";
+import { assertAuth } from "../../../../../../src/server/lib/api-helpers";
+import { getReportsForProject } from "../../../../../../src/server/lib/report";
+import { getSiteById } from "../../../../../../src/server/lib/site";
 
 export const projectHandler = async (request: NextApiRequest, response: NextApiResponse) => {
     if (request.method === "GET") {

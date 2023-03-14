@@ -5,7 +5,7 @@ cron:
 	npm run cron
 
 generate-migration:
-	npx prisma migrate
+	npx prisma migrate dev
 
 generate-client:
 	npm run prisma:generate
