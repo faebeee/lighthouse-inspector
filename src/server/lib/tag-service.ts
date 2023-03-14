@@ -37,7 +37,7 @@ export const getTagsByProjectId = (id: number) => {
 
 
 export const projectHasTag = async (projectId: number, tagId: number) => {
-    const has = await getPrisma().tagsOnProjects.findFirst({
+    const has = await getPrisma().tagsOnProject.findFirst({
         where: {
             projectId,
             tagId
@@ -51,7 +51,7 @@ export const addTagToProject = async (projectId: number, tagId: number) => {
     if (hasTag) {
         return;
     }
-    return getPrisma().tagsOnProjects.create({
+    return getPrisma().tagsOnProject.create({
         data: {
             projectId,
             tagId

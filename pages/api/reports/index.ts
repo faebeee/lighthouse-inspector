@@ -1,12 +1,12 @@
 import { NextApiHandler } from "next";
-import { getLatestReportsForAllProjects } from "../../../src/server/lib/project-services";
+import { getLatestReportsForAllSites } from "../../../src/server/lib/project-services";
 import { transformForSerialisation } from "../../../src/server/lib/lighthousereport-services";
 import { LighthouseRunReport } from "@prisma/client";
 import { assertAuth } from "../../../src/server/lib/api-helpers";
 
 export const getReportsApiHandler: NextApiHandler = async (req, res) => {
     const type = req.query["type"] as string;
-    const desktopReports = await getLatestReportsForAllProjects(type);
+    const desktopReports = await getLatestReportsForAllSites(type);
     const a = Object.entries(desktopReports)
         .reduce((acc, [ id, report ]) => {
             // @ts-ignore

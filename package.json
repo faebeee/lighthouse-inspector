@@ -9,6 +9,7 @@
     "start": "next start -p 8082",
     "lint": "next lint",
     "cron": "ts-node --project tsconfig.node.json ./cli/cron.ts",
+    "cli:create-user": "ts-node --project tsconfig.node.json ./cli/create-user.ts",
     "prisma:generate": "npx prisma generate",
     "prisma:generate:watch": "npx prisma generate --watch"
   },

@@ -5,19 +5,20 @@ import Box from "@mui/material/Box";
 
 export type WidgetProps = PropsWithChildren<{
     title: ReactNode;
-    actions?: ReactNode
+    actions?: ReactNode;
+    centered?: boolean
 }>;
 
-export const Widget = ({ actions, children, title }: WidgetProps) => {
+export const Widget = ({ actions, children, title, centered = true }: WidgetProps) => {
     return <Card sx={ { height: "380px" } }>
         <CardContent sx={ { display: "flex", flexDirection: "column", height: "100%" } }>
             <Typography color={ "textSecondary" } variant={ "h6" }>{ title }</Typography>
             <Box sx={ {
-                width: '100%',
+                width: "100%",
                 flex: "1 0 100%",
                 display: "flex",
                 flexDirection: "column",
-                justifyContent: "center",
+                justifyContent: centered ? "center" : "flex-start",
                 alignItems: "center"
             } }>
                 { children }

@@ -1,11 +1,11 @@
-import { getProjectById } from "../../../../src/server/lib/project-services";
 import { NextApiRequest, NextApiResponse } from "next";
 import { assertAuth } from "../../../../src/server/lib/api-helpers";
-import { getReportsForProject } from "../../../../src/server/lib/lighthousereport-services";
+import { getSiteById } from "../../../../src/server/lib/site";
+import { getReportsForProject } from "../../../../src/server/lib/report";
 
 export const projectHandler = async (request: NextApiRequest, response: NextApiResponse) => {
     if (request.method === "GET") {
-        const project = await getProjectById(parseInt(request.query.project as string));
+        const project = await getSiteById(parseInt(request.query.site as string));
         if (!project) {
             response.status(404).send({});
             return;

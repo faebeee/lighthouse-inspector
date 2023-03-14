@@ -2,7 +2,7 @@ import { GetServerSideProps } from "next";
 import React, { useMemo, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
-import { getProjectById, getProjects } from "../../../src/server/lib/project-services";
+import { getSiteById, getSites } from "../../../src/server/lib/project-services";
 import { Layout } from "../../../src/components/layout";
 import { Button, CardMedia, Chip, Grid, Stack, Tab, Tabs } from "@mui/material";
 import Typography from "@mui/material/Typography";
@@ -32,13 +32,13 @@ export type ProjectPageProps = {
 
 // @ts-ignore
 export const getServerSideProps: GetServerSideProps<ProjectPageProps> = async (req) => {
-    const project = await getProjectById(parseInt(req.query.project as string));
+    const project = await getSiteById(parseInt(req.query.project as string));
     if (!project) {
         return {
             notFound: true,
         }
     }
-    const projects = await getProjects();
+    const projects = await getSites();
     const navigation = await getNavigation();
 
     return {

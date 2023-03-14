@@ -11,21 +11,28 @@ datasource db {
 }
 
 model Project {
-  id                 Int                   @id @default(autoincrement())
+  id                 Int             @id @default(autoincrement())
   name               String
-  url                String
-  group              String?
-  reports            LighthouseRunReport[]
-  tags               TagsOnProjects[]
-  is_running         Boolean
+  sites              Site[]
+  tags               TagsOnProject[]
   repoUrl            String?
-  interval_reporting Boolean               @default(false)
+  interval_reporting Boolean         @default(false)
+}
+
+model Site {
+  id         Int                   @id @default(autoincrement())
+  name       String
+  project    Project               @relation(fields: [projectId], references: [id])
+  projectId  Int
+  url        String
+  reports    LighthouseRunReport[]
+  is_running Boolean
 }
 
 model LighthouseRunReport {
   id                 Int      @id @default(autoincrement())
-  project            Project  @relation(fields: [projectId], references: [id])
-  projectId          Int
+  site               Site     @relation(fields: [siteId], references: [id])
+  siteId             Int
   date               DateTime
   finalUrl           String
   performance        Float
@@ -41,12 +48,12 @@ model LighthouseRunReport {
 }
 
 model Tag {
-  id       Int              @id @default(autoincrement())
-  projects TagsOnProjects[]
+  id       Int             @id @default(autoincrement())
+  projects TagsOnProject[]
   name     String
 }
 
-model TagsOnProjects {
+model TagsOnProject {
   project   Project @relation(fields: [projectId], references: [id])
   projectId Int
 

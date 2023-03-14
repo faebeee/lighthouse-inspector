@@ -2,7 +2,7 @@ import { Button, Card, CardContent, Grid, TextField } from "@mui/material";
 import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
-import { getProjects } from "../../src/server/lib/project-services";
+import { getSites } from "../../src/server/lib/project-services";
 import { Layout } from "../../src/components/layout";
 import { Stack } from "@mui/system";
 import { Project } from "@prisma/client";
@@ -15,7 +15,7 @@ export type NewPageProps = {
 }
 
 export const getServerSideProps = async () => {
-    const projects = await getProjects();
+    const projects = await getSites();
     const navigation = await getNavigation();
     return {
         props: {

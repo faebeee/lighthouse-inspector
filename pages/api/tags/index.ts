@@ -1,6 +1,6 @@
 import { NextApiHandler } from "next";
 import { getPrisma } from "../../../src/server/get-prisma";
-import { getProjectById } from "../../../src/server/lib/project-services";
+import { getSiteById } from "../../../src/server/lib/project-services";
 import { getAllTags, getTagByName } from "../../../src/server/lib/tag-service";
 import { assertAuth } from "../../../src/server/lib/api-helpers";
 
@@ -16,7 +16,7 @@ export const tagsListApiHandler: NextApiHandler = async (req, res) => {
             return;
         }
 
-        const project = await getProjectById(req.body["id"]);
+        const project = await getSiteById(req.body["id"]);
         const tag = await getTagByName(req.body["name"]);
 
         if (!project) {

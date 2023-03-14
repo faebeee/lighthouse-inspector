@@ -12,12 +12,13 @@ import { useEndpoint } from "../../../src/hooks/use-endpoint";
 import { NumericValue } from "../../../src/components/numeric-value";
 import { Widget } from "../../../src/components/widget";
 import {
-    AUDIT_HISTORY_CHART_LINES,
+    AUDIT_HISTORY_CHART_LINES, DATE_FORMAT,
     SERVER_HISTORY_CHART_LINES,
     SERVER_RESPONSE_TIME_THRESHOLD,
     TIME_TO_INTERACTIVE_THRESHOLD
 } from "../../../config";
 import { ProjectResultHistoryChart } from "../../../src/components/project-result-history-chart";
+import { format } from "date-fns";
 
 export type ReportsPageProps = {
     navigation: NavigationEntry[];
@@ -81,8 +82,19 @@ export const ReportsPage = ({ navigation, group }: ReportsPageProps) => {
                         </Grid>
 
                         <Grid item xs={ 12 } lg={ 6 } xl={ 2 }>
-                            <Widget title={ "Stats" }>
+                            <Widget title={ "Stats" } centered={false}>
                                 <List>
+                                    <ListItem>
+                                        <ListItemText
+                                            primary={ <Typography variant={ "subtitle2" } color={ "text.primary" }>
+                                                Latest Report
+                                            </Typography> }
+                                            secondary={ <Typography
+                                                variant={ "subtitle1" }>
+                                                { format(new Date(report.date), DATE_FORMAT) }
+                                            </Typography>} />
+                                    </ListItem>
+
                                     <ListItem>
                                         <ListItemText
                                             primary={ <Typography variant={ "subtitle2" } color={ "text.primary" }>

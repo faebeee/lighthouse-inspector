@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getPrisma } from "../../../src/server/get-prisma";
-import { getProjects, getProjectsByTags } from "../../../src/server/lib/project-services";
+import { getSites, getProjectsByTags } from "../../../src/server/lib/project-services";
 import { assertAuth } from "../../../src/server/lib/api-helpers";
 
 export const ProjectsHandler = async (request: NextApiRequest, response: NextApiResponse) => {
@@ -35,7 +35,7 @@ export const ProjectsHandler = async (request: NextApiRequest, response: NextApi
             response.send(projects);
             return;
         }
-        const projects = await getProjects();
+        const projects = await getSites();
         response.send(projects);
         return;
     }
