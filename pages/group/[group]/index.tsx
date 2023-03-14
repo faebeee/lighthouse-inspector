@@ -68,7 +68,7 @@ export const ReportsPage = ({ navigation, group }: ReportsPageProps) => {
                     return null;
                 }
                 return (
-                    <Grid container item xs={ 12 } spacing={ 2 }>
+                    <Grid key={project.id} container item xs={ 12 } spacing={ 2 }>
                         <Grid item xs={ 12 } lg={ 6 } xl={ 2 }>
                             <Widget title={ <Link href={ `/projects/${ project.id }` }>
                                 <Typography color={ "secondary" }>{ project.name }</Typography>

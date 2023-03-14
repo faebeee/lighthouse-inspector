@@ -161,15 +161,15 @@ export const ProjectPage = ({
                         <Widget title={ "Response History" }>
                             { value === "desktop" &&
                               <HistoryChart keys={ [
-                                  { label: "serverResponseTime", color: COLOR.SPEED },
-                                  { label: "tti", color: COLOR.SPEED }
+                                  { label: "serverResponseTime", color: COLOR.RESPONSE_TIME },
+                                  { label: "tti", color: COLOR.TTI }
                               ] }
                                 data={ [ ...desktopReports ].reverse() } /> }
 
                             { value === "mobile" &&
                               <HistoryChart keys={ [
-                                  { label: "serverResponseTime", color: COLOR.SPEED },
-                                  { label: "tti", color: COLOR.SPEED }
+                                  { label: "serverResponseTime", color: COLOR.RESPONSE_TIME },
+                                  { label: "tti", color: COLOR.TTI }
                               ] }
                                 data={ [ ...mobileReports ].reverse() } /> }
                         </Widget>
