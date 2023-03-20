@@ -1,5 +1,5 @@
 {
-  "name": "lighthouse-inspector",
+  "name": "web-audit",
   "version": "0.24.0",
   "private": true,
   "scripts": {

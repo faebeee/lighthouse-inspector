@@ -29,10 +29,6 @@ export const getServerSideProps: GetServerSideProps<ReportsPageProps> = async ()
 export const ReportsPage = ({ navigation }: ReportsPageProps) => {
     const activeTags = useSelectionList<number>([]);
     const tagsApi = useResource<Tag[]>({ url: `/api/tags` }, 5000);
-    const inspectEndpoint = useEndpoint<Site[]>({ url: `/api/inspect` }, 2000);
-    const onInspectAllClicked = () => {
-        inspectEndpoint.call("POST");
-    };
 
     const sitesApi = useResource<Site[]>({
         url: `/api/sites`,
@@ -45,11 +41,8 @@ export const ReportsPage = ({ navigation }: ReportsPageProps) => {
         params: { type: "desktop" }
     }, 1000);
 
-    return <Layout navigation={ navigation } showBack={ false } title={ "Lighthouse Inspector" }
+    return <Layout navigation={ navigation } showBack={ false } title={ "Web Audit" }
         actions={ <>
-            <Button onClick={ onInspectAllClicked } disabled={ (inspectEndpoint.data ?? []).length > 0 }>
-                Inspect All
-            </Button>
         </> }>
         <Typography sx={ { mb: 2 } } color={ "textPrimary" } variant={ "h1" }>Sites</Typography>
 

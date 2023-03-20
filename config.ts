@@ -23,7 +23,7 @@ const THEME_LIGHT = {
     primary: "rgb(68,97,211)",
     secondary: "rgb(68,173,211)",
     background: "#F7F7FB",
-    cardBackground: "#FCFDFD"
+    cardBackground: "rgba(126,215,215,0.08)"
 };
 
 const THEME_DARK = {
@@ -32,7 +32,7 @@ const THEME_DARK = {
     primary: 'rgb(87,114,213)',
     secondary: 'rgb(59,175,218)',
     background: '#0F1013',
-    cardBackground: 'rgba(52,55,70,0.41)',
+    cardBackground: 'rgba(76,92,182,0.2)',
 }
 
 export const THEME = process.env.NEXT_PUBLIC_THEME_MODE === 'light' ? THEME_LIGHT : THEME_DARK;

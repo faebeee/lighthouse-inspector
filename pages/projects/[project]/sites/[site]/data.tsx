@@ -1,6 +1,5 @@
 import { GetServerSideProps } from "next";
 import React, { useMemo, useState } from "react";
-import axios from "axios";
 import Link from "next/link";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { Button, Card, Grid, Tab, Tabs } from "@mui/material";
@@ -13,7 +12,6 @@ import Divider from "@mui/material/Divider";
 import { useResource } from "../../../../../src/hooks/use-resource";
 import { getSiteById } from "../../../../../src/server/lib/site";
 import { getNavigation, NavigationEntry } from "../../../../../src/utils/get-navigation";
-import { useEndpoint } from "../../../../../src/hooks/use-endpoint";
 import { AUDIT_HISTORY_CHART_LINES, DATE_FORMAT, SERVER_HISTORY_CHART_LINES } from "../../../../../config";
 import { ActionsList } from "../../../../../src/components/actions-list";
 import { Layout } from "../../../../../src/components/layout";
@@ -68,22 +66,12 @@ export const ProjectPage = ({
         params: { type: "mobile", limit }
     }, 2000);
 
-    const inspectEndpoint = useEndpoint<Project[]>({ url: `/api/inspect` }, 2000);
-
     const desktopReports = useMemo(() => (!!desktopReportsApi.data && desktopReportsApi.data.length) > 0 ? (desktopReportsApi.data ?? []) : [], [ desktopReportsApi ]);
     const mobileReports = useMemo(() => (!!mobileReportsApi.data && mobileReportsApi.data.length) > 0 ? (mobileReportsApi.data ?? []) : [], [ mobileReportsApi ]);
 
 
     const handleChange = (event: React.SyntheticEvent, newValue: string) => {
         setValue(newValue);
-    };
-
-    const onRunReport = () => {
-        setIsLoading(true);
-        axios.post(`/api/projects/${ site.projectId }/sites/${ site.id }/inspect`)
-            .finally(() => {
-                setIsLoading(false);
-            });
     };
 
     const columns: GridColDef[] = [
@@ -122,8 +110,6 @@ export const ProjectPage = ({
             <Button href={ `/projects/${ site.projectId }/sites/${ site.id }` }>Overview</Button>
             <Divider orientation={ "vertical" } variant={ "fullWidth" } color={ "primary" } />
             <ActionsList site={ site } />
-            <Button variant={ "contained" } disabled={ isLoading || (inspectEndpoint.data ?? []).length > 0 }
-                onClick={ onRunReport }>{ isLoading ? "Loading..." : "Run" }</Button>
         </> }
         navigation={ navigation }>
         <Box sx={ { borderBottom: 1, borderColor: "divider" } }>

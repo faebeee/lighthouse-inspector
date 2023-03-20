@@ -1,10 +1,23 @@
-# lighthouse-inspector
-Tool for lighthouse audits to monitor your pages
+# web-audit
+Web Audit is a tool to automatically audit your web projects. Currently lighthouse is used under the hood.
+More integrations are coming
 
+![Overview](./doc/overview.png)
+
+## Requires
 This uses a `postgres` database and a `minio` asset bucket.
 
-## Dashboard
-![Overview](./doc/overview.png)
+## Docker
+
+```shell
+docker run --env-file .env -p 3000:3000 --name web-audit-web faebeee/web-audit-web
+```
+
+## Docker-compose
+Run `docker-compose up`
+
+Then run `npm run cli:create-user` which will create a new `admin` user with the password `admin`
+
 
 ## Dev environment
 Start the `minio` and `postgres` container with
@@ -16,13 +29,14 @@ Start the `minio` and `postgres` container with
 - `npm run build`
 - `npm run start`
 
-
 ## Env variables
 
 ```dotenv
-DATABASE_URL="postgresql://*:*@localhost:5432/lighthouse-inspector"
-MINIO_HOST=localhost
-MINIO_BUCKET=lighthouse-report
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=***
+DATABASE_URL=***
+MINIO_HOST=***
+MINIO_BUCKET=***
 MINIO_ACCESS_KEY=***
 MINIO_SECRET_KEY=***
 ```

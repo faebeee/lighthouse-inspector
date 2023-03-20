@@ -176,7 +176,7 @@ export const ReportsPage = ({ navigation, project }: ReportsPageProps) => {
                 );
             }) }
 
-            <Grid item xs={ 12 } lg={ 6 } xl={ 2 }>
+            <Grid item xs={ 12 } lg={ 6 } xl={ 3 }>
                 <Widget title={ "Add Site" }>
                     <Link href={ `/projects/${ project.id }/sites/new` }>
                         <IconButton size={ "large" } color={ "primary" }>

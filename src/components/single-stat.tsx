@@ -1,6 +1,7 @@
 import { Group } from "@visx/group";
 import Pie from "@visx/shape/lib/shapes/Pie";
 import { CHART_BLUR, SCORE_MAP, STATUS_COLORS } from "../../config";
+import { useTheme } from "@mui/material";
 
 const defaultMargin = { top: 20, right: 20, bottom: 20, left: 20 };
 
@@ -19,6 +20,7 @@ export const SingleStat = ({ width, height, margin = defaultMargin, label, value
     const centerY = innerHeight / 2;
     const centerX = innerWidth / 2;
     const donutThickness = 15;
+    const theme = useTheme();
 
     const data = [
         { label, value: value },
@@ -77,8 +79,9 @@ export const SingleStat = ({ width, height, margin = defaultMargin, label, value
                             }) }
 
                             <text
-                                fill="white"
+                                fill={theme.palette.text.primary}
                                 fontSize={ 32 }
+                                font-family={'Roboto'}
                                 dy={ 12 }
                                 textAnchor="middle"
                                 pointerEvents="none"
