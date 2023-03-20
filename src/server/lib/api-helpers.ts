@@ -13,7 +13,7 @@ export const assertMethod = (method: Method, handler: NextApiHandler) => (reques
     return handler(request, response);
 };
 
-export const allowed = (method: Method, handler: NextApiHandler) => (request: NextApiRequest, response: NextApiResponse) => {
+export const allowed = (method: Method, handler: NextApiHandler): NextApiHandler => (request: NextApiRequest, response: NextApiResponse) => {
     if (request.method === method) {
         return handler(request, response);
     }
@@ -27,4 +27,12 @@ export const assertAuth = (handler: NextApiHandler) => async (request: NextApiRe
     }
 
     return handler(request, response);
+};
+
+
+export const createHandler = (methods: NextApiHandler[]) =>async (request: NextApiRequest, response: NextApiResponse) => {
+    for (let i = 0; i < methods.length; i++) {
+        const methodHandler = methods[i];
+        await methodHandler(request, response);
+    }
 };

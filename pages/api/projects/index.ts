@@ -8,6 +8,7 @@ export const ProjectsHandler = async (request: NextApiRequest, response: NextApi
             const project = await getPrisma().project.create({
                 data: {
                     name: request.body.name,
+                    interval_reporting: true,
                 }
             });
             response.status(201).send(project);

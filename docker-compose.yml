@@ -40,13 +40,14 @@ services:
       - ./:/usr/src/app
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@database:5432/lhi
+      - NEXTAUTH_URL=http://0.0.0.0:3003
       - MINIO_HOST=minio
       - MINIO_BUCKET=lighthouse-report
       - MINIO_ACCESS_KEY=zwX1TeYJGdVRpW4a
       - MINIO_SECRET_KEY=OsF3XMHMYkeP4QRRHLbXPoPWeuQ9mBD1
       - NEXTAUTH_SECRET=mBBB7M61VJBU5VaYCW54g439JERbtH4Ge61j
     ports:
-      - "3000:3000"
+      - "3003:3000"
 
 
   cron:

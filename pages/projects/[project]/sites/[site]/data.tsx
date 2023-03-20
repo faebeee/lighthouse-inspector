@@ -120,7 +120,6 @@ export const ProjectPage = ({
         title={ `${ site.name } | Data` }
         actions={ <>
             <Button href={ `/projects/${ site.projectId }/sites/${ site.id }` }>Overview</Button>
-            <Button href={ `/projects/${ site.projectId }/sites/${ site.id }/data` }>Data</Button>
             <Divider orientation={ "vertical" } variant={ "fullWidth" } color={ "primary" } />
             <ActionsList site={ site } />
             <Button variant={ "contained" } disabled={ isLoading || (inspectEndpoint.data ?? []).length > 0 }

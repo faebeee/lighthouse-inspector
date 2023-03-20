@@ -1,11 +1,28 @@
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
-import { assertAuth, assertMethod } from "../../../../src/server/lib/api-helpers";
-import { getProjectById } from "../../../../src/server/lib/project";
+import { allowed, assertAuth, createHandler } from "../../../../src/server/lib/api-helpers";
+import { getProjectById, updateProject } from "../../../../src/server/lib/project";
 
-export const getProjectApiHandler: NextApiHandler = assertMethod("GET", async (request: NextApiRequest, response: NextApiResponse) => {
-    const projects = await getProjectById(parseInt(request.query.project as string));
 
-    return response.send(projects);
-});
+const methods: NextApiHandler[] = [
+    allowed("GET", async (request: NextApiRequest, response: NextApiResponse) => {
+        const project = await getProjectById(parseInt(request.query.project as string));
 
-export default assertAuth(getProjectApiHandler);
+        return response.send(project);
+    }),
+    allowed("PUT", async (request: NextApiRequest, response: NextApiResponse) => {
+        console.log(request);
+        const project = await getProjectById(parseInt(request.query.project as string));
+        if (!project) {
+            return response.status(404).send({});
+        }
+        const updatedProject = await updateProject(project?.id, {
+            name: request.body.name as string ?? project?.name,
+            interval_reporting: request.body.interval_reporting ? JSON.parse(request.body.interval_reporting as string) : project?.interval_reporting
+        });
+
+        return response.send(updatedProject);
+    })
+];
+
+
+export default assertAuth(createHandler(methods));

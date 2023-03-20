@@ -10,7 +10,8 @@ export const auditRunnerForSite = async (site: Site) => {
         await markSiteAsRunning(site, false);
     } catch (e) {
         await markSiteAsRunning(site, false);
-        getLogger().error(`Error for #${ site.id } ${ site.name }`, e);
+        getLogger().error(`Error for #${ site.id } ${ site.name }`);
+        getLogger().error((e as Error).message);
 
     } finally {
         await markSiteAsRunning(site, false);
