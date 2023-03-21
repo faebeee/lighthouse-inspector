@@ -49,7 +49,7 @@ export const ReportsPage = ({ navigation, project }: ReportsPageProps) => {
             interval_reporting: intervalEnabled
         })
             .then(() => {
-                router.push(`/projects/${ project.id }`);
+                // router.push(`/projects/${ project.id }`);
             })
             .finally(() => {
                 setIsLoading(false);

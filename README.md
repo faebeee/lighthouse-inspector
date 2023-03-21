@@ -10,7 +10,7 @@ This uses a `postgres` database and a `minio` asset bucket.
 ## Docker
 
 ```shell
-docker run --env-file .env -p 3000:3000 --name web-audit-web faebeee/web-audit-web
+docker run --env-file .env -p PORT:3000 -e "NEXTAUTH_URL=http://localhost:PORT" --name web-audit-web faebeee/web-audit-web
 ```
 
 ## Docker-compose

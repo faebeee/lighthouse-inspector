@@ -28,31 +28,22 @@ export const getServerSideProps: GetServerSideProps<ReportsPageProps> = async ()
 
 export const ReportsPage = ({ navigation }: ReportsPageProps) => {
     const activeTags = useSelectionList<number>([]);
-    const tagsApi = useResource<Tag[]>({ url: `/api/tags` }, 5000);
 
     const sitesApi = useResource<Site[]>({
         url: `/api/sites`,
         params: {
             tags: activeTags.list
         }
-    }, 2000);
+    }, 10_000);
     const desktopReportsApi = useResource<Record<number, LighthouseRunReport>>({
         url: `/api/reports/`,
         params: { type: "desktop" }
-    }, 1000);
+    }, 10_000);
 
     return <Layout navigation={ navigation } showBack={ false } title={ "Web Audit" }
         actions={ <>
         </> }>
         <Typography sx={ { mb: 2 } } color={ "textPrimary" } variant={ "h1" }>Sites</Typography>
-
-        <Box py={ 2 }>
-            <Stack spacing={ 1 } direction={ "row" }>
-                { tagsApi.data?.map((tag) => <Chip label={ tag.name } key={ tag.id }
-                    onClick={ () => activeTags.toggleItem(tag.id) }
-                    color={ activeTags.has(tag.id) ? "primary" : "default" } />) }
-            </Stack>
-        </Box>
 
         <Grid container spacing={ 2 }>
             { sitesApi.data?.map((site) => {

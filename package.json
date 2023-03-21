@@ -3,7 +3,7 @@
   "version": "0.25.1",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 8008",
     "build": "next build",
     "up": "npm run cron &",
     "start": "next start",

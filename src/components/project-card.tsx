@@ -1,19 +1,19 @@
-import { Button, Card, CardActions, CardContent, CardMedia, Chip } from "@mui/material";
+import { Button, Card, CardActions, CardContent, CardMedia } from "@mui/material";
 import { Stack } from "@mui/system";
 import Typography from "@mui/material/Typography";
 import Link from "next/link";
 import React from "react";
-import { LighthouseRunReport, Project, Site, Tag } from "@prisma/client";
+import { LighthouseRunReport, Project, Site } from "@prisma/client";
 import { useResource } from "../hooks/use-resource";
 import { ProjectResultHistoryChart } from "./project-result-history-chart";
-import { AUDIT_HISTORY_CHART_LINES } from "../../config";
+import { AUDIT_HISTORY_CHART_LINES, DATE_FORMAT } from "../../config";
+import { format } from "date-fns";
 
 export type ProjectCardProps = {
     site: Site;
     report?: LighthouseRunReport | null
 }
 export const ProjectCard = ({ report, site }: ProjectCardProps) => {
-    const tagsApi = useResource<Tag[]>({ url: `/api/projects/${ site.projectId }/sites/${ site.id }/tags` });
     const projectApi = useResource<Project>({ url: `/api/projects/${ site.projectId }` });
 
     return <Card sx={ { background: site.is_running ? "#555" : undefined } }>
@@ -42,18 +42,17 @@ export const ProjectCard = ({ report, site }: ProjectCardProps) => {
                 { site.is_running && <Typography sx={ { ml: 2 } } variant={ "body2" }>Running...</Typography> }
             </Stack>
 
-            <Stack spacing={ 1 } direction={ "row" } py={ 2 }>
-                { tagsApi.data?.map((tag: Tag) => <Chip label={ tag.name } key={ tag.id } />) }
-            </Stack>
-
-
             <ProjectResultHistoryChart lines={ AUDIT_HISTORY_CHART_LINES } site={ site } />
         </CardContent>
-        <CardActions>
-            { report && <Link target={ '_blank' }
-                href={ `/api/reports/${ report!.id }` }>
-                <Button color={ 'secondary' } variant={ 'text' }>Open Report</Button>
+        <CardActions sx={ { justifyContent: "space-between", alignItems: "center" } }>
+            { report && <Link target={ "_blank" }
+              href={ `/api/reports/${ report!.id }` }>
+              <Button color={ "secondary" } variant={ "text" }>Open Report</Button>
             </Link> }
+
+            { report && <Typography variant={ "caption" }>
+                { format(new Date(report.date), DATE_FORMAT) }
+            </Typography> }
         </CardActions>
     </Card>;
 }

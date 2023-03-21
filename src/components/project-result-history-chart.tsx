@@ -18,5 +18,5 @@ export const ProjectResultHistoryChart = ({ site, lines }: ProjectHistoryChartPr
         return null;
     }
 
-    return <HistoryChart keys={ lines } data={ [ ...reportsApi.data ].reverse() } />;
+    return <HistoryChart hideXAxis keys={ lines } data={ [ ...reportsApi.data ].reverse() } />;
 };

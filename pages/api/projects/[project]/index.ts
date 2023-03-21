@@ -10,14 +10,13 @@ const methods: NextApiHandler[] = [
         return response.send(project);
     }),
     allowed("PUT", async (request: NextApiRequest, response: NextApiResponse) => {
-        console.log(request);
         const project = await getProjectById(parseInt(request.query.project as string));
         if (!project) {
             return response.status(404).send({});
         }
         const updatedProject = await updateProject(project?.id, {
             name: request.body.name as string ?? project?.name,
-            interval_reporting: request.body.interval_reporting ? JSON.parse(request.body.interval_reporting as string) : project?.interval_reporting
+            interval_reporting: request.body.interval_reporting ?? project?.interval_reporting
         });
 
         return response.send(updatedProject);
