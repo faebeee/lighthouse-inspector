@@ -29,7 +29,7 @@ services:
       - minio
     image: faebeee/web-audit-web
     build:
-      dockerfile: ./Dockerfile
+      dockerfile: ./docker/web/Dockerfile
     volumes:
       - ./:/usr/src/app
     environment:
@@ -50,7 +50,7 @@ services:
       - minio
     image: faebeee/web-audit-cron
     build:
-      dockerfile: ./cron.Dockerfile
+      dockerfile: ./docker/cron/Dockerfile
     volumes:
       - ./:/usr/src/app
     environment:

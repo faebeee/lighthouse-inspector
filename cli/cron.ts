@@ -2,8 +2,7 @@
 
 import cron from "node-cron";
 import { getLogger } from "../src/server/logger";
-import { exec } from "./audit";
-
+import { exec } from "./lib";
 
 cron.schedule("*/15 * * * *", () => {
     exec();
