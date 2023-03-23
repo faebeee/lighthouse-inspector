@@ -9,9 +9,18 @@ This uses a `postgres` database and a `minio` asset bucket.
 
 ## Docker
 
+### Start docker
 ```shell
 docker run --env-file .env -p PORT:3000 -e "NEXTAUTH_URL=http://localhost:PORT" --name web-audit-web faebeee/web-audit-web
 ```
+
+### Update docker
+```shell
+docker stop web-audit-web
+docker rm web-audit-web
+docker pull faebeee/web-audit-web
+```
+and then reuse the command from `Start docker`
 
 ## Docker-compose
 Run `docker-compose up`

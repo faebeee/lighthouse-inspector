@@ -61,7 +61,7 @@ export const markSiteAsRunning = async (site: Site, isRunning: boolean) => {
 
 export const getSites = async (): Promise<Site[]> => {
     return (await getPrisma().site.findMany({
-        orderBy: { name: "asc" }
+        orderBy: { projectId: "asc" }
     })) ?? [];
 };
 
