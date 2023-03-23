@@ -8,17 +8,20 @@ More integrations are coming
 This uses a `postgres` database and a `minio` asset bucket.
 
 ## Docker
+- [DockerHub web-audit-web](https://hub.docker.com/r/faebeee/web-audit-web/tags)
+- [DockerHub web-audit-cron](https://hub.docker.com/r/faebeee/web-audit-cron/tags)
 
 ### Start docker
 ```shell
-docker run --env-file .env -p PORT:3000 -e "NEXTAUTH_URL=http://localhost:PORT" --name web-audit-web faebeee/web-audit-web
+docker run --env-file .env -p PORT:3000 -e "NEXTAUTH_URL=http://localhost:PORT" --name web-audit-web faebeee/web-audit-web:latest
 ```
 
 ### Update docker
 ```shell
 docker stop web-audit-web
 docker rm web-audit-web
-docker pull faebeee/web-audit-web
+docker rmi faebeee/web-audit-web:latest
+docker pull faebeee/web-audit-web:latest
 ```
 and then reuse the command from `Start docker`
 
