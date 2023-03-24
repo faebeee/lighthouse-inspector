@@ -116,12 +116,12 @@ export const ProjectPage = ({
                     { value === "desktop" && latestReport && <CardMedia component="img"
                       height={ 650 }
                       style={ { objectFit: "cover", objectPosition: "top" } }
-                      image={ `/api/reports/${ latestReport.id }/full-screenshot` } /> }
+                      image={ `/api/reports/${ latestReport.id }/thumbnail` } /> }
                     { value === "mobile" && latestReport &&
                       <CardMedia component="img"
                         height={ 650 }
                         style={ { objectFit: "cover", objectPosition: "top" } }
-                        image={ `/api/reports/${ latestReport.id }/full-screenshot?type=mobile` } /> }
+                        image={ `/api/reports/${ latestReport.id }/thumbnail?type=mobile` } /> }
                 </> }
 
                 <Widget sx={ { position: "absolute", top: 0, height: "100%", width: "100%" } }>

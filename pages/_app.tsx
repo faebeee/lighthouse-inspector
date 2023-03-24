@@ -3,16 +3,19 @@ import { createTheme, GlobalStyles } from "@mui/material";
 import { ThemeProvider } from "@mui/system";
 import { THEME } from "../config";
 import { SessionProvider } from "next-auth/react";
+import mixpanel from "mixpanel-browser";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 
 const theme = createTheme({
     palette: {
         mode: THEME.mode,
         primary: {
-            main: THEME.primary,
+            main: THEME.primary
         },
         secondary: {
-            main: THEME.secondary,
-        },
+            main: THEME.secondary
+        }
     },
     components: {
         MuiPaper: {
@@ -27,10 +30,21 @@ const theme = createTheme({
 });
 
 export default function App({ Component, pageProps }: AppProps) {
+    const router = useRouter();
+    useEffect(() => {
+        mixpanel.init("ed8326a29f285167e189ddcc22c3c0c0", { debug: true });
+    }, []);
+
+    useEffect(() => {
+        mixpanel.track("page", {
+            pathname: router.pathname
+        });
+    }, [ router.pathname ]);
+
     return <ThemeProvider theme={ theme }>
         <GlobalStyles styles={ {
             body: {
-                minHeight: '100vh',
+                minHeight: "100vh",
                 // backgroundImage: 'linear-gradient(-20deg, #2b5876 0%, #4e4376 100%)',
                 // backgroundSize: '100%',
                 // backgroundRepeat: 'no-repeat',
