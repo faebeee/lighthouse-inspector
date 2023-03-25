@@ -15,6 +15,9 @@ export const cleanup = async () => {
                 where: {
                     siteId: site.id
                 },
+                orderBy: {
+                    date: "desc"
+                },
                 take: KEEP_TOTAL_REPORTS
             });
 
