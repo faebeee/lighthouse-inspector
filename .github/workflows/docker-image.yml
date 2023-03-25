@@ -17,8 +17,6 @@ jobs:
 
     - name: Build the Docker image
       run: |
-        echo "Tag name from GITHUB_REF_NAME: $GITHUB_REF_NAME"
-        echo "Tag name from github.ref_name: ${{  github.ref_name }}"
-#        docker build --file docker/web/Dockerfile -t faebeee/web-audit-web:${{  github.ref_name }} .
-#        docker push faebeee/web-audit-web:${{  github.ref_name }}
+        docker build --file docker/web/Dockerfile -t faebeee/web-audit-web:${{  github.ref_name }} .
+        docker push faebeee/web-audit-web:${{  github.ref_name }}
 
