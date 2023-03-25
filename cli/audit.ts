@@ -1,5 +1,5 @@
 #!/usr/bin/env ts-node
 
-import { exec } from "./lib";
+import { runAudit } from "../src/server/cli/run-audit";
 
-exec();
+runAudit;
