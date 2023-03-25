@@ -1,4 +1,7 @@
 # web-audit
+
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/fa1e46f23ae64322a34eff5ae484f70a)](https://app.codacy.com/gh/faebeee/lighthouse-inspector/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+
 Web Audit is a tool to automatically audit your web projects. Currently lighthouse is used under the hood.
 More integrations are coming
 
