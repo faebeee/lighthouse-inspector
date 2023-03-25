@@ -2,7 +2,7 @@ import { useTheme } from "@mui/material";
 import React from "react";
 import { VictoryAxis, VictoryBar, VictoryPolarAxis } from "victory";
 import { ResponsiveVictoryChart } from "./chart";
-import { CHART_BLUR } from "../../config";
+import { CHART_BLUR } from "../../config.web";
 
 export type StatsChartProps = {
     height?: number;

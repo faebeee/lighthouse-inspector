@@ -13,7 +13,7 @@ export const getLatestReportsForAllSites = async (type?: string) => {
     return a;
 };
 
-export const getReportsForProject = (site: Site, type?: string, max = 10): Promise<LighthouseRunReport[]> => {
+export const getReportsForSite = (site: Site, type?: string, max = 10): Promise<LighthouseRunReport[]> => {
     return getPrisma().lighthouseRunReport.findMany({
         where: {
             siteId: site.id,

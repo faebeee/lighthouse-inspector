@@ -10,7 +10,7 @@ import { Layout } from "../../../../src/components/layout";
 import { getProjectById } from "../../../../src/server/lib/project";
 import { GetServerSideProps } from "next";
 import { toast } from "react-toastify";
-import { THEME_NAME } from "../../../../config";
+import { THEME_NAME } from "../../../../config.web";
 
 export type NewPageProps = {
     project: Project;

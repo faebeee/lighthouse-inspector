@@ -1,8 +1,5 @@
 import { PaletteMode } from "@mui/material";
 
-export const REPORTS_FOLDER = "_reports";
-export const REPORTFILE_PROJECT_DELIMITER = "::";
-export const REPORTFILE_DATE_FORMAT = "yyyy-MM-dd-hhmmss";
 export const DATE_FORMAT = "yyyy-MM-dd hh:mm:ss";
 
 export const SERVER_RESPONSE_TIME_THRESHOLD = {
@@ -13,7 +10,6 @@ export const TIME_TO_INTERACTIVE_THRESHOLD = {
     GOOD: 600,
     POOR: 1200
 };
-
 
 export const CHART_BLUR = "5px";
 

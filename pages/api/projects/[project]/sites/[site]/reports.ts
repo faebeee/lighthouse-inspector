@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { assertAuth } from "../../../../../../src/server/lib/api-helpers";
-import { getReportsForProject } from "../../../../../../src/server/lib/report";
+import { getReportsForSite } from "../../../../../../src/server/lib/report";
 import { getSiteById } from "../../../../../../src/server/lib/site";
 
 export const projectHandler = async (request: NextApiRequest, response: NextApiResponse) => {
@@ -11,7 +11,7 @@ export const projectHandler = async (request: NextApiRequest, response: NextApiR
             return;
         }
         const max = request.query.limit ? parseInt(request.query.limit as string) : 10;
-        const reports = await getReportsForProject(project, request.query.type as string ?? "desktop", max);
+        const reports = await getReportsForSite(project, request.query.type as string ?? "desktop", max);
         response.send(reports);
         return;
 

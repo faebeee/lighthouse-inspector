@@ -2,6 +2,8 @@ import { Project, Site } from "@prisma/client";
 import { getPrisma } from "../../get-prisma";
 import { getLogger } from "../../logger";
 
+export type SiteWithProject = Site & { project: Project }
+
 export const getSiteById = async (id: number): Promise<Site | null> => {
     return (await getPrisma().site.findFirst({
         where: {
@@ -17,6 +19,16 @@ export const getRunningSites = async (): Promise<Site[]> => {
         },
         orderBy: { name: "asc" }
     })) ?? [];
+};
+export const getAllSites = async (): Promise<SiteWithProject[]> => {
+    return await getPrisma()
+        .site
+        .findMany({
+            orderBy: { name: "asc" },
+            include: {
+                project: true
+            }
+        });
 };
 
 export const deleteSite = async (id: number): Promise<void> => {

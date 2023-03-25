@@ -15,7 +15,7 @@ import {
     SERVER_HISTORY_CHART_LINES,
     SERVER_RESPONSE_TIME_THRESHOLD,
     TIME_TO_INTERACTIVE_THRESHOLD
-} from "../../../config";
+} from "../../../config.web";
 import { ProjectResultHistoryChart } from "../../../src/components/project-result-history-chart";
 import { format } from "date-fns";
 import { getProjectById } from "../../../src/server/lib/project";

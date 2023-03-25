@@ -1,6 +1,6 @@
 import { useTheme } from "@mui/material";
 import { VictoryAxis, VictoryLegend, VictoryLine, VictoryTooltip } from "victory";
-import { CHART_BLUR, COLOR } from "../../config";
+import { CHART_BLUR, COLOR } from "../../config.web";
 import { ResponsiveVictoryChart } from "./chart";
 import { format } from "date-fns";
 

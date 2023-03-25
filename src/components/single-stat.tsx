@@ -1,6 +1,6 @@
 import { Group } from "@visx/group";
 import Pie from "@visx/shape/lib/shapes/Pie";
-import { CHART_BLUR, SCORE_MAP, STATUS_COLORS } from "../../config";
+import { CHART_BLUR, SCORE_MAP, STATUS_COLORS } from "../../config.web";
 import { useTheme } from "@mui/material";
 
 const defaultMargin = { top: 20, right: 20, bottom: 20, left: 20 };

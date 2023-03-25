@@ -12,7 +12,7 @@ import Divider from "@mui/material/Divider";
 import { useResource } from "../../../../../src/hooks/use-resource";
 import { getSiteById } from "../../../../../src/server/lib/site";
 import { getNavigation, NavigationEntry } from "../../../../../src/utils/get-navigation";
-import { AUDIT_HISTORY_CHART_LINES, DATE_FORMAT, SERVER_HISTORY_CHART_LINES } from "../../../../../config";
+import { AUDIT_HISTORY_CHART_LINES, DATE_FORMAT, SERVER_HISTORY_CHART_LINES } from "../../../../../config.web";
 import { ActionsList } from "../../../../../src/components/actions-list";
 import { Layout } from "../../../../../src/components/layout";
 import { Widget } from "../../../../../src/components/widget";

@@ -6,7 +6,7 @@ import React from "react";
 import { LighthouseRunReport, Project, Site } from "@prisma/client";
 import { useResource } from "../hooks/use-resource";
 import { ProjectResultHistoryChart } from "./project-result-history-chart";
-import { AUDIT_HISTORY_CHART_LINES, DATE_FORMAT } from "../../config";
+import { AUDIT_HISTORY_CHART_LINES, DATE_FORMAT } from "../../config.web";
 import { format } from "date-fns";
 
 export type ProjectCardProps = {

@@ -11,7 +11,7 @@ import Image from "next/image";
 import React, { PropsWithChildren, ReactNode, useMemo } from "react";
 import { version } from "../../package.json";
 import { NavigationEntry } from "../utils/get-navigation";
-import { THEME } from "../../config";
+import { THEME } from "../../config.web";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { RunningIndicator } from "./running-indicator";
 

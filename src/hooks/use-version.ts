@@ -3,7 +3,7 @@ import { VersionApiHandlerResponse } from "../../pages/api/meta/version";
 import { toast } from "react-toastify";
 
 import { useEffect, useState } from "react";
-import { THEME_NAME } from "../../config";
+import { THEME_NAME } from "../../config.web";
 
 export const useVersion = () => {
     const version = useResource<VersionApiHandlerResponse>({ url: "/api/meta/version" });

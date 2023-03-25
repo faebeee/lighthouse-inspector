@@ -7,7 +7,7 @@ import { Stack } from "@mui/system";
 import { getNavigation, NavigationEntry } from "../../src/utils/get-navigation";
 import Typography from "@mui/material/Typography";
 import { toast } from "react-toastify";
-import { THEME_NAME } from "../../config";
+import { THEME_NAME } from "../../config.web";
 
 export type NewPageProps = {
     navigation: NavigationEntry[];

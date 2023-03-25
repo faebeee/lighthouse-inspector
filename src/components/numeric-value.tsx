@@ -1,6 +1,6 @@
 import Typography, { TypographyProps } from "@mui/material/Typography";
 import React, { useMemo } from "react";
-import { CHART_BLUR, STATUS_COLORS } from "../../config";
+import { CHART_BLUR, STATUS_COLORS } from "../../config.web";
 import Box from "@mui/material/Box";
 
 export type NumericValueProps = {

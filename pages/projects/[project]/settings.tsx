@@ -10,7 +10,7 @@ import { getProjectById } from "../../../src/server/lib/project";
 import { Stack } from "@mui/system";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
-import { THEME_NAME } from "../../../config";
+import { THEME_NAME } from "../../../config.web";
 
 export type ReportsPageProps = {
     navigation: NavigationEntry[];

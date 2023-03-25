@@ -1,7 +1,7 @@
 import type { AppProps } from "next/app";
 import { createTheme, GlobalStyles } from "@mui/material";
 import { ThemeProvider } from "@mui/system";
-import { THEME } from "../config";
+import { THEME } from "../config.web";
 import { SessionProvider } from "next-auth/react";
 import mixpanel from "mixpanel-browser";
 import React, { useEffect } from "react";

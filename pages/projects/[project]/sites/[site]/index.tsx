@@ -14,7 +14,7 @@ import {
     DATE_FORMAT,
     SERVER_RESPONSE_TIME_THRESHOLD,
     TIME_TO_INTERACTIVE_THRESHOLD
-} from "../../../../../config";
+} from "../../../../../config.web";
 import { Widget } from "../../../../../src/components/widget";
 import { SingleStat } from "../../../../../src/components/single-stat";
 import { NumericValue } from "../../../../../src/components/numeric-value";
