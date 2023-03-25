@@ -4,8 +4,12 @@ import { ThemeProvider } from "@mui/system";
 import { THEME } from "../config";
 import { SessionProvider } from "next-auth/react";
 import mixpanel from "mixpanel-browser";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/router";
+import { Shell } from "../src/components/shell";
+import "../node_modules/react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
+
 
 const theme = createTheme({
     palette: {
@@ -32,7 +36,9 @@ const theme = createTheme({
 export default function App({ Component, pageProps }: AppProps) {
     const router = useRouter();
     useEffect(() => {
-        mixpanel.init("ed8326a29f285167e189ddcc22c3c0c0", { debug: true });
+        if (process.env.NEXT_PUBLIC_MIX_PANEL_TOKEN) {
+            mixpanel.init(process.env.NEXT_PUBLIC_MIX_PANEL_TOKEN, { debug: true });
+        }
     }, []);
 
     useEffect(() => {
@@ -58,7 +64,10 @@ export default function App({ Component, pageProps }: AppProps) {
             }
         } } />
         <SessionProvider session={ pageProps.session }>
-            <Component { ...pageProps } />
+            <ToastContainer />
+            <Shell>
+                <Component { ...pageProps } />
+            </Shell>
         </SessionProvider>
     </ThemeProvider>
 }

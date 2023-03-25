@@ -1,6 +1,6 @@
 {
   "name": "web-audit",
-  "version": "0.27.0",
+  "version": "0.23.0",
   "private": true,
   "scripts": {
     "dev": "next dev -p 8008",
@@ -14,6 +14,14 @@
     "prisma:generate": "npx prisma generate",
     "prisma:generate:watch": "npx prisma generate --watch"
   },
+  "author": {
+    "email": "faebeee@gmail.com",
+    "name": "faebeee"
+  },
+  "repository": {
+    "type": "github",
+    "url": "https://github.com/faebeee/lighthouse-inspector"
+  },
   "dependencies": {
     "@dreipol/t3-react-utils": "^2.0.3",
     "@emotion/react": "^11.10.5",
@@ -25,10 +33,12 @@
     "@types/node": "18.11.9",
     "@types/react": "18.0.25",
     "@types/react-dom": "18.0.9",
+    "@version-checker/core": "^3.0.0",
     "@visx/group": "^3.0.0",
     "@visx/shape": "^3.0.0",
     "axios": "^1.2.0",
     "date-fns": "^2.29.3",
+    "docker-secret": "^2.0.5",
     "dotenv": "^16.0.3",
     "eslint": "8.28.0",
     "eslint-config-next": "13.0.5",
@@ -44,6 +54,8 @@
     "psi": "^4.1.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-notifications": "^1.7.4",
+    "react-toastify": "^9.1.2",
     "sha1": "^1.1.1",
     "swr": "^2.0.3",
     "ts-node": "^10.9.1",

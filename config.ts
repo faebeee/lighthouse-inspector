@@ -36,6 +36,7 @@ const THEME_DARK = {
 }
 
 export const THEME = process.env.NEXT_PUBLIC_THEME_MODE === 'light' ? THEME_LIGHT : THEME_DARK;
+export const THEME_NAME = process.env.NEXT_PUBLIC_THEME_MODE === 'light' ? 'light' : 'dark';
 
 export const COLOR = {
     PERFORMANCE: 'rgba(68,211,175,0.7)',

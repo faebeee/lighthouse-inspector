@@ -9,6 +9,8 @@ import { getNavigation, NavigationEntry } from "../../../src/utils/get-navigatio
 import { getProjectById } from "../../../src/server/lib/project";
 import { Stack } from "@mui/system";
 import { useRouter } from "next/router";
+import { toast } from "react-toastify";
+import { THEME_NAME } from "../../../config";
 
 export type ReportsPageProps = {
     navigation: NavigationEntry[];
@@ -49,7 +51,9 @@ export const ReportsPage = ({ navigation, project }: ReportsPageProps) => {
             interval_reporting: intervalEnabled
         })
             .then(() => {
-                // router.push(`/projects/${ project.id }`);
+                toast.info(`Project ${project.name} updated`, {
+                    theme: THEME_NAME
+                });
             })
             .finally(() => {
                 setIsLoading(false);

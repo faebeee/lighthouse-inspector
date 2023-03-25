@@ -9,6 +9,8 @@ import { getNavigation, NavigationEntry } from "../../../../src/utils/get-naviga
 import { Layout } from "../../../../src/components/layout";
 import { getProjectById } from "../../../../src/server/lib/project";
 import { GetServerSideProps } from "next";
+import { toast } from "react-toastify";
+import { THEME_NAME } from "../../../../config";
 
 export type NewPageProps = {
     project: Project;
@@ -40,6 +42,9 @@ export const NewPage = ({ project, navigation }: NewPageProps) => {
         })
             .then(({ data }) => {
                 router.push(`/projects/${ project.id }`);
+                toast.info(`Site ${ name } created`, {
+                    theme: THEME_NAME
+                });
             })
             .finally(() => {
                 setIsLoading(false);

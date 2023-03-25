@@ -6,6 +6,8 @@ import { Layout } from "../../src/components/layout";
 import { Stack } from "@mui/system";
 import { getNavigation, NavigationEntry } from "../../src/utils/get-navigation";
 import Typography from "@mui/material/Typography";
+import { toast } from "react-toastify";
+import { THEME_NAME } from "../../config";
 
 export type NewPageProps = {
     navigation: NavigationEntry[];
@@ -30,6 +32,9 @@ export const NewPage = ({ navigation }: NewPageProps) => {
             name
         })
             .then(({ data }) => {
+                toast.info(`Project created`, {
+                    theme: THEME_NAME
+                });
                 router.push(`/projects/${ data.id }/sites/new`);
             })
             .finally(() => {

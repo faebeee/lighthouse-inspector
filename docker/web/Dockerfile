@@ -1,5 +1,7 @@
 FROM node:18-alpine
 
+ARG GH_ACCESS_TOKEN
+
 RUN mkdir -p /app/
 
 WORKDIR /app/
@@ -17,6 +19,7 @@ ENV MINIO_HOST=***
 ENV MINIO_BUCKET=***
 ENV MINIO_ACCESS_KEY=***
 ENV MINIO_SECRET_KEY=***
+ENV GH_ACCESS_TOKEN=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
 
 RUN npm run build
 
