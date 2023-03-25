@@ -19,6 +19,6 @@ jobs:
       uses: docker/build-push-action@v3
       with:
         context: .
-        file: docker/web/Dockerfile
+        file: ./docker/web/Dockerfile
         tags: faebeee/web-audit-web:${{  github.ref_name }}
         push: true
