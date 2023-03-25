@@ -15,8 +15,10 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - name: Build the Docker image
-      run: |
-        docker build --file docker/web/Dockerfile -t faebeee/web-audit-web:${{  github.ref_name }} .
-        docker push faebeee/web-audit-web:${{  github.ref_name }}
-
+    - name: Build and push
+      uses: docker/build-push-action@v3
+      with:
+        context: .
+        file: docker/web/Dockerfile
+        tag: faebeee/web-audit-web:${{  github.ref_name }}
+        push: true
