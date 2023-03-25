@@ -20,5 +20,5 @@ jobs:
       with:
         context: .
         file: docker/web/Dockerfile
-        tag: faebeee/web-audit-web:${{  github.ref_name }}
+        tags: faebeee/web-audit-web:${{  github.ref_name }}
         push: true
