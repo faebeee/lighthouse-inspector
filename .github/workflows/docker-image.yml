@@ -25,9 +25,13 @@ jobs:
       uses: docker/build-push-action@v4
       with:
         context: .
+        build-args: |
+          GH_ACCESS_TOKEN=${{ secrets.GH_ACCESS_TOKEN }} 
+          NEXT_PUBLIC_MIX_PANEL_TOKEN=${{ secrets.NEXT_PUBLIC_MIX_PANEL_TOKEN }}
         file: ./docker/web/Dockerfile
         tags: ${{ secrets.DOCKER_USERNAME }}/web-audit-web:latest,${{ secrets.DOCKER_USERNAME }}/web-audit-web:${{ github.ref_name }}
         push: true
+        
   cron:
     runs-on: ubuntu-latest
     steps:
@@ -47,6 +51,8 @@ jobs:
       uses: docker/build-push-action@v4
       with:
         context: .
+        build-args: |
+          NEXT_PUBLIC_MIX_PANEL_TOKEN=${{ secrets.NEXT_PUBLIC_MIX_PANEL_TOKEN }}
         file: ./docker/cron/Dockerfile
         tags: ${{ secrets.DOCKER_USERNAME }}/web-audit-cron:latest,${{ secrets.DOCKER_USERNAME }}/web-audit-cron:${{ github.ref_name }}
         push: true
