@@ -1,9 +1,12 @@
 FROM node:18-alpine
 
+ARG NEXT_PUBLIC_MIX_PANEL_TOKEN
+
 RUN apk --no-cache upgrade && apk add --no-cache chromium
 
 ENV CHROME_BIN=/usr/bin/chromium-browser
-ENV GH_ACCESS_TOKEN=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
+
+ENV NEXT_PUBLIC_MIX_PANEL_TOKEN=${NEXT_PUBLIC_MIX_PANEL_TOKEN}
 
 RUN mkdir -p /app/
 
