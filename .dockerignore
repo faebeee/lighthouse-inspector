@@ -3,3 +3,7 @@ node_modules
 .next
 data
 minio_storage
+.idea
+.git
+doc
+docker

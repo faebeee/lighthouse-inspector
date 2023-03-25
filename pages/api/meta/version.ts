@@ -19,6 +19,12 @@ export type VersionApiHandlerResponse = {
 }
 
 export const versionApiHandler: NextApiHandler<VersionApiHandlerResponse> = async (req, res) => {
+    if(!process.env.GH_ACCESS_TOKEN) {
+        return res.send({
+            updateAvailable: false,
+        })
+
+    }
     const result = await checker(options);
     res.send({
         updateAvailable: !!result.update,

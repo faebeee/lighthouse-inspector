@@ -31,7 +31,7 @@ jobs:
         file: ./docker/web/Dockerfile
         tags: ${{ secrets.DOCKER_USERNAME }}/web-audit-web:latest,${{ secrets.DOCKER_USERNAME }}/web-audit-web:${{ github.ref_name }}
         push: true
-        
+
   cron:
     runs-on: ubuntu-latest
     steps:
