@@ -1,6 +1,6 @@
 {
   "name": "web-audit",
-  "version": "0.24.0",
+  "version": "0.27.0",
   "private": true,
   "scripts": {
     "dev": "next dev -p 8008",
@@ -49,15 +49,15 @@
     "next": "13.0.5",
     "next-auth": "^4.19.2",
     "node-cron": "^3.0.2",
+    "notiflix": "^3.2.6",
     "pino": "^8.10.0",
     "pino-pretty": "^9.3.0",
     "psi": "^4.1.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-notifications": "^1.7.4",
-    "react-toastify": "^9.1.2",
     "sha1": "^1.1.1",
     "swr": "^2.0.3",
+    "tailwindcss": "^3.2.7",
     "ts-node": "^10.9.1",
     "typescript": "4.9.3",
     "victory": "^36.6.8"
