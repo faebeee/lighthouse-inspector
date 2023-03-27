@@ -68,3 +68,9 @@ model User {
   username String @unique
   password String
 }
+
+model Beacon {
+  id   Int      @id @default(autoincrement())
+  key  String   @unique
+  date DateTime
+}

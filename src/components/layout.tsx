@@ -8,12 +8,17 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Link from "next/link";
 import Image from "next/image";
-import React, { PropsWithChildren, ReactNode, useMemo } from "react";
+import React, { PropsWithChildren, ReactNode, useEffect, useMemo } from "react";
 import { version } from "../../package.json";
 import { NavigationEntry } from "../utils/get-navigation";
 import { THEME } from "../../config.web";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { RunningIndicator } from "./running-indicator";
+import { useResource } from "../hooks/use-resource";
+import { CronStatusApiResponse } from "../../pages/api/meta/cron-status";
+import { toast } from "react-toastify";
+import { CronStatusIndicator, cronStatusIndicator } from "./cron-status-indicator";
+import { SystemIndicators } from "./system-indicators";
 
 export type LayoutProps = PropsWithChildren<{
     title?: string;
@@ -36,7 +41,7 @@ export const Layout = ({
                        }: LayoutProps) => {
     const { data: session } = useSession();
     const pages = navigation.filter((item) => !item.isGroup);
-    const groups = navigation.filter((item) => item.isGroup);
+
 
     const hasSidebar = useMemo(() => {
         if (!session) {
@@ -44,6 +49,7 @@ export const Layout = ({
         }
         return showSidebar;
     }, [ showSidebar, session ]);
+
 
     return <Box>
         { hasSidebar && <Drawer
@@ -101,7 +107,7 @@ export const Layout = ({
             <Divider />
           </MenuList>
 
-          <RunningIndicator />
+          <SystemIndicators/>
 
           <Divider />
           <Link href={ "https://github.com/faebeee/lighthouse-inspector" } target={ "_blank" }>
