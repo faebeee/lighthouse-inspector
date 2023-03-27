@@ -1,4 +1,4 @@
-# 0.30.0
+# [0.30.0](https://github.com/faebeee/lighthouse-inspector/pull/20)
 
 - Add indicator if a cron is running which audits the
 pages or not
