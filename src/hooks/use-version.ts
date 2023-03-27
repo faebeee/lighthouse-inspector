@@ -16,7 +16,7 @@ export const useVersion = () => {
                 position: "bottom-left",
                 theme: THEME_NAME,
                 onClick: () => {
-                    window.open(`https://github.com/faebeee/lighthouse-inspector#update-docker`, "_blank");
+                    window.open(`https://github.com/faebeee/lighthouse-inspector/blob/main/CHANGELOG.md`, "_blank");
                 }
             }));
         }

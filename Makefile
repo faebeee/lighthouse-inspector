@@ -1,15 +1,11 @@
-start:
-	npm run start
-
-cron:
-	npm run cron
-
-generate-migration:
+# DB
+prisma-generate-migration:
 	npx prisma migrate dev
 
-generate-client:
+prisma-generate-client:
 	npm run prisma:generate
 
+# DOCKER
 docker-build:
 	make docker-build-web
 	make docker-build-cron
