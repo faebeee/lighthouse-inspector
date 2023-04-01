@@ -1,6 +1,7 @@
 import { getPrisma } from "../../../src/server/get-prisma";
 import { isBefore, subMinutes } from "date-fns";
 import { NextApiHandler } from "next";
+import { BEACON_KEY } from "../../../config";
 
 export type CronStatusApiResponse = {
     lastSeen: string;
@@ -12,7 +13,7 @@ export const cronStatusApiHandler: NextApiHandler<CronStatusApiResponse> = async
         .beacon
         .findFirstOrThrow({
             where: {
-                key: "cron"
+                key: BEACON_KEY.CRON
             }
         });
 

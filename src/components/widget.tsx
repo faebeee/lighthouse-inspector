@@ -21,7 +21,7 @@ export const Widget = ({
                            xCentered = true,
                            sx
                        }: WidgetProps) => {
-    return <Card sx={ { height: autoHeight ? "auto" : "380px", ...sx } }>
+    return <Card sx={ { height: autoHeight ? "100%" : "380px", ...sx } }>
         <CardContent sx={ { display: "flex", flexDirection: "column", height: "100%" } }>
             { title && <Typography color={ "textSecondary" } variant={ "h6" }>{ title }</Typography> }
             <Box sx={ {

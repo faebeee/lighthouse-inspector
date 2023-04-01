@@ -1,28 +1,28 @@
-import { GetServerSideProps } from "next";
-import React, { useMemo, useState } from "react";
-import Link from "next/link";
-import { Button, CardMedia, Chip, Grid, Stack, Tab, Tabs } from "@mui/material";
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
-import { LighthouseRunReport, Project, Site, Tag } from "@prisma/client";
-import { format } from "date-fns";
-import { useSearchParams } from "next/navigation";
-import { ActionsList } from "../../../../../src/components/actions-list";
-import { Layout } from "../../../../../src/components/layout";
+import { GetServerSideProps } from 'next';
+import React, { useMemo, useState } from 'react';
+import Link from 'next/link';
+import { Button, CardMedia, Chip, Grid, Tab, Tabs } from '@mui/material';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import { LighthouseRunReport, Project, Site, Tag } from '@prisma/client';
+import { format } from 'date-fns';
+import { useSearchParams } from 'next/navigation';
+import { ActionsList } from '../../../../../src/components/actions-list';
+import { Layout } from '../../../../../src/components/layout';
 import {
     COLOR,
     DATE_FORMAT,
     SERVER_RESPONSE_TIME_THRESHOLD,
     TIME_TO_INTERACTIVE_THRESHOLD
-} from "../../../../../config.web";
-import { Widget } from "../../../../../src/components/widget";
-import { SingleStat } from "../../../../../src/components/single-stat";
-import { NumericValue } from "../../../../../src/components/numeric-value";
-import { StatsChart } from "../../../../../src/components/stats-chart";
-import { useResource } from "../../../../../src/hooks/use-resource";
-import { getNavigation, NavigationEntry } from "../../../../../src/utils/get-navigation";
-import { getSiteById } from "../../../../../src/server/lib/site";
-import { getProjectById } from "../../../../../src/server/lib/project";
+} from '../../../../../config.web';
+import { Widget } from '../../../../../src/components/widget';
+import { SingleStat } from '../../../../../src/components/single-stat';
+import { NumericValue } from '../../../../../src/components/numeric-value';
+import { StatsChart } from '../../../../../src/components/stats-chart';
+import { useResource } from '../../../../../src/hooks/use-resource';
+import { getNavigation, NavigationEntry } from '../../../../../src/utils/get-navigation';
+import { getSiteById } from '../../../../../src/server/lib/site';
+import { getProjectById } from '../../../../../src/server/lib/project';
 
 export type ProjectPageProps = {
     site: Site;
@@ -197,6 +197,7 @@ export const ProjectPage = ({
                         </Widget> }
                     </Grid>
                 </Grid>
+
                 <Grid item container spacing={ 2 } xs={ 12 } md={ 12 } xl={ 6 }>
                     <Grid item xs={ 12 } md={ 6 }>
                         <Widget title={ "URL" }>
@@ -225,10 +226,10 @@ export const ProjectPage = ({
                     </Grid>
 
                     <Grid item xs={ 12 } md={ 6 }>
-                        <Widget title={ "Tags" }>
-                            <Stack direction={ "row" } spacing={ 1 }>
-                                { tagsApi.data?.map((tag: Tag) => <Chip label={ tag.name } key={ tag.id } />) }
-                            </Stack>
+                        <Widget title={ 'Is Crawlable' }>
+                            { latestReport && <Typography color={ latestReport.is_crawlable ? 'primary' : 'error' }>
+                                { latestReport.is_crawlable ? 'Crawable' : 'Site not crawlable' }
+                            </Typography> }
                         </Widget>
                     </Grid>
                 </Grid>

@@ -1,8 +1,8 @@
 # DB
-prisma-generate-migration:
+prisma-migrate:
 	npx prisma migrate dev
 
-prisma-generate-client:
+prisma-generate:
 	npm run prisma:generate
 
 # DOCKER

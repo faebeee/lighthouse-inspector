@@ -45,6 +45,7 @@ model LighthouseRunReport {
   htmlReportFile     String?
   type               String
   stacks             String[] @default([])
+  is_crawlable       Boolean  @default(false)
 }
 
 model Tag {

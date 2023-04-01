@@ -6,6 +6,7 @@ import { getLogger } from "../src/server/logger";
 import { runAudit } from "../src/server/cli/run-audit";
 import { cleanup } from "../src/server/cli/cleanup";
 import { sendBeacon } from "../src/server/cli/send-beacon";
+import { BEACON_KEY } from "../config";
 
 cron.schedule(AUDIT_CRON_EXPRESSION, () => {
     runAudit();
@@ -16,9 +17,9 @@ cron.schedule(CLEANUP_CRON_EXPRESSION, () => {
 });
 
 cron.schedule(SEND_HEALTH_BEACON_EXPRESSION, () => {
-    sendBeacon();
+    sendBeacon(BEACON_KEY.CRON);
 });
 
-sendBeacon();
+sendBeacon(BEACON_KEY.CRON);
 getLogger().info("Cron setup");
 

@@ -1,15 +1,16 @@
 import { getPrisma } from "../get-prisma";
 import { getLogger } from "../logger";
+import { BEACON_KEY } from "../../../config";
 
-export const sendBeacon = async (): Promise<void> => {
+export const sendBeacon = async (key: BEACON_KEY): Promise<void> => {
     getLogger().debug("Send health beacon");
-    
+
     await getPrisma().beacon.upsert({
         where: {
-            key: "cron"
+            key: key
         },
         create: {
-            key: "cron",
+            key: key,
             date: new Date()
         },
         update: {

@@ -41,7 +41,8 @@ export const persistReport = async (site: Site, data: LighthouseReport, htmlFile
             finalUrl: data.finalUrl,
             stacks: data.stackPacks.map((stack) => stack.title),
             siteId: site.id,
-            htmlReportFile: htmlFilePath
+            htmlReportFile: htmlFilePath,
+            is_crawlable: data.audits['is-crawlable'].score === 1
         }
     });
 };

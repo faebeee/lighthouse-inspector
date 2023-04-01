@@ -2,4 +2,4 @@
 
 import { runAudit } from "../src/server/cli/run-audit";
 
-runAudit;
+runAudit();
