@@ -1,3 +1,7 @@
+# 0.33.0
+
+- Make CRON timings configurable via ENV variable
+
 # [0.31.0](https://github.com/faebeee/lighthouse-inspector/pull/20)
 
 - Improve usage of beacons
