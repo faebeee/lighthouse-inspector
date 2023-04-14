@@ -87,8 +87,8 @@ export const ProjectPage = ({
         { field: "performance", headerName: "performance", flex: 1 },
         { field: "accessibility", headerName: "accessibility", flex: 1 },
         { field: "bestPractices", headerName: "bestPractices", flex: 1 },
-        { field: "SEO", headerName: "seo", flex: 1 },
-        { field: "PWA", headerName: "pwa", flex: 1 },
+        { field: "seo", headerName: "seo", flex: 1 },
+        { field: "pwa", headerName: "pwa", flex: 1 },
         {
             field: "htmlReportFile",
             headerName: "htmlReportFile",

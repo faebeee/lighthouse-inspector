@@ -1,4 +1,4 @@
-import { PaletteMode } from "@mui/material";
+import { PaletteMode } from '@mui/material';
 
 export const DATE_FORMAT = "yyyy-MM-dd hh:mm:ss";
 
@@ -14,41 +14,34 @@ export const TIME_TO_INTERACTIVE_THRESHOLD = {
 export const CHART_BLUR = "5px";
 
 const THEME_LIGHT = {
-    logo: "/lighthouse_logo_dark.png",
-    mode: "light" as PaletteMode,
-    primary: "rgb(68,97,211)",
-    secondary: "rgb(68,173,211)",
-    background: "#F7F7FB",
-    cardBackground: "rgba(126,215,215,0.08)"
+    logo: '/lighthouse_logo_dark.png',
+    mode: 'light' as PaletteMode,
+    primary: 'rgb(13,67,96)',
+    secondary: 'rgb(100,97,97)',
+    background: '#f5f5f5',
+    cardBackground: 'rgba(132,140,140,0.08)'
 };
 
-const THEME_DARK = {
-    logo: '/lighthouse_logo.png',
-    mode: 'dark' as PaletteMode,
-    primary: 'rgb(87,114,213)',
-    secondary: 'rgb(59,175,218)',
-    background: '#0F1013',
-    cardBackground: 'rgba(76,92,182,0.2)',
-}
 
-export const THEME = process.env.NEXT_PUBLIC_THEME_MODE === 'light' ? THEME_LIGHT : THEME_DARK;
-export const THEME_NAME = process.env.NEXT_PUBLIC_THEME_MODE === 'light' ? 'light' : 'dark';
+export const THEME = THEME_LIGHT;
+export const THEME_NAME = 'light';
 
 export const COLOR = {
     PERFORMANCE: 'rgba(68,211,175,0.7)',
     ACCESSIBILITY: 'rgba(68,173,211,0.7)',
     BEST_PRACTICE: 'rgba(68,211,113,0.7)',
-    SEO: 'rgba(68,211,70,0.7)',
-    PWA: 'rgba(147,211,68,0.7)',
+    seo: 'rgba(68,211,70,0.7)',
+    pwa: 'rgba(147,211,68,0.7)',
     RESPONSE_TIME: 'rgba(183,181,57,0.9)',
-    TTI: 'rgba(30,196,160,0.9)',
-}
+    TTI: 'rgba(30,196,160,0.9)'
+};
+
 export const STATUS_COLORS = {
-    VERY_GOOD: 'rgb(137,232,8, 0.8)',
-    GOOD: 'rgba(76,175,98,0.8)',
-    MEDIUM: 'rgba(215,196,77,0.8)',
-    BAD: 'rgba(215,130,77,0.8)',
-    POOR: 'rgba(215,77,77,0.8)',
+    VERY_GOOD: 'rgb(137,232,8, 1)',
+    GOOD: 'rgba(76,175,98,1)',
+    MEDIUM: 'rgba(215,196,77,1)',
+    BAD: 'rgba(215,130,77,1)',
+    POOR: 'rgba(215,77,77,1)'
 }
 
 export const SCORE_MAP = {
@@ -63,8 +56,8 @@ export const AUDIT_HISTORY_CHART_LINES = [
     { label: "performance", color: COLOR.PERFORMANCE },
     { label: "accessibility", color: COLOR.ACCESSIBILITY },
     { label: "bestPractices", color: COLOR.BEST_PRACTICE },
-    { label: "SEO", color: COLOR.SEO },
-    { label: "PWA", color: COLOR.PWA }
+    { label: "seo", color: COLOR.seo },
+    { label: "pwa", color: COLOR.pwa }
 ];
 
 export const SERVER_HISTORY_CHART_LINES = [

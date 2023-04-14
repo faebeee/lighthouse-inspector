@@ -30,8 +30,8 @@ export const persistReport = async (site: Site, data: LighthouseReport, htmlFile
     return getPrisma().lighthouseRunReport.create({
         data: {
             date: new Date(),
-            SEO: data.categories["seo"].score * 100,
-            PWA: data.categories["pwa"].score * 100,
+            seo: data.categories["seo"].score * 100,
+            pwa: data.categories["pwa"].score * 100,
             bestPractices: data.categories["best-practices"].score * 100,
             accessibility: data.categories["accessibility"].score * 100,
             performance: data.categories["performance"].score * 100,

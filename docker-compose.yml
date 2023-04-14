@@ -42,8 +42,6 @@ services:
       - NEXTAUTH_SECRET=mBBB7M61VJBU5VaYCW54g439JERbtH4Ge61j
     ports:
       - "3003:3000"
-    command:
-      - 'npm run dev'
 
 
   cron:

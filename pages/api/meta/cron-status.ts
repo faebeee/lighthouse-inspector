@@ -17,7 +17,7 @@ export const cronStatusApiHandler: NextApiHandler<CronStatusApiResponse> = async
             }
         });
 
-    const isOnline = isBefore(subMinutes(new Date(), 2), cronBeacon.date);
+    const isOnline = isBefore(subMinutes(new Date(), 5), cronBeacon.date);
 
     res.send({
         lastSeen: cronBeacon.date.toISOString(),

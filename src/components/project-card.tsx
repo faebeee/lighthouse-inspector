@@ -16,7 +16,7 @@ export type ProjectCardProps = {
 export const ProjectCard = ({ report, site }: ProjectCardProps) => {
     const projectApi = useResource<Project>({ url: `/api/projects/${ site.projectId }` });
 
-    return <Card sx={ { background: site.is_running ? '#555' : undefined } }>
+    return <Card sx={ { background: site.is_running ? 'rgba(178,178,178,0.54)' : undefined } }>
         <Stack component={ 'div' } direction={ 'row' } spacing={ 1 }>
             <CardMedia component="img"
               height={ 300 }

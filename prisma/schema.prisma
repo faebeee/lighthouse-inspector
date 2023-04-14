@@ -38,8 +38,8 @@ model LighthouseRunReport {
   performance        Float
   accessibility      Float
   bestPractices      Float
-  SEO                Float
-  PWA                Float
+  seo                Float
+  pwa                Float
   serverResponseTime Float?
   tti                Float?
   htmlReportFile     String?

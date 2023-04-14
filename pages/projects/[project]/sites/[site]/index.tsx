@@ -255,8 +255,8 @@ export const ProjectPage = ({
                                   y: latestReport.bestPractices,
                                   fill: COLOR.BEST_PRACTICE
                               },
-                              { x: "SEO", y: latestReport.SEO, fill: COLOR.SEO },
-                              { x: "PWA", y: latestReport.PWA, fill: COLOR.PWA }
+                              { x: "seo", y: latestReport.seo, fill: COLOR.seo },
+                              { x: "pwa", y: latestReport.pwa, fill: COLOR.pwa }
                           ] } />
                         </Widget> }
                     </Grid>

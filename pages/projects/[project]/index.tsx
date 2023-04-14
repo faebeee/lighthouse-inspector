@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next';
 import { Layout } from '../../../src/components/layout';
-import { Badge, Button, Grid, IconButton, List, ListItem, ListItemText } from '@mui/material';
+import { Badge, Button, Fab, Grid, IconButton, List, ListItem, ListItemText } from '@mui/material';
 import Link from 'next/link';
 import Typography from '@mui/material/Typography';
 import React, { useMemo } from 'react';
@@ -70,8 +70,8 @@ export const ReportsPage = ({ navigation, project }: ReportsPageProps) => {
                 title={ <Link href={ `/projects/${ project.id }/sites/${ site.id }` }>
                   <Typography variant={ 'h6' } color={ 'secondary' }>{ site.name }</Typography>
                 </Link> }>
-                { report && <img width={ '100%' }
-                  src={ `/api/reports/${ report?.id }/thumbnail` }
+                { report && <img height={ '450px' }
+                  src={ `/api/reports/${ report?.id }/full-screenshot` }
                   alt={ 'Report' } /> }
               </Widget>
             </Grid>
@@ -169,8 +169,8 @@ export const ReportsPage = ({ navigation, project }: ReportsPageProps) => {
                     y: report.bestPractices,
                     fill: COLOR.BEST_PRACTICE
                   },
-                  { x: 'SEO', y: report.SEO, fill: COLOR.SEO },
-                  { x: 'PWA', y: report.PWA, fill: COLOR.PWA }
+                  { x: 'seo', y: report.seo, fill: COLOR.seo },
+                  { x: 'pwa', y: report.pwa, fill: COLOR.pwa }
                 ] } /> }
                 <ProjectResultHistoryChart lines={ SERVER_HISTORY_CHART_LINES } site={ site } />
               </Widget>
@@ -187,9 +187,9 @@ export const ReportsPage = ({ navigation, project }: ReportsPageProps) => {
       <Grid item xs={ 12 } lg={ 6 } xl={ 3 }>
         <Widget title={ 'Add Site' }>
           <Link href={ `/projects/${ project.id }/sites/new` }>
-            <IconButton size={ 'large' } color={ 'primary' }>
+            <Fab size={ 'large' } color={ 'primary' }>
               <Add />
-            </IconButton>
+            </Fab>
           </Link>
         </Widget>
       </Grid>

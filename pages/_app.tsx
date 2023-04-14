@@ -1,14 +1,12 @@
-import type { AppProps } from "next/app";
-import { createTheme, GlobalStyles } from "@mui/material";
-import { ThemeProvider } from "@mui/system";
-import { THEME } from "../config.web";
-import { SessionProvider } from "next-auth/react";
-import mixpanel from "mixpanel-browser";
-import React, { useEffect } from "react";
-import { useRouter } from "next/router";
-import { Shell } from "../src/components/shell";
-import "../node_modules/react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
+import type { AppProps } from 'next/app';
+import { createTheme, GlobalStyles } from '@mui/material';
+import { ThemeProvider } from '@mui/system';
+import { THEME } from '../config.web';
+import { SessionProvider } from 'next-auth/react';
+import React from 'react';
+import { Shell } from '../src/components/shell';
+import '../node_modules/react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 
 
 const theme = createTheme({
@@ -34,19 +32,6 @@ const theme = createTheme({
 });
 
 export default function App({ Component, pageProps }: AppProps) {
-    const router = useRouter();
-    useEffect(() => {
-        if (process.env.NEXT_PUBLIC_MIX_PANEL_TOKEN) {
-            mixpanel.init(process.env.NEXT_PUBLIC_MIX_PANEL_TOKEN, { debug: true });
-        }
-    }, []);
-
-    useEffect(() => {
-        mixpanel.track("page", {
-            pathname: router.pathname
-        });
-    }, [ router.pathname ]);
-
     return <ThemeProvider theme={ theme }>
         <GlobalStyles styles={ {
             body: {
