@@ -20,14 +20,14 @@ const theme = createTheme({
         }
     },
     components: {
-        MuiPaper: {
-            styleOverrides: {
-                root: {
-                    background: THEME.cardBackground,
-                    backdropFilter: 'blur( 5.5px )',
-                }
-            }
-        }
+        // MuiPaper: {
+        //     styleOverrides: {
+        //         root: {
+        //             background: THEME.cardBackground,
+        //             backdropFilter: 'blur( 5.5px )',
+        //         }
+        //     }
+        // }
     }
 });
 
