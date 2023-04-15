@@ -54,8 +54,9 @@ services:
     volumes:
       - ./:/usr/src/app
     environment:
-      - DATABASE_URL=postgresql://postgres:postgres@database:5432/lhi
-      - MINIO_HOST=minio
-      - MINIO_BUCKET=lighthouse-report
-      - MINIO_ACCESS_KEY=zwX1TeYJGdVRpW4a
-      - MINIO_SECRET_KEY=OsF3XMHMYkeP4QRRHLbXPoPWeuQ9mBD1
+      - DATABASE_URL=postgresql://doadmin:AVNS_BrEZ-uTH32RTBX7aZ_a@db-postgresql-fra1-09806-do-user-2359801-0.b.db.ondigitalocean.com:25060/dev?sslmode=require
+      - MINIO_HOST=159.223.249.139
+      - MINIO_PORT=9000
+      - MINIO_BUCKET=web-audit
+      - MINIO_ACCESS_KEY=bLLH6w4lfxlFSIDH
+      - MINIO_SECRET_KEY=gVNRWqz7hzkhD0Lcr5qCJPO8pyMuWK2E

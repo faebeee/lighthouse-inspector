@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { getReportById } from "../../../../src/server/report-services";
 import { getReportFile, hasReportFile } from "../../../../src/server/lib/minio";
 import { assertAuth } from "../../../../src/server/lib/api-helpers";
+import {CACHE_SHORT} from "../../../../config.web";
 
 
 export const thumbnailHandler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -27,6 +28,7 @@ export const thumbnailHandler = async (req: NextApiRequest, res: NextApiResponse
     return res
         .setHeader('Content-Type', 'image/jpeg')
         .setHeader('Content-Length', byteArray.length)
+        .setHeader('Cache-Control', `s-maxage=${CACHE_SHORT}`)
         .send(byteArray);
 }
 export default assertAuth(thumbnailHandler);

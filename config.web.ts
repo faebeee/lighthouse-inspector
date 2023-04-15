@@ -1,6 +1,9 @@
 import { PaletteMode } from '@mui/material';
 
 export const DATE_FORMAT = "yyyy-MM-dd hh:mm:ss";
+export const CACHE_VERY_SHORT = 60; // 1min
+export const CACHE_SHORT = 60 * 60; // 1h
+export const CACHE_LONG = 60 * 60 * 6; // 6h
 
 export const SERVER_RESPONSE_TIME_THRESHOLD = {
     GOOD: 800,

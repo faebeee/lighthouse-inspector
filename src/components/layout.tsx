@@ -37,7 +37,6 @@ export const Layout = ({
   const {data: session} = useSession();
   const pages = navigation.filter((item) => !item.isGroup);
 
-
   const hasSidebar = useMemo(() => {
     if (!session) {
       return false;
