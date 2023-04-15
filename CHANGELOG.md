@@ -1,4 +1,4 @@
-# 0.34.0
+# [0.34.0](https://github.com/faebeee/lighthouse-inspector/pull/24)
 
 - Remove auto refresh for API calls (data read)
 - Add caching headers
