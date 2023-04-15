@@ -12,6 +12,14 @@ export const getSiteById = async (id: number): Promise<Site | null> => {
     })) || null;
 };
 
+export const getSiteByToken = async (token: string): Promise<Site | null> => {
+    return (await getPrisma().site.findFirst({
+        where: {
+            share_token: token
+        }
+    })) || null;
+};
+
 export const getRunningSites = async (): Promise<Site[]> => {
     return (await getPrisma().site.findMany({
         where: {

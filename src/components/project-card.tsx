@@ -40,7 +40,6 @@ export const ProjectCard = ({ report, site }: ProjectCardProps) => {
                 </Link>
             </Stack>
 
-
             <ProjectResultHistoryChart lines={ AUDIT_HISTORY_CHART_LINES } site={ site } />
         </CardContent>
         <CardActions sx={ { justifyContent: 'space-between', alignItems: 'center' } }>

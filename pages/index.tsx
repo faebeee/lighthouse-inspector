@@ -1,7 +1,6 @@
 import { GetServerSideProps } from "next";
 import { Layout } from "../src/components/layout";
 import { Button, Chip, Grid, Stack } from "@mui/material";
-import Link from "next/link";
 import Typography from "@mui/material/Typography";
 import React from "react";
 import { LighthouseRunReport, Project, Site, Tag } from "@prisma/client";
@@ -9,8 +8,6 @@ import { getNavigation, NavigationEntry } from "../src/utils/get-navigation";
 import { ProjectCard } from "../src/components/project-card";
 import { useResource } from "../src/hooks/use-resource";
 import { useSelectionList } from "@dreipol/t3-react-utils";
-import Box from "@mui/material/Box";
-import { useEndpoint } from "../src/hooks/use-endpoint";
 
 export type ReportsPageProps = {
     navigation: NavigationEntry[];
@@ -34,15 +31,13 @@ export const ReportsPage = ({ navigation }: ReportsPageProps) => {
         params: {
             tags: activeTags.list
         }
-    }, 10_000);
+    });
     const desktopReportsApi = useResource<Record<number, LighthouseRunReport>>({
         url: `/api/reports/`,
         params: { type: "desktop" }
-    }, 10_000);
+    });
 
-    return <Layout navigation={ navigation } showBack={ false } title={ "Web Audit" }
-        actions={ <>
-        </> }>
+    return <Layout navigation={ navigation } showBack={ false } title={ "Web Audit" }>
         <Typography sx={ { mb: 2 } } color={ "textPrimary" } variant={ "h1" }>Sites</Typography>
 
         <Grid container spacing={ 2 }>

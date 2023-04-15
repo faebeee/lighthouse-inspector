@@ -46,11 +46,11 @@ export const getServerSideProps: GetServerSideProps<ReportsPageProps> = async (r
 };
 
 export const ReportsPage = ({ navigation, project }: ReportsPageProps) => {
-  const sitesApi = useResource<Site[]>({ url: `/api/projects/${ project.id }/sites` }, 1000);
+  const sitesApi = useResource<Site[]>({ url: `/api/projects/${ project.id }/sites` });
   const reportsApi = useResource<Record<number, LighthouseRunReport>>({
     url: `/api/reports/`,
     params: { type: 'desktop' }
-  }, 1000);
+  });
   const desktopReports = useMemo(() => reportsApi.data ?? {}, [ reportsApi.data ]);
 
   return <Layout navigation={ navigation } title={ project.name }

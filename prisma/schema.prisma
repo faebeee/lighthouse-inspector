@@ -20,13 +20,14 @@ model Project {
 }
 
 model Site {
-  id         Int                   @id @default(autoincrement())
-  name       String
-  project    Project               @relation(fields: [projectId], references: [id])
-  projectId  Int
-  url        String
-  reports    LighthouseRunReport[]
-  is_running Boolean
+  id          Int                   @id @default(autoincrement())
+  name        String
+  project     Project               @relation(fields: [projectId], references: [id])
+  projectId   Int
+  url         String
+  reports     LighthouseRunReport[]
+  is_running  Boolean
+  share_token String?
 }
 
 model LighthouseRunReport {
