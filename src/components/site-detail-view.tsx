@@ -24,27 +24,11 @@ import {DataGrid, GridColDef} from "@mui/x-data-grid";
 export type SiteDetailViewProps = {
     project: Project;
     site: Site;
+    desktopReports: LighthouseRunReport[]
+    mobileReports: LighthouseRunReport[]
 }
-export const SiteDetailView = ({project, site}: SiteDetailViewProps) => {
+export const SiteDetailView = ({site, desktopReports, mobileReports}: SiteDetailViewProps) => {
     const [value, setValue] = useState<string>("desktop");
-    const searchParams = useSearchParams();
-    const limit = searchParams.get("limit") ? searchParams.get("limit") : 10;
-
-    const desktopReportsApi = useResource<LighthouseRunReport[]>({
-        url: `/api/projects/${project.id}/sites/${site.id}/reports`,
-        params: {type: "desktop", limit}
-    });
-
-    const mobileReportsApi = useResource<LighthouseRunReport[]>({
-        url: `/api/projects/${project.id}/sites/${site.id}/reports`,
-        params: {
-            type: "mobile",
-            limit
-        }
-    });
-
-    const desktopReports = useMemo(() => (!!desktopReportsApi.data && desktopReportsApi.data.length) > 0 ? (desktopReportsApi.data ?? []) : [], [desktopReportsApi]);
-    const mobileReports = useMemo(() => (!!mobileReportsApi.data && mobileReportsApi.data.length) > 0 ? (mobileReportsApi.data ?? []) : [], [mobileReportsApi]);
 
     const latestReport = useMemo(() => {
         if (value === "desktop") {
@@ -56,7 +40,6 @@ export const SiteDetailView = ({project, site}: SiteDetailViewProps) => {
     const handleChange = (event: React.SyntheticEvent, newValue: string) => {
         setValue(newValue);
     };
-
 
     const columns: GridColDef[] = [
         {field: "id", headerName: "ID"},
@@ -100,7 +83,6 @@ export const SiteDetailView = ({project, site}: SiteDetailViewProps) => {
                                image={`/api/reports/${latestReport.id}/thumbnail?type=mobile`}/>}
             </>}
 
-            
 
         </Grid>
 

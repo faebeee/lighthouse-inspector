@@ -64,6 +64,24 @@ export const ProjectPage = ({
                                 project,
                                 navigation
                             }: ProjectPageProps) => {
+    const searchParams = useSearchParams();
+    const limit = searchParams.get("limit") ? searchParams.get("limit") : 10;
+
+    const desktopReportsApi = useResource<LighthouseRunReport[]>({
+        url: `/api/projects/${project.id}/sites/${site.id}/reports`,
+        params: {type: "desktop", limit}
+    });
+
+    const mobileReportsApi = useResource<LighthouseRunReport[]>({
+        url: `/api/projects/${project.id}/sites/${site.id}/reports`,
+        params: {
+            type: "mobile",
+            limit
+        }
+    });
+
+    const desktopReports = useMemo(() => (!!desktopReportsApi.data && desktopReportsApi.data.length) > 0 ? (desktopReportsApi.data ?? []) : [], [desktopReportsApi]);
+    const mobileReports = useMemo(() => (!!mobileReportsApi.data && mobileReportsApi.data.length) > 0 ? (mobileReportsApi.data ?? []) : [], [mobileReportsApi]);
 
     return <Layout
         backLink={`/projects/${site.projectId}`}
@@ -73,7 +91,9 @@ export const ProjectPage = ({
             <SiteShare site={site}/>
         </>}
         navigation={navigation}>
-        <SiteDetailView site={site} project={project}/>
+        <SiteDetailView site={site} project={project}
+                        desktopReports={desktopReports}
+                        mobileReports={mobileReports}/>
     </Layout>;
 };
 

@@ -15,7 +15,8 @@ import {Add, ArrowBack} from "@mui/icons-material";
 import Typography from "@mui/material/Typography";
 import {signIn, signOut} from "next-auth/react";
 import AppBar from "@mui/material/AppBar";
-import React from "react";
+import React, {useMemo} from "react";
+import {getReportsForSite} from "../../src/server/lib/report";
 
 export type SharePageProps = {
     site: Site;
@@ -40,10 +41,17 @@ export const getServerSideProps: GetServerSideProps<SharePageProps> = async (req
             notFound: true
         };
     }
+
+    const max = req.query.limit ? parseInt(req.query.limit as string) : 10;
+    const desktopReports = await getReportsForSite(site, "desktop", max);
+    const mobileReports = await getReportsForSite(site, "mobile", max);
+
     return {
         props: {
             site,
             project,
+            desktopReports,
+            mobileReports,
         }
     };
 };
@@ -51,30 +59,33 @@ export const getServerSideProps: GetServerSideProps<SharePageProps> = async (req
 export const SharePage = ({
                               site,
                               project,
+                              desktopReports,
+                              mobileReports
                           }: SharePageProps) => {
-
     return <div>
         <AppBar position={'sticky'}
-        variant={'outlined'}
-        sx={{
-          background: 'transparent',
-        }}>
-        <Toolbar variant={'regular'}>
-          <Stack direction={'row'} flex={1} justifyContent={'space-between'} alignItems={'center'}
-            spacing={1}>
-            <Stack direction={'row'} alignItems={'center'} spacing={1}>
-                <Image alt={'Logo'} src={THEME.logo} width={50} height={40} />
-              <Typography variant="h5" noWrap color={'textPrimary'}>
-                {project.name} - {site.name}
-              </Typography>
-            </Stack>
-          </Stack>
-        </Toolbar>
-      </AppBar>
+                variant={'outlined'}
+                sx={{
+                    background: 'transparent',
+                }}>
+            <Toolbar variant={'regular'}>
+                <Stack direction={'row'} flex={1} justifyContent={'space-between'} alignItems={'center'}
+                       spacing={1}>
+                    <Stack direction={'row'} alignItems={'center'} spacing={1}>
+                        <Image alt={'Logo'} src={THEME.logo} width={50} height={40}/>
+                        <Typography variant="h5" noWrap color={'textPrimary'}>
+                            {project.name} - {site.name}
+                        </Typography>
+                    </Stack>
+                </Stack>
+            </Toolbar>
+        </AppBar>
         <Box sx={{
             p: 5
         }}>
-            <SiteDetailView site={site} project={project}/>
+            <SiteDetailView site={site} project={project}
+                            desktopReports={desktopReports}
+                            mobileReports={mobileReports}/>
         </Box>
     </div>;
 };
