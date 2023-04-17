@@ -1,3 +1,8 @@
+# 0.35.0
+
+- Update UI colors
+- Improve caching for serverSideProps and API Handlers
+
 # [0.34.0](https://github.com/faebeee/lighthouse-inspector/pull/24)
 
 - Remove auto refresh for API calls (data read)
