@@ -66,14 +66,14 @@ export const SharePage = ({
         <AppBar position={'sticky'}
                 variant={'outlined'}
                 sx={{
-                    background: 'transparent',
+                    background: 'black',
                 }}>
             <Toolbar variant={'regular'}>
                 <Stack direction={'row'} flex={1} justifyContent={'space-between'} alignItems={'center'}
                        spacing={1}>
                     <Stack direction={'row'} alignItems={'center'} spacing={1}>
                         <Image alt={'Logo'} src={THEME.logo} width={50} height={40}/>
-                        <Typography variant="h5" noWrap color={'textPrimary'}>
+                        <Typography variant="h5" noWrap color={'white'}>
                             {project.name} - {site.name}
                         </Typography>
                     </Stack>

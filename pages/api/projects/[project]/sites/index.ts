@@ -3,7 +3,7 @@ import { getPrisma } from '../../../../../src/server/get-prisma';
 import { getProjectById } from '../../../../../src/server/lib/project';
 import { getSitesByProject } from '../../../../../src/server/lib/site';
 import { assertAuth } from '../../../../../src/server/lib/api-helpers';
-import { CACHE_VERY_SHORT } from '../../../../../config.web';
+import { CACHE_VERY_LONG } from '../../../../../config.web';
 
 export const ProjectsHandler = async (request: NextApiRequest, response: NextApiResponse) => {
     const projectId = parseInt(request.query["project"] as string);

@@ -1,7 +1,7 @@
-import {Site} from "@prisma/client";
-import {useResource} from "../hooks/use-resource";
-import {getApiShareEndpoint} from "../routes";
-import {ShareHandlerGetResponse} from "../../pages/api/projects/[project]/sites/[site]/share";
+import { Site } from '@prisma/client';
+import { useResource } from '../hooks/use-resource';
+import { getApiShareEndpoint } from '../routes';
+import { ShareHandlerGetResponse } from '../../pages/api/projects/[project]/sites/[site]/share';
 import {
     Button,
     CircularProgress,
@@ -9,21 +9,21 @@ import {
     DialogActions,
     DialogContent,
     DialogContentText,
-    DialogTitle
-} from "@mui/material";
-import Link from "next/link";
-import {useCallback, useState} from "react";
-import {getAxios} from "../utils/get-axios";
-import {toast} from "react-toastify";
-import {THEME_NAME} from "../../config.web";
+    DialogTitle, Typography
+} from '@mui/material';
+import Link from 'next/link';
+import { useCallback, useState } from 'react';
+import { getAxios } from '../utils/get-axios';
+import { toast } from 'react-toastify';
+import { THEME_NAME } from '../../config.web';
 
 export type SiteShareProps = {
     site: Site;
 }
 
 export const SiteShare = ({site}: SiteShareProps) => {
-    const [isOpen, setIsOpen] = useState(false);
-    const [isLoading, setIsLoading] = useState(false)
+    const [ isOpen, setIsOpen ] = useState(false);
+    const [ isLoading, setIsLoading ] = useState(false);
     const api = useResource<ShareHandlerGetResponse>({url: getApiShareEndpoint(site.projectId, site.id)});
 
     const removeShare = useCallback(() => {
@@ -70,7 +70,9 @@ export const SiteShare = ({site}: SiteShareProps) => {
         {isLoading ?
             <CircularProgress size={'small'}/> :
             <Button onClick={() => setIsOpen(true)}>
-                Share
+                <Typography color={'secondary'}>
+                    Share
+                </Typography>
             </Button>}
 
         <Dialog

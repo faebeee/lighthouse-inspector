@@ -51,7 +51,7 @@ export const Layout = ({
         width: drawerWidth,
         flexShrink: 0,
         '& .MuiDrawer-paper': {
-          background: 'transparent',
+          background: 'black',
           width: drawerWidth,
           boxSizing: 'border-box'
         }
@@ -84,7 +84,9 @@ export const Layout = ({
 
         <MenuItem>
           <ListItemText>
-            Projects
+            <Typography color={'white'}>
+              Projects
+            </Typography>
           </ListItemText>
         </MenuItem>
 
@@ -111,7 +113,7 @@ export const Layout = ({
       <AppBar position={'sticky'}
         variant={'outlined'}
         sx={{
-          background: 'transparent',
+          background: 'black',
           left: hasSidebar ? `${drawerWidth}px` : 0,
           maxWidth: hasSidebar ? `calc(100% - ${drawerWidth}px)` : '100%'
         }}>
@@ -124,10 +126,10 @@ export const Layout = ({
 
               {showBack && <Link href={backLink ?? '/'}>
                 <IconButton>
-                  <ArrowBack />
+                  <ArrowBack color={'secondary'} />
                 </IconButton>
               </Link>}
-              <Typography variant="h5" noWrap color={'textPrimary'}>
+              <Typography variant="h5" noWrap color={'white'}>
                 {title}
               </Typography>
 
@@ -135,14 +137,21 @@ export const Layout = ({
             </Stack>
             <Stack direction={'row'} alignItems={'flex-end'} spacing={1}>
               {session && <Link href={`/projects/new`}>
-                <Fab size={'small'} color={'primary'}>
+                <Fab size={'small'} color={'secondary'} variant={'circular'}>
                   <Add />
                 </Fab>
               </Link>}
 
-              {!session && <Button onClick={() => signIn()}>Login</Button>}
+              {!session && <Button onClick={() => signIn()}>
+                <Typography color={'secondary'}>
+                  Login
+                </Typography>
+              </Button>}
+
               {session && <Button variant={'text'} onClick={() => signOut()}>
-                {session.user?.name}
+                <Typography color={'secondary'}>
+                  {session.user?.name}
+                </Typography>
               </Button>}
             </Stack>
           </Stack>

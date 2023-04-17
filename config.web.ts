@@ -18,10 +18,10 @@ export const TIME_TO_INTERACTIVE_THRESHOLD = {
 export const CHART_BLUR = "5px";
 
 const THEME_LIGHT = {
-    logo: '/lighthouse_logo_dark.png',
+    logo: '/lighthouse_logo.png',
     mode: 'light' as PaletteMode,
-    primary: 'rgb(13,67,96)',
-    secondary: 'rgb(100,97,97)',
+    primary: 'rgb(255,162,69)',
+    secondary: 'rgb(236,183,122)',
     background: '#f5f5f5',
     cardBackground: 'rgba(132,140,140,0.08)'
 };
