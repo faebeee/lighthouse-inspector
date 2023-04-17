@@ -45,9 +45,6 @@ services:
 
 
   cron:
-    depends_on:
-      - database
-      - minio
     image: faebeee/web-audit-cron
     build:
       dockerfile: ./docker/cron/Dockerfile

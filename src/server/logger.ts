@@ -1,13 +1,17 @@
-import { pino } from "pino";
+import { pino } from 'pino';
 
 const logger = pino({
-    level: "debug",
+    level: 'debug',
+    name: 'app',
     transport: {
-        target: "pino-pretty",
+        target: 'pino-pretty',
         options: {
             colorize: true
         }
     }
 });
 
-export const getLogger = () => logger;
+
+export const getLogger = (name?: string) => {
+    return logger;
+};

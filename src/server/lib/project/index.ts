@@ -45,7 +45,6 @@ export const getProjects = async (): Promise<Project[]> => {
 };
 
 export const updateProject = async (id: number, data: Partial<Project>) => {
-    console.log(data);
     return getPrisma().project.update({
         where: {
             id

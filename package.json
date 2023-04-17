@@ -10,8 +10,12 @@
     "lint": "next lint",
     "audit": "ts-node  --project tsconfig.node.json -r dotenv/config ./cli/audit.ts",
     "cron": "ts-node  --project tsconfig.node.json -r dotenv/config ./cli/cron.ts",
-    "cli:create-user": "ts-node --project tsconfig.node.json ./cli/create-user.ts",
-    "cli:report-cleanup": "ts-node --project tsconfig.node.json ./cli/report-cleanup.ts",
+    "cli:create-user": "ts-node --project tsconfig.node.json -r dotenv/config  ./cli/create-user.ts",
+    "cli:report-cleanup": "ts-node --project tsconfig.node.json -r dotenv/config  ./cli/report-cleanup.ts",
+    "cli:task:audit": "ts-node --project tsconfig.node.json -r dotenv/config  ./cli/tasks/task-audit.ts",
+    "cli:task:cleanup": "ts-node --project tsconfig.node.json -r dotenv/config ./cli/tasks/task-cleanup.ts",
+    "cli:task:beacon": "ts-node --project tsconfig.node.json -r dotenv/config ./cli/tasks/task-send-beacon.ts",
+
     "prisma:generate": "npx prisma generate",
     "prisma:generate:watch": "npx prisma generate --watch"
   },
