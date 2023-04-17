@@ -9,3 +9,6 @@ cleanup()
   .then(() => {
     getLogger().info('Task complete')
   })
+  .catch((e) => {
+    getLogger().error(e)
+  })

@@ -1,16 +1,20 @@
 import { pino } from 'pino';
 
-const logger = pino({
-    level: 'debug',
-    name: 'app',
-    transport: {
-        target: 'pino-pretty',
-        options: {
-            colorize: true
-        }
-    }
+const targets = [];
+
+if (process.env.LOGTAIL_SOURCE_TOKEN) {
+    targets.push({
+        level: 'debug',
+        target: '@logtail/pino',
+        options: {sourceToken: process.env.LOGTAIL_SOURCE_TOKEN}
+    });
+}
+
+const transports = pino.transport({
+    targets
 });
 
+const logger = pino(transports);
 
 export const getLogger = (name?: string) => {
     return logger;

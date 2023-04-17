@@ -8,4 +8,7 @@ getLogger('beacon').info('Start task');
 sendBeacon(BEACON_KEY.CRON)
   .then(() => {
     getLogger('beacon').info('Task complete');
+  })
+  .catch((e) => {
+    getLogger('beacon').error(e);
   });

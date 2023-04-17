@@ -30,6 +30,7 @@
     "@dreipol/t3-react-utils": "^2.0.3",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
+    "@logtail/pino": "^0.4.0",
     "@mui/icons-material": "^5.10.15",
     "@mui/material": "^5.10.15",
     "@mui/x-data-grid": "^5.17.13",
