@@ -15,7 +15,7 @@ ENV APP_NAME = 'cron'
 
 RUN npm install
 
-RUN crontab -l | { cat; echo "*/5 * * * * cd /app/ && npm run cli:task:beacon"; } | crontab -
+RUN crontab -l | { cat; echo "* */4 * * * cd /app/ && npm run cli:task:beacon"; } | crontab -
 RUN crontab -l | { cat; echo "* */12 * * * cd /app/ && npm run cli:task:cleanup"; } | crontab -
 RUN crontab -l | { cat; echo "*/15 * * * * cd /app/ && npm run cli:task:audit"; } | crontab -
 

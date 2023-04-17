@@ -1,26 +1,27 @@
-import {GetServerSideProps} from 'next';
-import {Layout} from '../../../src/components/layout';
-import {Badge, Button, Fab, Grid, IconButton, List, ListItem, ListItemText, Stack} from '@mui/material';
+import { GetServerSideProps } from 'next';
+import { Layout } from '../../../src/components/layout';
+import { Badge, Button, Fab, Grid, List, ListItem, ListItemText, Stack } from '@mui/material';
 import Link from 'next/link';
 import Typography from '@mui/material/Typography';
-import React, {useMemo} from 'react';
-import {LighthouseRunReport, Project, Site} from '@prisma/client';
-import {getNavigation, NavigationEntry} from '../../../src/utils/get-navigation';
-import {useResource} from '../../../src/hooks/use-resource';
-import {NumericValue} from '../../../src/components/numeric-value';
-import {Widget} from '../../../src/components/widget';
+import React, { useMemo } from 'react';
+import { LighthouseRunReport, Project, Site } from '@prisma/client';
+import { getNavigation, NavigationEntry } from '../../../src/utils/get-navigation';
+import { useResource } from '../../../src/hooks/use-resource';
+import { NumericValue } from '../../../src/components/numeric-value';
+import { Widget } from '../../../src/components/widget';
 import {
+    CACHE_VERY_LONG,
     COLOR,
     DATE_FORMAT,
     SERVER_HISTORY_CHART_LINES,
     SERVER_RESPONSE_TIME_THRESHOLD,
     TIME_TO_INTERACTIVE_THRESHOLD
 } from '../../../config.web';
-import {ProjectResultHistoryChart} from '../../../src/components/project-result-history-chart';
-import {format} from 'date-fns';
-import {getProjectById} from '../../../src/server/lib/project';
-import {Add} from '@mui/icons-material';
-import {StatsChart} from '../../../src/components/stats-chart';
+import { ProjectResultHistoryChart } from '../../../src/components/project-result-history-chart';
+import { format } from 'date-fns';
+import { getProjectById } from '../../../src/server/lib/project';
+import { Add } from '@mui/icons-material';
+import { StatsChart } from '../../../src/components/stats-chart';
 import Divider from '@mui/material/Divider';
 
 export type ReportsPageProps = {
@@ -28,7 +29,7 @@ export type ReportsPageProps = {
     project: Project;
 }
 
-export const getServerSideProps: GetServerSideProps<ReportsPageProps> = async (req) => {
+export const getServerSideProps: GetServerSideProps<ReportsPageProps> = async ({req, res}) => {
     const project = await getProjectById(parseInt(req.query.project as string));
     const navigation = await getNavigation();
     if (!project) {
@@ -36,6 +37,11 @@ export const getServerSideProps: GetServerSideProps<ReportsPageProps> = async (r
             notFound: true
         };
     }
+
+    res.setHeader(
+      'Cache-Control',
+      `public, s-maxage=${CACHE_VERY_LONG}, stale-while-revalidate=59`
+    );
 
     return {
         props: {

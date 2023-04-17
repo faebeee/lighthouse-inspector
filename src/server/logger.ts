@@ -1,6 +1,12 @@
 import { pino } from 'pino';
 
-const targets = [];
+const targets = [
+    {
+        level: 'debug',
+        target: 'pino-pretty',
+        options: {}
+    }
+];
 
 if (process.env.LOGTAIL_SOURCE_TOKEN) {
     targets.push({
@@ -11,7 +17,10 @@ if (process.env.LOGTAIL_SOURCE_TOKEN) {
 }
 
 const transports = pino.transport({
-    targets
+    targets,
+    options:{
+        msgPrefix: '[HTTP] '
+    }
 });
 
 const logger = pino(transports);

@@ -1,27 +1,31 @@
-import { GetServerSideProps } from "next";
-import { Layout } from "../src/components/layout";
-import { Button, Chip, Grid, Stack } from "@mui/material";
-import Typography from "@mui/material/Typography";
-import React from "react";
-import { LighthouseRunReport, Project, Site, Tag } from "@prisma/client";
-import { getNavigation, NavigationEntry } from "../src/utils/get-navigation";
-import { ProjectCard } from "../src/components/project-card";
-import { useResource } from "../src/hooks/use-resource";
-import { useSelectionList } from "@dreipol/t3-react-utils";
+import { GetServerSideProps } from 'next';
+import { Layout } from '../src/components/layout';
+import { Grid } from '@mui/material';
+import Typography from '@mui/material/Typography';
+import React from 'react';
+import { LighthouseRunReport, Site } from '@prisma/client';
+import { getNavigation, NavigationEntry } from '../src/utils/get-navigation';
+import { ProjectCard } from '../src/components/project-card';
+import { useResource } from '../src/hooks/use-resource';
+import { useSelectionList } from '@dreipol/t3-react-utils';
 
 export type ReportsPageProps = {
     navigation: NavigationEntry[];
 }
 
-export const getServerSideProps: GetServerSideProps<ReportsPageProps> = async () => {
+export const getServerSideProps: GetServerSideProps<ReportsPageProps> = async ({req, res}) => {
     const navigation = await getNavigation();
+    res.setHeader(
+      'Cache-Control',
+      'public, s-maxage=30, stale-while-revalidate=59'
+    );
 
     return {
         props: {
-            navigation,
+            navigation
         }
-    }
-}
+    };
+};
 
 export const ReportsPage = ({ navigation }: ReportsPageProps) => {
     const activeTags = useSelectionList<number>([]);

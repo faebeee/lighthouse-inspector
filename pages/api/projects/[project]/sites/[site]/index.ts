@@ -12,7 +12,10 @@ export const siteHandler = async (request: NextApiRequest, response: NextApiResp
             return;
         }
 
-        response.setHeader('Cache-Control', `s-maxage=${CACHE_VERY_SHORT}`)
+        response.setHeader(
+          'Cache-Control',
+          `public, s-maxage=30, stale-while-revalidate=59`
+        );
         response.send(site);
         return;
     }

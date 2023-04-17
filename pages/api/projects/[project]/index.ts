@@ -1,14 +1,16 @@
-import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
-import { allowed, assertAuth, createHandler } from "../../../../src/server/lib/api-helpers";
-import { getProjectById, updateProject } from "../../../../src/server/lib/project";
-import {CACHE_VERY_SHORT} from "../../../../config.web";
+import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
+import { allowed, assertAuth, createHandler } from '../../../../src/server/lib/api-helpers';
+import { getProjectById, updateProject } from '../../../../src/server/lib/project';
 
 
 const methods: NextApiHandler[] = [
-    allowed("GET", async (request: NextApiRequest, response: NextApiResponse) => {
+    allowed('GET', async (request: NextApiRequest, response: NextApiResponse) => {
         const project = await getProjectById(parseInt(request.query.project as string));
 
-        response.setHeader('Cache-Control', `s-maxage=${CACHE_VERY_SHORT}`)
+        response.setHeader(
+          'Cache-Control',
+          `public, s-maxage=30, stale-while-revalidate=59`
+        );
         return response.send(project);
     }),
     allowed("PUT", async (request: NextApiRequest, response: NextApiResponse) => {

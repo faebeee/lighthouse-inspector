@@ -1,9 +1,9 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { getPrisma } from "../../../../../src/server/get-prisma";
-import { getProjectById } from "../../../../../src/server/lib/project";
-import { getSitesByProject } from "../../../../../src/server/lib/site";
-import { assertAuth } from "../../../../../src/server/lib/api-helpers";
-import {CACHE_SHORT, CACHE_VERY_SHORT} from "../../../../../config.web";
+import { NextApiRequest, NextApiResponse } from 'next';
+import { getPrisma } from '../../../../../src/server/get-prisma';
+import { getProjectById } from '../../../../../src/server/lib/project';
+import { getSitesByProject } from '../../../../../src/server/lib/site';
+import { assertAuth } from '../../../../../src/server/lib/api-helpers';
+import { CACHE_VERY_SHORT } from '../../../../../config.web';
 
 export const ProjectsHandler = async (request: NextApiRequest, response: NextApiResponse) => {
     const projectId = parseInt(request.query["project"] as string);
@@ -33,7 +33,10 @@ export const ProjectsHandler = async (request: NextApiRequest, response: NextApi
     if (request.method === 'GET') {
         const sites = await getSitesByProject(project);
 
-        response.setHeader('Cache-Control', `s-maxage=${CACHE_VERY_SHORT}`)
+        response.setHeader(
+          'Cache-Control',
+          `public, s-maxage=${CACHE_VERY_LONG}, stale-while-revalidate=59`
+        );
         response.send(sites);
         return;
     }

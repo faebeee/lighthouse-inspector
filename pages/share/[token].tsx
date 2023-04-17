@@ -1,22 +1,17 @@
-import {LighthouseRunReport, Project, Site} from "@prisma/client";
-import {getNavigation, NavigationEntry} from "../../src/utils/get-navigation";
-import {getSiteById, getSiteByToken} from "../../src/server/lib/site";
-import {getProjectById} from "../../src/server/lib/project";
-import {Layout} from "../../src/components/layout";
-import {Button, Fab, IconButton, Stack} from "@mui/material";
-import {ActionsList} from "../../src/components/actions-list";
-import {SiteDetailView} from "../../src/components/site-detail-view";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import Image from "next/image";
-import {THEME} from "../../config.web";
-import Link from "next/link";
-import {Add, ArrowBack} from "@mui/icons-material";
-import Typography from "@mui/material/Typography";
-import {signIn, signOut} from "next-auth/react";
-import AppBar from "@mui/material/AppBar";
-import React, {useMemo} from "react";
-import {getReportsForSite} from "../../src/server/lib/report";
+import { LighthouseRunReport, Project, Site } from '@prisma/client';
+import { NavigationEntry } from '../../src/utils/get-navigation';
+import { getSiteByToken } from '../../src/server/lib/site';
+import { getProjectById } from '../../src/server/lib/project';
+import { Stack } from '@mui/material';
+import { SiteDetailView } from '../../src/components/site-detail-view';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import Image from 'next/image';
+import { CACHE_VERY_LONG, THEME } from '../../config.web';
+import Typography from '@mui/material/Typography';
+import AppBar from '@mui/material/AppBar';
+import React from 'react';
+import { getReportsForSite } from '../../src/server/lib/report';
 
 export type SharePageProps = {
     site: Site;
@@ -27,7 +22,7 @@ export type SharePageProps = {
 }
 
 // @ts-ignore
-export const getServerSideProps: GetServerSideProps<SharePageProps> = async (req) => {
+export const getServerSideProps: GetServerSideProps<SharePageProps> = async ({req, res}) => {
     const site = await getSiteByToken(req.query.token as string);
     if (!site) {
         return {
@@ -43,15 +38,20 @@ export const getServerSideProps: GetServerSideProps<SharePageProps> = async (req
     }
 
     const max = req.query.limit ? parseInt(req.query.limit as string) : 10;
-    const desktopReports = await getReportsForSite(site, "desktop", max);
-    const mobileReports = await getReportsForSite(site, "mobile", max);
+    const desktopReports = await getReportsForSite(site, 'desktop', max);
+    const mobileReports = await getReportsForSite(site, 'mobile', max);
+
+    res.setHeader(
+      'Cache-Control',
+      `public, s-maxage=${CACHE_VERY_LONG}, stale-while-revalidate=59`
+    );
 
     return {
         props: {
             site,
             project,
             desktopReports,
-            mobileReports,
+            mobileReports
         }
     };
 };

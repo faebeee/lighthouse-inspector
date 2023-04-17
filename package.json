@@ -5,11 +5,8 @@
   "scripts": {
     "dev": "next dev -p 8008",
     "build": "next build",
-    "up": "npm run cron &",
     "start": "next start",
     "lint": "next lint",
-    "audit": "ts-node  --project tsconfig.node.json -r dotenv/config ./cli/audit.ts",
-    "cron": "ts-node  --project tsconfig.node.json -r dotenv/config ./cli/cron.ts",
     "cli:create-user": "ts-node --project tsconfig.node.json -r dotenv/config  ./cli/create-user.ts",
     "cli:report-cleanup": "ts-node --project tsconfig.node.json -r dotenv/config  ./cli/report-cleanup.ts",
     "cli:task:audit": "ts-node --project tsconfig.node.json -r dotenv/config  ./cli/tasks/task-audit.ts",
