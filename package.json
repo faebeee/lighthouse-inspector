@@ -1,6 +1,6 @@
 {
   "name": "web-audit",
-  "version": "0.34.1",
+  "version": "0.34.2",
   "private": true,
   "scripts": {
     "dev": "next dev -p 8008",
@@ -15,7 +15,6 @@
     "cli:task:audit": "ts-node --project tsconfig.node.json -r dotenv/config  ./cli/tasks/task-audit.ts",
     "cli:task:cleanup": "ts-node --project tsconfig.node.json -r dotenv/config ./cli/tasks/task-cleanup.ts",
     "cli:task:beacon": "ts-node --project tsconfig.node.json -r dotenv/config ./cli/tasks/task-send-beacon.ts",
-
     "prisma:generate": "npx prisma generate",
     "prisma:generate:watch": "npx prisma generate --watch"
   },
