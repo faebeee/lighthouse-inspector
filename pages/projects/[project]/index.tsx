@@ -3,13 +3,14 @@ import { Layout } from '../../../src/components/layout';
 import { Badge, Button, Fab, Grid, List, ListItem, ListItemText, Stack } from '@mui/material';
 import Link from 'next/link';
 import Typography from '@mui/material/Typography';
-import React, { useMemo } from 'react';
+import React, { useMemo, lazy } from 'react';
 import { LighthouseRunReport, Project, Site } from '@prisma/client';
 import { getNavigation, NavigationEntry } from '../../../src/utils/get-navigation';
 import { useResource } from '../../../src/hooks/use-resource';
 import { NumericValue } from '../../../src/components/numeric-value';
 import { Widget } from '../../../src/components/widget';
 import {
+  AUDIT_HISTORY_CHART_LINES,
   CACHE_VERY_LONG,
   COLOR,
   DATE_FORMAT,
@@ -17,7 +18,7 @@ import {
   SERVER_RESPONSE_TIME_THRESHOLD,
   TIME_TO_INTERACTIVE_THRESHOLD
 } from '../../../config.web';
-import { ProjectResultHistoryChart } from '../../../src/components/project-result-history-chart';
+const ProjectResultHistoryChart = lazy(()=> import('../../../src/components/project-result-history-chart'));
 import { format } from 'date-fns';
 import { getProjectById } from '../../../src/server/lib/project';
 import { Add } from '@mui/icons-material';
@@ -182,21 +183,7 @@ export const ReportsPage = ({navigation, project}: ReportsPageProps) => {
               </Grid>
 
               <Grid item xs={12} lg={6}>
-                {report && <StatsChart height={320} data={[
-                  {x: 'Performance', y: report.performance, fill: COLOR.PERFORMANCE},
-                  {
-                    x: 'Accessibility',
-                    y: report.accessibility,
-                    fill: COLOR.ACCESSIBILITY
-                  },
-                  {
-                    x: 'Best Practices',
-                    y: report.bestPractices,
-                    fill: COLOR.BEST_PRACTICE
-                  },
-                  {x: 'seo', y: report.seo, fill: COLOR.seo},
-                  {x: 'pwa', y: report.pwa, fill: COLOR.pwa}
-                ]} />}
+                <ProjectResultHistoryChart lines={AUDIT_HISTORY_CHART_LINES} site={site} />
                 <Divider />
                 <ProjectResultHistoryChart lines={SERVER_HISTORY_CHART_LINES} site={site} />
               </Grid>

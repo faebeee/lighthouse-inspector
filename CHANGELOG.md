@@ -1,3 +1,10 @@
+# 0.36.0
+
+- Improve dashboard view
+- Add chart
+- Add user persistent context
+- Add storybook
+
 # 0.35.0
 
 - Update UI colors

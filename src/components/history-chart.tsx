@@ -4,13 +4,13 @@ import { CHART_BLUR, COLOR } from "../../config.web";
 import { ResponsiveVictoryChart } from "./chart";
 import { format } from "date-fns";
 
-export type StatsChartProps = {
+export type HistoryChartProps = {
     keys: { label: string, color?: string }[];
     data: any[];
     hideXAxis?: boolean
 }
 
-export const HistoryChart = ({ keys, data, hideXAxis = false }: StatsChartProps) => {
+export const HistoryChart = ({ keys, data, hideXAxis = false }: HistoryChartProps) => {
     const theme = useTheme();
     return <ResponsiveVictoryChart height={ 320 }>
         <VictoryAxis
