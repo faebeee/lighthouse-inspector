@@ -11,6 +11,5 @@ export const runAudit = async () => {
     await auditRunnerForProjects(projects);
     const endDate = new Date();
     const diff = endDate.getTime() - startDate.getTime();
-    sendBeacon(BEACON_KEY.AUDIT);
     getLogger().info(`Completed in ${ diff / 1000 }s`);
 };

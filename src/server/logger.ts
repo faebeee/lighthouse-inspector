@@ -1,10 +1,12 @@
 import { pino } from 'pino';
 
-const targets = [
+const targets: {level:string, target:string, options: object}[] = [
     {
         level: 'debug',
         target: 'pino-pretty',
-        options: {}
+        options: {
+            msgPrefix: '[HTTP]',
+        }
     }
 ];
 
@@ -18,9 +20,6 @@ if (process.env.LOGTAIL_SOURCE_TOKEN) {
 
 const transports = pino.transport({
     targets,
-    options:{
-        msgPrefix: '[HTTP] '
-    }
 });
 
 const logger = pino(transports);

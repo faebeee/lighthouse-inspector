@@ -1,13 +1,14 @@
 #!/usr/bin/env ts-node
 
-import { sendBeacon } from '../../src/server/cli/send-beacon';
 import { BEACON_KEY } from '../../config';
 import { getLogger } from '../../src/server/logger';
+import { setBeaconDate } from '../../src/server/lib/beacon';
 
-getLogger('beacon').info('Start task');
-sendBeacon(BEACON_KEY.CRON)
+getLogger('beacon').info('Send beacon');
+
+setBeaconDate(BEACON_KEY.CRON, new Date())
   .then(() => {
-    getLogger('beacon').info('Task complete');
+    getLogger('beacon').info('Sent beacon complete');
   })
   .catch((e) => {
     getLogger('beacon').error(e);

@@ -1,7 +1,9 @@
-import { runInspection } from "./run-inspection";
-import { Project, Site } from "@prisma/client";
-import { getLogger } from "../logger";
-import { getSitesByProject, markSiteAsRunning } from "../lib/site";
+import { runInspection } from './run-inspection';
+import { Project, Site } from '@prisma/client';
+import { getLogger } from '../logger';
+import { getSitesByProject, markSiteAsRunning } from '../lib/site';
+import { setBeaconValue } from '../lib/beacon';
+import { BEACON_KEY } from '../../../config';
 
 export const auditRunnerForSite = async (site: Site) => {
     await markSiteAsRunning(site, true);
@@ -10,7 +12,7 @@ export const auditRunnerForSite = async (site: Site) => {
         await markSiteAsRunning(site, false);
     } catch (e) {
         await markSiteAsRunning(site, false);
-        getLogger().error(`Error for #${ site.id } ${ site.name }`);
+        getLogger().error(`Error for #${site.id} ${site.name}`);
         getLogger().error((e as Error).message);
     } finally {
         await markSiteAsRunning(site, false);
@@ -27,8 +29,10 @@ export const auditRunnerForSites = async (sites: Site[]) => {
 export const auditRunnerForProjects = async (projects: Project[]) => {
     for (let i = 0; i < projects.length; i++) {
         const project = projects[i];
-        getLogger().info(`Run for Project #${ project.id } ${ project.name }`);
+        await setBeaconValue(BEACON_KEY.AUDIT_PROGRESS, `${i} of ${projects.length}`);
+        getLogger().info(`Run for Project #${project.id} ${project.name}`);
         const sites = await getSitesByProject(project);
         await auditRunnerForSites(sites);
     }
+    await setBeaconValue(BEACON_KEY.AUDIT_PROGRESS, `complete`);
 };
