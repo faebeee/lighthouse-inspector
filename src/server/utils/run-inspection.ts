@@ -30,5 +30,5 @@ export const runInspection = async (site: Site) => {
         getLogger().error(`Audit for ${site.url} failed`);
         getLogger().error((e as Error).message);
     }
-    getLogger().info(`Audit for ${site.url} completed`);
+    getLogger().debug(`Audit for ${site.url} completed`);
 };

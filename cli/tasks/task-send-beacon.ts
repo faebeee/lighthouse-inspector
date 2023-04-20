@@ -8,7 +8,7 @@ getLogger('beacon').info('Send beacon');
 
 setBeaconDate(BEACON_KEY.CRON, new Date())
   .then(() => {
-    getLogger('beacon').info('Sent beacon complete');
+    getLogger('beacon').info('Send beacon complete');
   })
   .catch((e) => {
     getLogger('beacon').error(e);

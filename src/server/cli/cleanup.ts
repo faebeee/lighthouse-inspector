@@ -4,7 +4,7 @@ import { getAllSites } from "../lib/site";
 import { getLogger } from "../logger";
 
 export const cleanup = async () => {
-    getLogger().info(`Cleanup started`);
+    getLogger().debug(`Cleanup started`);
 
     const allSites = await getAllSites();
     for (let i = 0; i < allSites.length; i++) {
@@ -35,5 +35,5 @@ export const cleanup = async () => {
         getLogger().info(`Cleanup reports for ${ site.project.name } - ${ site.name }. Removed ${ removedReports.count } reports`);
     }
 
-    getLogger().info(`Cleanup complete`);
+    getLogger().debug(`Cleanup complete`);
 };
