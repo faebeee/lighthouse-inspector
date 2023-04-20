@@ -1,6 +1,6 @@
-import { Project, Site } from "@prisma/client";
-import { getPrisma } from "../../get-prisma";
-import { getLogger } from "../../logger";
+import { Project, Site } from '@prisma/client';
+import { getPrisma } from '../../get-prisma';
+import { getLogger } from '../../logger';
 
 export type SiteWithProject = Site & { project: Project }
 
@@ -68,15 +68,19 @@ export const updateSite = async (site: Site, data: Partial<Site>) => {
 
 
 export const markSiteAsRunning = async (site: Site, isRunning: boolean) => {
-    getLogger().debug(`Mark project #${ site.id } ${ site.name } as Running{${ isRunning }}`);
-    return getPrisma().site.update({
-        where: {
-            id: site.id
-        },
-        data: {
-            is_running: isRunning
-        }
-    });
+    getLogger().debug(`Mark project #${site.id} ${site.name} as Running{${isRunning}}`);
+    try {
+        return getPrisma().site.update({
+            where: {
+                id: site.id
+            },
+            data: {
+                is_running: isRunning
+            }
+        });
+    } catch {
+        getLogger().error(`Failed to mark site ${site.id}`);
+    }
 };
 
 export const getSites = async (): Promise<Site[]> => {
