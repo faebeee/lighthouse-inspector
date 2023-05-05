@@ -1,6 +1,8 @@
-FROM node:18-alpine
+FROM node:18-alpine3.16
 
-RUN apk --no-cache upgrade && apk add --no-cache chromium
+RUN apk --no-cache upgrade
+RUN apk add --no-cache openssl
+RUN apk add --no-cache chromium
 ENV CHROME_BIN=/usr/bin/chromium-browser
 
 RUN mkdir -p /app/
