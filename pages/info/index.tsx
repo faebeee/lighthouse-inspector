@@ -71,7 +71,7 @@ export const InfoPage = ({navigation, minioHost, dbUrl, showAuditButton}: InfoPr
             </Badge>} />
         </ListItem>}
 
-        {(api.data?.length ?? 0) === 0 && <ListItem>
+        {!api.data && <ListItem>
           <ListItemText primary={<Typography color={'textPrimary'}>Audit</Typography>}
             secondary={<Button onClick={onClickAudit} variant={'contained'} size={'small'}>Start</Button>} />
         </ListItem>}
