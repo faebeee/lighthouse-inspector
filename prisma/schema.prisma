@@ -67,9 +67,10 @@ model TagsOnProject {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  username String @unique
-  password String
+  id              Int     @id @default(autoincrement())
+  username        String  @unique
+  password        String
+  can_start_audit Boolean @default(false)
 }
 
 model Beacon {

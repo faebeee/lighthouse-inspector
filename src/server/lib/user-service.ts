@@ -11,3 +11,16 @@ export const getUserByUsernameAndPassword = async (username: string, password: s
         }
     });
 };
+
+export const getUserByUsername = async(username:string) => {
+    return getPrisma().user.findFirst({
+        select: {
+            username: true,
+            id: true,
+            can_start_audit: true,
+        },
+        where: {
+            username,
+        }
+    });
+}

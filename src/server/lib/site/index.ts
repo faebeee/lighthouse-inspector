@@ -1,6 +1,6 @@
-import { Project, Site } from '@prisma/client';
-import { getPrisma } from '../../get-prisma';
-import { getLogger } from '../../logger';
+import { Project, Site } from '@prisma/client'
+import { getPrisma } from '../../get-prisma'
+import { getLogger } from '../../logger'
 
 export type SiteWithProject = Site & { project: Project }
 
@@ -9,16 +9,28 @@ export const getSiteById = async (id: number): Promise<Site | null> => {
         where: {
             id
         }
-    })) || null;
-};
+    })) || null
+}
+
+export const createSite = async (name: string, url: string, project: Project): Promise<Site> => {
+    const site = await getPrisma().site.create({
+        data: {
+            name,
+            url,
+            projectId: project.id,
+            is_running: false
+        }
+    })
+    return site
+}
 
 export const getSiteByToken = async (token: string): Promise<Site | null> => {
     return (await getPrisma().site.findFirst({
         where: {
             share_token: token
         }
-    })) || null;
-};
+    })) || null
+}
 
 export const getRunningSites = async (): Promise<Site[]> => {
     return (await getPrisma().site.findMany({
@@ -85,14 +97,15 @@ export const markSiteAsRunning = async (site: Site, isRunning: boolean) => {
 
 export const getSites = async (): Promise<Site[]> => {
     return (await getPrisma().site.findMany({
-        orderBy: { projectId: "asc" }
+        orderBy: {name: 'asc'}
     })) ?? [];
 };
 
 export const getSitesByProject = async (project: Project): Promise<Site[]> => {
     try {
         return getPrisma().site.findMany({
-            where: { projectId: project.id }
+            where: {projectId: project.id},
+            orderBy: {name: 'asc'}
         });
     } catch {
         return [];

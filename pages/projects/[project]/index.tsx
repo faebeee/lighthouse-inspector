@@ -1,30 +1,29 @@
-import { GetServerSideProps } from 'next';
-import { Layout } from '../../../src/components/layout';
-import { Badge, Button, Fab, Grid, List, ListItem, ListItemText, Stack } from '@mui/material';
-import Link from 'next/link';
-import Typography from '@mui/material/Typography';
-import React, { useMemo, lazy } from 'react';
-import { LighthouseRunReport, Project, Site } from '@prisma/client';
-import { getNavigation, NavigationEntry } from '../../../src/utils/get-navigation';
-import { useResource } from '../../../src/hooks/use-resource';
-import { NumericValue } from '../../../src/components/numeric-value';
-import { Widget } from '../../../src/components/widget';
+import { GetServerSideProps } from 'next'
+import { Layout } from '../../../src/components/layout'
+import { Badge, Button, CircularProgress, Fab, Grid, List, ListItem, ListItemText, Stack } from '@mui/material'
+import Link from 'next/link'
+import Typography from '@mui/material/Typography'
+import React, { lazy, useMemo } from 'react'
+import { LighthouseRunReport, Project, Site } from '@prisma/client'
+import { getNavigation, NavigationEntry } from '../../../src/utils/get-navigation'
+import { useResource } from '../../../src/hooks/use-resource'
+import { NumericValue } from '../../../src/components/numeric-value'
+import { Widget } from '../../../src/components/widget'
 import {
   AUDIT_HISTORY_CHART_LINES,
   CACHE_VERY_LONG,
-  COLOR,
   DATE_FORMAT,
   SERVER_HISTORY_CHART_LINES,
   SERVER_RESPONSE_TIME_THRESHOLD,
   TIME_TO_INTERACTIVE_THRESHOLD
-} from '../../../config.web';
-const ProjectResultHistoryChart = lazy(()=> import('../../../src/components/project-result-history-chart'));
-import { format } from 'date-fns';
-import { getProjectById } from '../../../src/server/lib/project';
-import { Add } from '@mui/icons-material';
-import { StatsChart } from '../../../src/components/stats-chart';
-import Divider from '@mui/material/Divider';
-import Box from '@mui/material/Box';
+} from '../../../config.web'
+import { format } from 'date-fns'
+import { getProjectById } from '../../../src/server/lib/project'
+import { Add } from '@mui/icons-material'
+import Divider from '@mui/material/Divider'
+import Box from '@mui/material/Box'
+
+const ProjectResultHistoryChart = lazy(() => import('../../../src/components/project-result-history-chart'))
 
 export type ReportsPageProps = {
   navigation: NavigationEntry[];
@@ -32,7 +31,7 @@ export type ReportsPageProps = {
 }
 
 export const getServerSideProps: GetServerSideProps<ReportsPageProps> = async ({req, query, res}) => {
-  const project = await getProjectById(parseInt(query.project as string));
+  const project = await getProjectById(parseInt(query.project as string))
   const navigation = await getNavigation();
   if (!project) {
     return {
@@ -73,9 +72,11 @@ export const ReportsPage = ({navigation, project}: ReportsPageProps) => {
     </>}>
     <Typography color={'text.primary'} variant="h4">Sites</Typography>
 
+    {sitesApi.isLoading && <CircularProgress />}
+
     <Stack spacing={2}>
       {sitesApi.data?.map((site) => {
-        const report = desktopReports[site.id];
+        const report = desktopReports[site.id]
         return (
           <Widget autoHeight key={site.id}>
             <Grid container spacing={2} key={site.id}>
