@@ -1,5 +1,5 @@
-import { getPrisma } from "../../get-prisma";
-import { Project } from "@prisma/client";
+import { getPrisma } from '../../get-prisma'
+import { Project } from '@prisma/client'
 
 export const getProjectsByTags = async (tagId: number[]): Promise<Project[]> => {
     return (await getPrisma().project.findMany({
@@ -36,9 +36,16 @@ export const getProjectById = async (projectId: number): Promise<Project | null>
     }
 };
 
-export const getProjects = async (): Promise<Project[]> => {
+export const getProjects = async (activeProjects?: boolean): Promise<Project[]> => {
     try {
-        return getPrisma().project.findMany();
+        return getPrisma().project.findMany({
+            where: {
+                interval_reporting: activeProjects
+            },
+            orderBy: {
+                name: 'asc'
+            }
+        })
     } catch {
         return [];
     }

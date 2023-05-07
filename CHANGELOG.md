@@ -1,3 +1,9 @@
+# 0.39.0
+
+- Fix sort order
+- Show only active projects by default
+- Add toggle to show all projects on dashboard
+
 # 0.38.0
 
 - Minor cronjob fixes

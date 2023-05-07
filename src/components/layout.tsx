@@ -1,19 +1,19 @@
-import { Add, ArrowBack } from '@mui/icons-material';
-import { Button, Fab, IconButton, ListItemText, MenuItem, MenuList, Stack } from '@mui/material';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Divider from '@mui/material/Divider';
-import Drawer from '@mui/material/Drawer';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Link from 'next/link';
-import Image from 'next/image';
-import React, { PropsWithChildren, ReactNode, useMemo } from 'react';
-import { version } from '../../package.json';
-import { NavigationEntry } from '../utils/get-navigation';
-import { THEME } from '../../config.web';
-import { signIn, signOut, useSession } from 'next-auth/react';
-import { SystemIndicators } from './system-indicators';
+import { Add, ArrowBack } from '@mui/icons-material'
+import { Badge, Button, Fab, IconButton, ListItemText, MenuItem, MenuList, Stack } from '@mui/material'
+import AppBar from '@mui/material/AppBar'
+import Box from '@mui/material/Box'
+import Divider from '@mui/material/Divider'
+import Drawer from '@mui/material/Drawer'
+import Toolbar from '@mui/material/Toolbar'
+import Typography from '@mui/material/Typography'
+import Link from 'next/link'
+import Image from 'next/image'
+import React, { PropsWithChildren, ReactNode, useMemo } from 'react'
+import { version } from '../../package.json'
+import { NavigationEntry } from '../utils/get-navigation'
+import { THEME } from '../../config.web'
+import { signIn, signOut, useSession } from 'next-auth/react'
+import { SystemIndicators } from './system-indicators'
 
 export type LayoutProps = PropsWithChildren<{
   title?: string;
@@ -23,7 +23,7 @@ export type LayoutProps = PropsWithChildren<{
   showBack?: boolean;
   backLink?: string;
 }>
-const drawerWidth = 240;
+const drawerWidth = 240
 
 export const Layout = ({
                          children,
@@ -93,7 +93,9 @@ export const Layout = ({
         {pages.map((nav) => (<Link href={nav.url} key={nav.label}>
           <MenuItem>
             <ListItemText>
-              <Typography color={'secondary'}>{nav.label}</Typography>
+              <Badge color={nav.isActive ? 'success' : 'warning'} variant={'dot'}>
+                <Typography color={'secondary'}>{nav.label}</Typography>
+              </Badge>
             </ListItemText>
           </MenuItem>
         </Link>))}

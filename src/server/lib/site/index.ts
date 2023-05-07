@@ -95,11 +95,32 @@ export const markSiteAsRunning = async (site: Site, isRunning: boolean) => {
     }
 };
 
-export const getSites = async (): Promise<Site[]> => {
+export const getSites = async (activeOnly?: boolean): Promise<Site[]> => {
+    if (activeOnly) {
+        return getActiveSites()
+    }
     return (await getPrisma().site.findMany({
-        orderBy: {name: 'asc'}
-    })) ?? [];
-};
+        orderBy: {
+            project: {
+                name: 'asc'
+            }
+        }
+    })) ?? []
+}
+export const getActiveSites = async (): Promise<Site[]> => {
+    return (await getPrisma().site.findMany({
+        where: {
+            project: {
+                interval_reporting: true
+            }
+        },
+        orderBy: {
+            project: {
+                name: 'asc'
+            }
+        }
+    })) ?? []
+}
 
 export const getSitesByProject = async (project: Project): Promise<Site[]> => {
     try {
