@@ -1,6 +1,6 @@
 import { PaletteMode } from '@mui/material';
 
-export const DATE_FORMAT = "yyyy-MM-dd hh:mm:ss";
+export const DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 export const CACHE_VERY_SHORT = 60; // 1min
 export const CACHE_SHORT = 60 * 60; // 1h
 export const CACHE_LONG = 60 * 60 * 6; // 6h
@@ -17,27 +17,26 @@ export const TIME_TO_INTERACTIVE_THRESHOLD = {
 
 export const CHART_BLUR = "5px";
 
-const THEME_LIGHT = {
+export const THEME = {
     logo: '/lighthouse_logo.png',
     mode: 'light' as PaletteMode,
-    primary: 'rgb(255,162,69)',
-    secondary: 'rgb(236,183,122)',
+    primary: '#6AB187',
+    secondary: '#6AB187',
     background: '#f5f5f5',
-    cardBackground: 'rgba(132,140,140,0.08)'
+    cardBackground: 'rgba(132,140,140,0.08)',
+    drawerBackground: '#333',
+
 };
-
-
-export const THEME = THEME_LIGHT;
 export const THEME_NAME = 'light';
 
 export const COLOR = {
-    PERFORMANCE: 'rgba(68,211,175,0.7)',
-    ACCESSIBILITY: 'rgba(68,173,211,0.7)',
-    BEST_PRACTICE: 'rgba(68,211,113,0.7)',
-    seo: 'rgba(68,211,70,0.7)',
-    pwa: 'rgba(147,211,68,0.7)',
-    RESPONSE_TIME: 'rgba(183,181,57,0.9)',
-    TTI: 'rgba(30,196,160,0.9)'
+    PERFORMANCE: '#7eb0d5',
+    ACCESSIBILITY: '#fd7f6f',
+    BEST_PRACTICE: '#b2e061',
+    seo: '#bd7ebe',
+    pwa: '#ffb55a',
+    RESPONSE_TIME: '#8bd3c7',
+    TTI: '#fdcce5'
 };
 
 export const STATUS_COLORS = {

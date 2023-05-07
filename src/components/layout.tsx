@@ -51,7 +51,7 @@ export const Layout = ({
         width: drawerWidth,
         flexShrink: 0,
         '& .MuiDrawer-paper': {
-          background: 'black',
+          background: THEME.drawerBackground,
           width: drawerWidth,
           boxSizing: 'border-box'
         }
@@ -113,7 +113,7 @@ export const Layout = ({
       <AppBar position={'sticky'}
         variant={'outlined'}
         sx={{
-          background: 'black',
+          background: THEME.drawerBackground,
           left: hasSidebar ? `${drawerWidth}px` : 0,
           maxWidth: hasSidebar ? `calc(100% - ${drawerWidth}px)` : '100%'
         }}>
