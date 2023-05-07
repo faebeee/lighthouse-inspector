@@ -1,3 +1,11 @@
+# 0.38.0
+
+- Minor cronjob fixes
+- Fix date formatting in UI
+- Update UI color theme
+- Add more links to Info section
+
+
 # 0.36.0
 
 - Improve dashboard view
