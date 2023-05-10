@@ -13,7 +13,7 @@ export const ProjectsHandler = async (request: NextApiRequest, response: NextApi
 
     if (request.method === 'POST') {
         try {
-            const site = await createSite(request.body.name, request.body.name, project)
+            const site = await createSite(request.body.name, request.body.url, project)
             response.status(201).send(site);
             return;
         } catch (e) {
