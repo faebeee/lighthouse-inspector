@@ -11,7 +11,7 @@ export const projectHandler = async (request: NextApiRequest, response: NextApiR
             response.status(404).send({});
             return;
         }
-        const max = request.query.limit ? parseInt(request.query.limit as string) : 10;
+        const max = request.query.limit ? parseInt(request.query.limit as string) : 100;
         const reports = await getReportsForSite(project, request.query.type as string ?? 'desktop', max);
 
         response.setHeader(

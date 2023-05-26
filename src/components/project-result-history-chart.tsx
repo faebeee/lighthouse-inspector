@@ -11,13 +11,13 @@ export type ProjectHistoryChartProps = {
 export const ProjectResultHistoryChart = ({site, lines}: ProjectHistoryChartProps) => {
     const reportsApi = useResource<LighthouseRunReport[]>({
         url: `/api/projects/${site.projectId}/sites/${site.id}/reports`,
-        params: {type: 'desktop', limit: 10}
+        params: {type: 'desktop'}
     });
 
     if (!reportsApi.data) {
         return null;
     }
 
-    return <HistoryChart hideXAxis keys={lines} data={[ ...reportsApi.data ].reverse()} />;
+    return <HistoryChart keys={lines} data={[ ...reportsApi.data ].reverse()} />;
 };
 export default ProjectResultHistoryChart;

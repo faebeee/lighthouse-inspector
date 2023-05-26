@@ -26,6 +26,8 @@ export const HistoryChart = ({ keys, data, hideXAxis = false }: HistoryChartProp
             style={ {
                 tickLabels: { fontSize: 14, fill: theme.palette.text.primary }
             } }
+          scale={{ x: "time" }}
+          tickCount={5}
             tickFormat={ (t) => {
                 return format(new Date(t), "d.M hh:mm");
             } }
