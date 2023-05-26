@@ -1,3 +1,8 @@
+# 0.40
+
+- Update history chart UI
+- Update max amount of visible data points for the history chart
+
 # 0.39.0
 
 - Fix sort order
