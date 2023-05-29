@@ -1,6 +1,6 @@
-import Typography, { TypographyProps } from "@mui/material/Typography";
-import React, { useMemo } from "react";
-import { CHART_BLUR, STATUS_COLORS } from "../../config.web";
+import Typography, {TypographyProps} from "@mui/material/Typography";
+import React, {useMemo} from "react";
+import {CHART_BLUR, STATUS_COLORS} from "../../config.web";
 import Box from "@mui/material/Box";
 
 export type NumericValueProps = {
@@ -8,10 +8,33 @@ export type NumericValueProps = {
     unit?: string;
     goodThreshold: number;
     poorThreshold: number;
+    reverse: boolean;
     variant?: TypographyProps["variant"];
 }
-export const NumericValue = ({ value = 0, variant = "h2", unit, goodThreshold, poorThreshold }: NumericValueProps) => {
+export const NumericValue = ({
+                                 reverse,
+                                 value = 0,
+                                 variant = "h2",
+                                 unit,
+                                 goodThreshold,
+                                 poorThreshold
+                             }: NumericValueProps) => {
     const color = useMemo(() => {
+        if (reverse) {
+            if (value >= goodThreshold) {
+                return {
+                    color: STATUS_COLORS.VERY_GOOD
+                };
+            }
+
+            if (value < goodThreshold && value >= poorThreshold) {
+                return {
+                    color: STATUS_COLORS.MEDIUM
+                };
+            }
+
+            return {color: STATUS_COLORS.POOR}
+        }
         if (value >= goodThreshold && value <= poorThreshold) {
             return {
                 color: STATUS_COLORS.MEDIUM
@@ -31,13 +54,12 @@ export const NumericValue = ({ value = 0, variant = "h2", unit, goodThreshold, p
         return {
             color: STATUS_COLORS.POOR
         };
-    }, [value])
-    ;
+    }, [value]);
     return <Box>
-        <Typography variant={ variant } color={ color.color }
-            sx={ { position: "absolute", filter: `blur(${ CHART_BLUR })` } }
-            noWrap={ true }>{ value ? Math.round(value) : "???" }{ unit }</Typography>
-        <Typography variant={ variant } color={ color.color }
-            noWrap={ true }>{ value ? Math.round(value) : "???" }{ unit }</Typography>
+        <Typography variant={variant} color={color.color}
+                    sx={{position: "absolute", filter: `blur(${CHART_BLUR})`}}
+                    noWrap={true}>{value ? Math.round(value) : "???"}{unit}</Typography>
+        <Typography variant={variant} color={color.color}
+                    noWrap={true}>{value ? Math.round(value) : "???"}{unit}</Typography>
     </Box>;
 };

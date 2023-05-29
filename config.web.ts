@@ -15,6 +15,11 @@ export const TIME_TO_INTERACTIVE_THRESHOLD = {
     POOR: 1200
 };
 
+export const SCORE_THRESHOLD = {
+    GOOD: 90,
+    POOR: 70
+};
+
 export const CHART_BLUR = "5px";
 
 export const THEME = {

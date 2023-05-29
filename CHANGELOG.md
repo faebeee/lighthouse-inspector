@@ -1,3 +1,9 @@
+# 0.41
+
+- Improve UI for detail view of pages
+- Improve UI for project view
+
+
 # 0.40
 
 - Update history chart UI

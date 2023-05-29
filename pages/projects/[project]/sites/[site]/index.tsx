@@ -65,7 +65,7 @@ export const ProjectPage = ({
                                 navigation
                             }: ProjectPageProps) => {
     const searchParams = useSearchParams();
-    const limit = searchParams.get("limit") ? searchParams.get("limit") : 10;
+    const limit = searchParams.get("limit") ? searchParams.get("limit") : 50;
 
     const desktopReportsApi = useResource<LighthouseRunReport[]>({
         url: `/api/projects/${project.id}/sites/${site.id}/reports`,
