@@ -217,12 +217,12 @@ export const SiteDetailView = ({site, desktopReports, mobileReports}: SiteDetail
                     width={'100%'}
                     height={'100%'}
                     style={{objectFit: 'contain', objectPosition: 'top', overflow: 'hidden'}}
-                    src={`/api/reports/${latestReport.id}/thumbnail`}/>}
+                    src={`/api/reports/${latestReport!.id}/thumbnail`}/>}
                 {value === 'mobile' && latestReport &&
                     <CardMedia component="img"
                                height={650}
                                style={{objectFit: 'contain', objectPosition: 'top'}}
-                               image={`/api/reports/${latestReport.id}/thumbnail?type=mobile`}/>}
+                               image={`/api/reports/${latestReport!.id}/thumbnail?type=mobile`}/>}
             </Box>}
         </Grid>
 

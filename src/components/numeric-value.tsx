@@ -8,7 +8,7 @@ export type NumericValueProps = {
     unit?: string;
     goodThreshold: number;
     poorThreshold: number;
-    reverse: boolean;
+    reverse?: boolean;
     variant?: TypographyProps["variant"];
 }
 export const NumericValue = ({
