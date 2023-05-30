@@ -1,6 +1,6 @@
 {
   "name": "web-audit",
-  "version": "0.41.0",
+  "version": "0.41.1",
   "private": true,
   "scripts": {
     "dev": "next dev -p 8008",
