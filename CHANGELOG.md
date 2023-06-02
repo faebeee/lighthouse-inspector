@@ -1,3 +1,7 @@
+# 0.42
+
+- Improve Site detail view
+
 # 0.41
 
 - Improve UI for detail view of pages
