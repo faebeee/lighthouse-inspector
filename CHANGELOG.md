@@ -1,3 +1,9 @@
+# 0.43
+
+- Improve Site detail view
+- Minor bug fixes on shared page
+- Update colors (again)
+
 # 0.42
 
 - Improve Site detail view

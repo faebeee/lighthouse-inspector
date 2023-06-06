@@ -1,4 +1,4 @@
-import { Add, ArrowBack } from '@mui/icons-material'
+import { Add, ArrowBack, Menu } from '@mui/icons-material'
 import { Badge, Button, Fab, IconButton, ListItemText, MenuItem, MenuList, Stack } from '@mui/material'
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
@@ -8,7 +8,7 @@ import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import Link from 'next/link'
 import Image from 'next/image'
-import React, { PropsWithChildren, ReactNode, useMemo } from 'react'
+import React, { PropsWithChildren, ReactNode, useMemo, useState } from 'react'
 import { version } from '../../package.json'
 import { NavigationEntry } from '../utils/get-navigation'
 import { THEME } from '../../config.web'
@@ -34,15 +34,17 @@ export const Layout = ({
                          showBack = true,
                          backLink
                        }: LayoutProps) => {
-  const {data: session} = useSession();
-  const pages = navigation.filter((item) => !item.isGroup);
+  const {data: session} = useSession()
+  const pages = navigation.filter((item) => !item.isGroup)
+
+  const [ sidebarOpen, setSidebarOpen ] = useState(showSidebar)
 
   const hasSidebar = useMemo(() => {
     if (!session) {
-      return false;
+      return false
     }
-    return showSidebar;
-  }, [ showSidebar, session ]);
+    return sidebarOpen
+  }, [ sidebarOpen, session ])
 
 
   return <Box>
@@ -123,6 +125,9 @@ export const Layout = ({
           <Stack direction={'row'} flex={1} justifyContent={'space-between'} alignItems={'center'}
             spacing={1}>
             <Stack direction={'row'} alignItems={'center'} spacing={1}>
+              <IconButton onClick={() => setSidebarOpen(!sidebarOpen)}>
+                <Menu color={'secondary'} />
+              </IconButton>
 
               {!hasSidebar && <Image alt={'Logo'} src={THEME.logo} width={50} height={40} />}
 

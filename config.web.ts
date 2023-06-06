@@ -25,11 +25,11 @@ export const CHART_BLUR = "5px";
 export const THEME = {
     logo: '/lighthouse_logo.png',
     mode: 'light' as PaletteMode,
-    primary: '#6AB187',
-    secondary: '#6AB187',
+    primary: '#506586',
+    secondary: '#506586',
     background: '#f5f5f5',
     cardBackground: 'rgba(132,140,140,0.08)',
-    drawerBackground: '#333',
+    drawerBackground: '#110f14',
 
 };
 export const THEME_NAME = 'light';

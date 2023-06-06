@@ -8,9 +8,9 @@ import { DATE_FORMAT } from '../../config.web';
 import { useMemo } from 'react';
 
 export const RunningIndicator = () => {
-  const api = useResource<Site[]>({url: '/api/inspect'}, 5000);
+  const api = useResource<Site[]>({url: '/api/inspect'}, 1000);
   const beacon = useBeacon<AUDIT_BEACON_VALUE>(BEACON_KEY.AUDIT, 5000);
-  const auditProgress = useBeacon(BEACON_KEY.AUDIT_PROGRESS, 5000);
+  const auditProgress = useBeacon(BEACON_KEY.AUDIT_PROGRESS, 1000);
   const text = useMemo(() => beacon.value ===AUDIT_BEACON_VALUE.running ? `Started ${(beacon.date ? format(beacon.date, DATE_FORMAT) : '?')}`: `Last run ${(beacon.date ? format(beacon.date, DATE_FORMAT) : '?')}`, [ beacon, auditProgress ]);
 
   return <MenuItem>
