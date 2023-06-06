@@ -1,9 +1,9 @@
-import { Group } from "@visx/group";
-import Pie from "@visx/shape/lib/shapes/Pie";
-import { CHART_BLUR, SCORE_MAP, STATUS_COLORS } from "../../config.web";
-import { useTheme } from "@mui/material";
+import { Group } from '@visx/group'
+import Pie from '@visx/shape/lib/shapes/Pie'
+import { SCORE_MAP, STATUS_COLORS } from '../../config.web'
+import { useTheme } from '@mui/material'
 
-const defaultMargin = { top: 20, right: 20, bottom: 20, left: 20 };
+const defaultMargin = {top: 20, right: 20, bottom: 20, left: 20}
 
 export type SingleStatProps = {
     width: number;
@@ -55,16 +55,6 @@ export const SingleStat = ({ width, height, margin = defaultMargin, label, value
                             { pie.arcs.map((arc) => {
                                 return (
                                     <g key={ pie.pie.name }>
-                                        { pie.path && <path
-                                          style={ { filter: `blur(${ CHART_BLUR })` } }
-                                            /*@ts-ignore*/
-                                          d={ pie.path({
-                                              ...arc,
-                                              startAngle: arc.startAngle,
-                                              endAngle: arc.endAngle
-                                          }) }
-                                          fill={ getColor(arc.index) }
-                                        /> }
                                         { pie.path && <path
                                             /*@ts-ignore*/
                                           d={ pie.path({
