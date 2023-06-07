@@ -127,8 +127,24 @@ export const getSitesByProject = async (project: Project): Promise<Site[]> => {
         return getPrisma().site.findMany({
             where: {projectId: project.id},
             orderBy: {name: 'asc'}
-        });
+        })
     } catch {
-        return [];
+        return []
     }
-};
+}
+
+
+export const getSitesByProjects = async (projects: Project[]): Promise<Site[]> => {
+    try {
+        return getPrisma().site.findMany({
+            where: {
+                projectId: {
+                    in: projects.map(p => p.id)
+                }
+            },
+            orderBy: {name: 'asc'}
+        })
+    } catch {
+        return []
+    }
+}

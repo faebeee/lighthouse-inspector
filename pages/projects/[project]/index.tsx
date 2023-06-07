@@ -20,18 +20,38 @@ import { format } from 'date-fns'
 import { getProjectById } from '../../../src/server/lib/project'
 import { Add } from '@mui/icons-material'
 import Box from '@mui/material/Box'
+import { getAxios } from '../../../src/utils/get-axios'
+import { getUserByUsername } from '../../../src/server/lib/user-service'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '../../api/auth/[...nextauth]'
+import { useAuditRunnintState } from '../../../src/hooks/use-audit-runnint-state'
 
 const ProjectResultHistoryChart = lazy(() => import('../../../src/components/project-result-history-chart'))
 
 export type ReportsPageProps = {
   navigation: NavigationEntry[];
   project: Project;
+  showAuditButton: boolean
 }
 
 export const getServerSideProps: GetServerSideProps<ReportsPageProps> = async ({req, query, res}) => {
   const project = await getProjectById(parseInt(query.project as string))
   const navigation = await getNavigation()
   if (!project) {
+    return {
+      notFound: true
+    }
+  }
+
+  const session = await getServerSession(req, res, authOptions)
+  if (!session) {
+    return {
+      notFound: true
+    }
+  }
+
+  const user = await getUserByUsername(session.user!.name!)
+  if (!user) {
     return {
       notFound: true
     }
@@ -45,18 +65,25 @@ export const getServerSideProps: GetServerSideProps<ReportsPageProps> = async ({
   return {
     props: {
       navigation,
-      project
+      project,
+      showAuditButton: user.can_start_audit
+
     }
   }
 }
 
-export const ReportsPage = ({navigation, project}: ReportsPageProps) => {
+export const ReportsPage = ({navigation, project, showAuditButton}: ReportsPageProps) => {
   const sitesApi = useResource<Site[]>({url: `/api/projects/${project.id}/sites`})
   const reportsApi = useResource<Record<number, LighthouseRunReport>>({
     url: `/api/reports/`,
     params: {type: 'desktop'}
   })
   const desktopReports = useMemo(() => reportsApi.data ?? {}, [ reportsApi.data ])
+  const {isRunning} = useAuditRunnintState()
+
+  const onAudit = () => {
+    getAxios().post(`/api/projects/${project.id}/audit`)
+  }
 
   return <Layout navigation={navigation} title={project.name}
     actions={<>
@@ -67,6 +94,11 @@ export const ReportsPage = ({navigation, project}: ReportsPageProps) => {
           </Typography>
         </Button>
       </Link>
+      {showAuditButton && <Button variant={'text'} onClick={onAudit} disabled={isRunning}>
+        <Typography color={'secondary'}>
+          Audit
+        </Typography>
+      </Button>}
     </>}>
     <Typography color={'text.primary'} variant="h4">Sites</Typography>
 

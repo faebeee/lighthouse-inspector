@@ -1,3 +1,8 @@
+# 0.44
+
+- Add audit button on project and site for admin user 
+- Update audit progress display
+
 # 0.43
 
 - Improve Site detail view

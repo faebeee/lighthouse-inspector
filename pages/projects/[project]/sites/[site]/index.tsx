@@ -1,6 +1,5 @@
 import { GetServerSideProps } from 'next'
 import React, { useMemo } from 'react'
-import { Button } from '@mui/material'
 import { LighthouseRunReport, Project, Site } from '@prisma/client'
 import { useSearchParams } from 'next/navigation'
 import { ActionsList } from '../../../../../src/components/actions-list'
@@ -11,10 +10,13 @@ import { getSiteById } from '../../../../../src/server/lib/site'
 import { getProjectById } from '../../../../../src/server/lib/project'
 import { SiteDetailView } from '../../../../../src/components/site-detail-view'
 import { SiteShare } from '../../../../../src/components/site-share'
-import { getAxios } from '../../../../../src/utils/get-axios'
 import { getUserByUsername } from '../../../../../src/server/lib/user-service'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '../../../../api/auth/[...nextauth]'
+import { getAxios } from '../../../../../src/utils/get-axios'
+import { Button } from '@mui/material'
+import Typography from '@mui/material/Typography'
+import { useAuditRunnintState } from '../../../../../src/hooks/use-audit-runnint-state'
 
 export type ProjectPageProps = {
   site: Site;
@@ -88,6 +90,11 @@ export const ProjectPage = ({
     }
   })
 
+  const onAudit = () => {
+    getAxios().post(`/api/projects/${project.id}/sites/${site.id}/audit`)
+  }
+  const {isRunning} = useAuditRunnintState()
+
   const desktopReports = useMemo(() => (!!desktopReportsApi.data && desktopReportsApi.data.length) > 0 ? (desktopReportsApi.data ?? []) : [], [ desktopReportsApi ])
   const mobileReports = useMemo(() => (!!mobileReportsApi.data && mobileReportsApi.data.length) > 0 ? (mobileReportsApi.data ?? []) : [], [ mobileReportsApi ])
 
@@ -97,6 +104,11 @@ export const ProjectPage = ({
     actions={<>
       <ActionsList site={site} />
       <SiteShare site={site} />
+      {showAuditButton && <Button variant={'text'} onClick={onAudit} disabled={isRunning}>
+        <Typography color={'secondary'}>
+          Audit
+        </Typography>
+      </Button>}
     </>}
     navigation={navigation}>
     <SiteDetailView site={site} project={project}
