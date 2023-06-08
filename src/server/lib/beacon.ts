@@ -2,7 +2,7 @@ import { getPrisma } from '../get-prisma';
 import { getLogger } from '../logger';
 
 export const setBeaconValue = (key: string, value?: string) => {
-  getLogger().debug(`Set beacon ${key}:${value}`);
+  getLogger().info(`Set beacon ${key}:${value}`);
   return getPrisma().beacon.upsert({
     where: {
       key
@@ -20,7 +20,7 @@ export const setBeaconValue = (key: string, value?: string) => {
 };
 
 export const setBeaconDate = (key: string, date: Date) => {
-  getLogger().debug(`Set beacon ${key}:${date.toISOString()}`);
+  getLogger().info(`Set beacon ${key}:${date.toISOString()}`);
   return getPrisma().beacon.upsert({
     where: {
       key

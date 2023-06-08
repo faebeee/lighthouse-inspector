@@ -9,6 +9,7 @@
     "lint": "next lint",
     "cli:create-user": "ts-node --project tsconfig.node.json -r dotenv/config  ./cli/create-user.ts",
     "cli:report-cleanup": "ts-node --project tsconfig.node.json -r dotenv/config  ./cli/report-cleanup.ts",
+    "cli:task:all": "npm run cli:task:cleanup && npm run cli:task:audit",
     "cli:task:audit": "ts-node --project tsconfig.node.json -r dotenv/config  ./cli/tasks/task-audit.ts",
     "cli:task:cleanup": "ts-node --project tsconfig.node.json -r dotenv/config ./cli/tasks/task-cleanup.ts",
     "cli:task:beacon": "ts-node --project tsconfig.node.json -r dotenv/config ./cli/tasks/task-send-beacon.ts",

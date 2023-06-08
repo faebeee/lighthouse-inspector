@@ -1,3 +1,7 @@
+# 0.45
+- Update docker cron image
+
+
 # 0.44
 
 - Add audit button on project and site for admin user 
