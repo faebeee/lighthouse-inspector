@@ -34,6 +34,7 @@
     "@mui/icons-material": "^5.10.15",
     "@mui/material": "^5.10.15",
     "@mui/x-data-grid": "^5.17.13",
+    "@next/bundle-analyzer": "^13.4.4",
     "@prisma/client": "^4.10.1",
     "@types/node": "18.11.9",
     "@types/react": "18.0.25",

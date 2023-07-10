@@ -6,6 +6,7 @@ Web Audit is a tool to automatically audit your web projects. Currently lighthou
 More integrations are coming
 
 ![Overview](./doc/overview.png)
+![Detail](./doc/detail.png)
 
 ## Requires
 This uses a `postgres` database and a `minio` asset bucket.
